@@ -1,3 +1,9 @@
+# 0.3.2
+
+* `keep_non_zero_percentage` gains an argument, `all`, that defaults to `FALSE`
+to keep previous behavior. Setting `all = TRUE` means that the value must be
+non-zero in at least X% of **all** of the sample classes.
+
 # 0.3.0
 
 * `median_correlations` gains a new argument, `between_classes` to generate the
