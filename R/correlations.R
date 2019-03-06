@@ -31,15 +31,132 @@ neither_sample <- function(in_x, in_y){
   not_in_both
 }
 
-jaccard_information <- function(in_x, in_y){
-  both_samples(in_x, in_y) / either_samples(in_x, in_y)
+caculate_jaccard <- function(in_both, in_either){
+  in_both / in_either
 }
 
-information_consistency <- function(in_both, in_neither, total_features){
+calculate_information_consistency <- function(in_both, in_neither, total_features){
   (in_both + not_in_both) / total_features
 }
 
-global_pairwise_correlation <- function()
+
+#' globally information theoretic weighted pairwise correlation
+#'
+#' given a data matrix, calculate \emph{inter-row} correlation values that are weighted
+#' by information content and information consistency.
+#'
+#' @param data_matrix the data
+#' @param use what data to use, see \code{cor}
+#' @param exclude_na should NA values be excluded (default TRUE)
+#' @param exclude_inf should Inf values be excluded (default TRUE)
+#' @param exclude_0 should 0 values be excluded (default FALSE)
+#' @param zero_value what value represents zero (default is 0)
+#' @param method which method of correlation to use
+#' @param scale_information_content should the information content be scaled by the maximum value?
+#'
+#' @details The function returns a named list with:
+#'   \describe{
+#'     \item{cor}{the correlation matrix}
+#'     \item{keep}{a logical matrix indicating which points passed filtering}
+#'     \item{raw}{the raw correlations}
+#'     \item{content}{the weighting calculated from information content (weighted jaccard)}
+#'     \item{consistency}{weighted information consistency}
+#'     }
+#'
+#'
+#' @return list
+#' @export
+globally_it_weighted_pairwise_correlation <- function(data_matrix, use = "pairwise.complete.obs", 
+                                        exclude_na = TRUE, exclude_inf = TRUE, 
+                                        exclude_0 = FALSE, zero_value = 0, method = "pearson",
+                                        scale_information_content = TRUE){
+  correlation_values <- pairwise_correlation(data_matrix, use = use, exclude_na = exclude_na,
+                                             exclude_inf = exclude_inf, exclude_0 = exclude_0,
+                                             zero_value = zero_value, method = method)
+  cor_values <- correlation_values$cor
+  keep_matrix <- t(correlation_values$keep)
+  
+  in_both <- in_either <- not_in_both <- matrix(0, nrow = ncol(keep_matrix), ncol = ncol(keep_matrix))
+  
+  for (icol in seq_len(ncol(keep_matrix) - 1)) {
+    for (jcol in seq(icol + 1, ncol(keep_matrix))) {
+      #print(c(icol, jcol))
+      in_both[icol, jcol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      in_either[icol, jcol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      not_in_both[icol, jcol] <- neither_sample(keep_matrix[, icol], keep_matrix[, jcol])
+    }
+  }
+  
+  total_features <- ncol(data_matrix)
+  
+  jaccard_info <- jaccard_information(in_both, in_either)
+  if (scale_information_content) {
+    max_jaccard <- max(jaccard_info[jaccard_info < 1])
+    information_content <- jaccard_info / max_jaccard
+  } else {
+    information_content <- jaccard_info
+  }
+  
+  information_consistency <- calculate_information_consistency(in_both, in_either, total_features)
+  
+  global_correlation <- cor_values * information_content * information_consistency
+  
+  return(list(cor = global_correlation, raw = cor_values,
+       keep = t(keep_matrix), content = information_content,
+       consistency = information_consistency))
+}
+
+
+#' locally information theoretic weighted pairwise correlation
+#'
+#' given a data matrix, calculate \emph{inter-row} correlation values that are weighted
+#' by information content where only the pairwise information (jaccard index) is considered.
+#'
+#' @param data_matrix the data
+#' @param use what data to use, see \code{cor}
+#' @param exclude_na should NA values be excluded (default TRUE)
+#' @param exclude_inf should Inf values be excluded (default TRUE)
+#' @param exclude_0 should 0 values be excluded (default FALSE)
+#' @param zero_value what value represents zero (default is 0)
+#' @param method which method of correlation to use
+#'
+#' @details The function returns a named list with:
+#'   \describe{
+#'     \item{cor}{the correlation matrix}
+#'     \item{keep}{a logical matrix indicating which points passed filtering}
+#'     \item{raw}{the raw correlations}
+#'     \item{jaccard}{the jaccard information index used to weight the values}
+#'     }
+#'
+#'
+#' @return list
+#' @export
+locally_it_weighted_pairwise_correlation <- function(data_matrix, use = "pairwise.complete.obs", 
+                                        exclude_na = TRUE, exclude_inf = TRUE, 
+                                        exclude_0 = FALSE, zero_value = 0, method = "pearson"){
+  correlation_values <- pairwise_correlation(data_matrix, use = use, exclude_na = exclude_na,
+                                             exclude_inf = exclude_inf, exclude_0 = exclude_0,
+                                             zero_value = zero_value, method = method)
+  cor_values <- correlation_values$cor
+  keep_matrix <- t(correlation_values$keep)
+  
+  in_both <- in_either <- matrix(0, nrow = ncol(keep_matrix), ncol = ncol(keep_matrix))
+  
+  for (icol in seq_len(ncol(keep_matrix) - 1)) {
+    for (jcol in seq(icol + 1, ncol(keep_matrix))) {
+      #print(c(icol, jcol))
+      in_both[icol, jcol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      in_either[icol, jcol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
+    }
+  }
+  
+  jaccard_info <- jaccard_information(in_both, in_either)
+  
+  local_correlation <- cor_values * jaccard_info
+  
+  return(list(cor = local_correlation, raw = cor_values,
+              keep = t(keep_matrix), jaccard = jaccard_info))
+}
 
 #' correspondence
 #' 
@@ -134,9 +251,6 @@ calculate_weights <- function(nonzero_loc, not_both = FALSE){
 #'   \describe{
 #'     \item{cor}{the correlation matrix}
 #'     \item{keep}{a logical matrix indicating which points passed filtering}
-#'     \item{raw}{the raw correlations}
-#'     \item{info}{the weighting calculated from information content}
-#'     \item{correspondence}{the weighting from correspondence}
 #'     }
 #'
 #'
@@ -144,8 +258,7 @@ calculate_weights <- function(nonzero_loc, not_both = FALSE){
 #' @export
 pairwise_correlation <- function(data_matrix, use = "pairwise.complete.obs", 
                                  exclude_na = TRUE, exclude_inf = TRUE, 
-                                 exclude_0 = FALSE, zero_value = 0, method = "pearson",
-                                 weight = TRUE){
+                                 exclude_0 = FALSE, zero_value = 0, method = "pearson"){
 
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
@@ -173,7 +286,7 @@ pairwise_correlation <- function(data_matrix, use = "pairwise.complete.obs",
 
   calc_cor <- cor(data_matrix, use = use, method = method)
   
-  return(list(cor = cor, keep = t(!exclude_loc)))
+  return(list(cor = calc_cor, keep = t(!exclude_loc)))
 }
 
 #' pairwise correlation counts
