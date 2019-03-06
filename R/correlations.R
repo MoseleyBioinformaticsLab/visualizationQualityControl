@@ -16,6 +16,31 @@ information_volume <- function(in_x, in_y){
   in_both
 }
 
+both_samples <- function(in_x, in_y){
+  in_both <- sum(in_x & in_y)
+  in_both
+}
+
+either_samples <- function(in_x, in_y){
+  in_either <- sum(in_x | in_y)
+  in_either
+}
+
+neither_sample <- function(in_x, in_y){
+  not_in_both <- sum(!in_x & !in_y)
+  not_in_both
+}
+
+jaccard_information <- function(in_x, in_y){
+  both_samples(in_x, in_y) / either_samples(in_x, in_y)
+}
+
+information_consistency <- function(in_both, in_neither, total_features){
+  (in_both + not_in_both) / total_features
+}
+
+global_pairwise_correlation <- function()
+
 #' correspondence
 #' 
 #' @param in_x which things are in X
@@ -148,21 +173,7 @@ pairwise_correlation <- function(data_matrix, use = "pairwise.complete.obs",
 
   calc_cor <- cor(data_matrix, use = use, method = method)
   
-  # weight them if necessary
-  if (weight) {
-    w_matrices <- calculate_weights(!exclude_loc)
-    w_cor <- calc_cor * w_matrices$info * w_matrices$correspondence
-  } else {
-    w_cor <- calc_cor
-    w_matrices <- list(info = matrix(1, nrow = nrow(calc_cor), ncol = nrow(calc_cor)),
-                       correspondence = matrix(1, nrow = nrow(calc_cor), ncol = nrow(calc_cor)))
-  }
-
-  # note that exclude_loc is transposed so it matches what the input data looked
-  # like
-  return(list(cor = w_cor, keep = t(!exclude_loc),
-              raw = calc_cor, info = w_matrices$info,
-              correspondence = w_matrices$correspondence))
+  return(list(cor = cor, keep = t(!exclude_loc)))
 }
 
 #' pairwise correlation counts
