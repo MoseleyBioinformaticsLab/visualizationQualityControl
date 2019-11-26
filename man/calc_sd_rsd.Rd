@@ -20,4 +20,3 @@ vector
 given a data.frame of means and variances, calculate mean sd at low end and
 mean rsd at high end.
 }
-

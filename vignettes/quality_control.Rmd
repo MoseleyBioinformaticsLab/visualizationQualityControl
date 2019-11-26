@@ -227,7 +227,7 @@ information about `viridis` is available [here](http://bids.github.io/colormap/)
 ```{r correlation_to_color}
 library(viridis)
 library(circlize)
-colormap <- colorRamp2(seq(0.8, 1, length.out = 20), viridis::viridis(20))
+colormap <- colorRamp2(seq(0.2, 1, length.out = 20), viridis::viridis(20))
 ```
 
 

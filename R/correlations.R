@@ -31,11 +31,11 @@ neither_sample <- function(in_x, in_y){
   not_in_both
 }
 
-caculate_jaccard <- function(in_both, in_either){
+calculate_jaccard <- function(in_both, in_either){
   in_both / in_either
 }
 
-calculate_information_consistency <- function(in_both, in_neither, total_features){
+calculate_information_consistency <- function(in_both, not_in_both, total_features){
   (in_both + not_in_both) / total_features
 }
 
@@ -56,7 +56,7 @@ calculate_information_consistency <- function(in_both, in_neither, total_feature
 #'
 #' @details The function returns a named list with:
 #'   \describe{
-#'     \item{cor}{the correlation matrix}
+#'     \item{cor}{the weighted correlation matrix}
 #'     \item{keep}{a logical matrix indicating which points passed filtering}
 #'     \item{raw}{the raw correlations}
 #'     \item{content}{the weighting calculated from information content (weighted jaccard)}
@@ -78,26 +78,29 @@ globally_it_weighted_pairwise_correlation <- function(data_matrix, use = "pairwi
   
   in_both <- in_either <- not_in_both <- matrix(0, nrow = ncol(keep_matrix), ncol = ncol(keep_matrix))
   
-  for (icol in seq_len(ncol(keep_matrix) - 1)) {
-    for (jcol in seq(icol + 1, ncol(keep_matrix))) {
+  for (icol in seq_len(ncol(keep_matrix))) {
+    for (jcol in seq_len(ncol(keep_matrix))) {
       #print(c(icol, jcol))
-      in_both[icol, jcol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
-      in_either[icol, jcol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
-      not_in_both[icol, jcol] <- neither_sample(keep_matrix[, icol], keep_matrix[, jcol])
+      in_both[icol, jcol] <- in_both[jcol, icol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      in_either[icol, jcol] <- in_either[jcol, icol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      not_in_both[icol, jcol] <- not_in_both[jcol, icol] <- neither_sample(keep_matrix[, icol], keep_matrix[, jcol])
     }
   }
   
   total_features <- ncol(data_matrix)
   
-  jaccard_info <- jaccard_information(in_both, in_either)
+  jaccard_info <- calculate_jaccard(in_both, in_either)
   if (scale_information_content) {
-    max_jaccard <- max(jaccard_info[jaccard_info < 1])
+    off_diag_values <- jaccard_info[lower.tri(jaccard_info)]
+    max_jaccard <- max(off_diag_values)
     information_content <- jaccard_info / max_jaccard
+    diag(information_content) <- 1
   } else {
     information_content <- jaccard_info
   }
   
-  information_consistency <- calculate_information_consistency(in_both, in_either, total_features)
+  information_consistency <- calculate_information_consistency(in_both, not_in_both, total_features)
+  diag(information_consistency) <- diag(in_both) / total_features
   
   global_correlation <- cor_values * information_content * information_consistency
   
@@ -122,7 +125,7 @@ globally_it_weighted_pairwise_correlation <- function(data_matrix, use = "pairwi
 #'
 #' @details The function returns a named list with:
 #'   \describe{
-#'     \item{cor}{the correlation matrix}
+#'     \item{cor}{the weighted correlation matrix}
 #'     \item{keep}{a logical matrix indicating which points passed filtering}
 #'     \item{raw}{the raw correlations}
 #'     \item{jaccard}{the jaccard information index used to weight the values}
@@ -142,15 +145,15 @@ locally_it_weighted_pairwise_correlation <- function(data_matrix, use = "pairwis
   
   in_both <- in_either <- matrix(0, nrow = ncol(keep_matrix), ncol = ncol(keep_matrix))
   
-  for (icol in seq_len(ncol(keep_matrix) - 1)) {
-    for (jcol in seq(icol + 1, ncol(keep_matrix))) {
+  for (icol in seq_len(ncol(keep_matrix))) {
+    for (jcol in seq_len(ncol(keep_matrix))) {
       #print(c(icol, jcol))
-      in_both[icol, jcol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
-      in_either[icol, jcol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      in_both[icol, jcol] <- in_both[jcol, icol] <- both_samples(keep_matrix[, icol], keep_matrix[, jcol])
+      in_either[icol, jcol] <- in_either[jcol, icol] <- either_samples(keep_matrix[, icol], keep_matrix[, jcol])
     }
   }
   
-  jaccard_info <- jaccard_information(in_both, in_either)
+  jaccard_info <- calculate_jaccard(in_both, in_either)
   
   local_correlation <- cor_values * jaccard_info
   

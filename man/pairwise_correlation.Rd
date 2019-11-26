@@ -6,7 +6,7 @@
 \usage{
 pairwise_correlation(data_matrix, use = "pairwise.complete.obs",
   exclude_na = TRUE, exclude_inf = TRUE, exclude_0 = FALSE,
-  zero_value = 0, method = "pearson", weight = TRUE)
+  zero_value = 0, method = "pearson")
 }
 \arguments{
 \item{data_matrix}{the data}
@@ -38,9 +38,5 @@ The function returns a named list with:
   \describe{
     \item{cor}{the correlation matrix}
     \item{keep}{a logical matrix indicating which points passed filtering}
-    \item{raw}{the raw correlations}
-    \item{info}{the weighting calculated from information content}
-    \item{correspondence}{the weighting from correspondence}
     }
 }
-

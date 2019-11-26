@@ -24,4 +24,3 @@ matrix
 \description{
 given a data matrix, calculate inter-row distances
 }
-

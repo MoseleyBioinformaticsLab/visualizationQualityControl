@@ -42,4 +42,3 @@ Returns a \code{data.frame} with:
   \item{frac}{the actual outlier fraction calculated for that sample}
 }
 }
-

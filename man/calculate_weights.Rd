@@ -17,4 +17,3 @@ list
 \description{
 calculates the weights for correlations
 }
-

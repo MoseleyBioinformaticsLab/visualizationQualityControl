@@ -35,4 +35,3 @@ Correspondence is based on how many things agree compared to how
   This value will be scaled to the largest observed correspondence for weighting
   as well.
 }
-

@@ -33,4 +33,3 @@ The data.frame may have 5 columns, first three are always present,
   \item{plot_class}{\code{sample_class::compare_class} for easy grouping}
 }
 }
-

@@ -29,4 +29,3 @@ This function is being deprecated and all code should use the
 \seealso{
 keep_non_zero_percentage
 }
-

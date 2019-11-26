@@ -25,4 +25,3 @@ data.frame
 summarizes a matrix or data.frame, where rows are samples
 and columns are features
 }
-

@@ -22,4 +22,3 @@ matrix
 \description{
 given a data matrix, how many entries are non-zero on a pairwise basis
 }
-

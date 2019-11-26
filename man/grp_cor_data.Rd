@@ -25,4 +25,3 @@ The data comes from two groups of samples, where there is ~0.85 correlation
 within each group, and ~0.53 correlation between groups.
 }
 \keyword{datasets}
-

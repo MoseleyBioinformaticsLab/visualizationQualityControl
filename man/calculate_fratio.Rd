@@ -18,4 +18,3 @@ vector
 given a data matrix of samples (rows) and features (columns), and a vector of classes (character or factor),
 calculate an F-ratio for each feature.
 }
-

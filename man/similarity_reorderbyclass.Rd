@@ -48,12 +48,16 @@ rownames(mat) <- colnames(mat) <- letters[1:10]
 neworder <- similarity_reorderbyclass(mat)
 mat[neworder$indices, neworder$indices]
 
-sample_class <- data.frame(grp = rep(c("grp1", "grp2"), each = 5))
+sample_class <- data.frame(grp = rep(c("grp1", "grp2"), each = 5), stringsAsFactors = FALSE)
 rownames(sample_class) <- rownames(mat)
 neworder2 <- similarity_reorderbyclass(mat, sample_class[, "grp", drop = FALSE])
+
+# if there is a class with only one member, it is dropped, with a warning
+sample_class[10, "grp"] = "grp3"
+neworder3 <- similarity_reorderbyclass(mat, sample_class[, "grp", drop = FALSE])
+neworder3$indices # 10 should be missing
 
 mat[neworder2$indices, neworder2$indices]
 cbind(neworder$names, neworder2$names)
 
 }
-

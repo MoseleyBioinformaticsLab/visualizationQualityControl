@@ -22,4 +22,3 @@ The information volume is based on how many things are actually
   not missing in both samples. For weighting of correlations, this value
   will be scaled by the maximum observed value across calculated correlations.
 }
-

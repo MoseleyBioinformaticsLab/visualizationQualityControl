@@ -17,4 +17,3 @@ given the \code{keep} entry from \code{pairwise_correlation}, get the number
 of things that would have been used for each of the pairwise comparisons. Note
 that pairwise comparisons of the rows are used.
 }
-

@@ -27,4 +27,3 @@ matrix
 \description{
 given a data matrix, calculate inter-row correlation values
 }
-

@@ -1,10 +1,10 @@
 Package: visualizationQualityControl
-Version: 0.3.5
+Version: 0.3.6
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.
 Author: Robert M Flight <rflight79@gmail.com>
-Date: 2019-03-06
+Date: 2019-11-26
 Maintainer: Robert M Flight <rflight79@gmail.com>
 Depends: R (>= 3.1.1)
 Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
@@ -12,4 +12,4 @@ Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
 License: MIT + file LICENSE
 VignetteBuilder: knitr
 Suggests: testthat, knitr, rmarkdown, circlize, viridis
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

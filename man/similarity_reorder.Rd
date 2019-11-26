@@ -21,4 +21,3 @@ a \link{dendrogram} object. To get the order use \code{order.dendogram}.
 given a matrix (maybe a distance matrix), cluster and then re-order using
 dendsort.
 }
-

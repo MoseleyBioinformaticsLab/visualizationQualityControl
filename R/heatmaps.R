@@ -59,6 +59,11 @@ generate_group_colors <- function(n_group, randomize = NULL){
   group_color
 }
 
+euclidian = function(values){
+  # simple euclidian distance function to transform correlations to distances
+  return(sqrt(2*(1 - values)))
+}
+
 #' cluster and reorder
 #' 
 #' given a matrix (maybe a distance matrix), cluster and then re-order using
@@ -86,7 +91,8 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
                            none = similarity_matrix,
                            inverse = 1 / similarity_matrix,
                            sub_1 = 1 - similarity_matrix,
-                           log = log(similarity_matrix))
+                           log = log(similarity_matrix),
+                           euclidian = euclidian(similarity_matrix))
   
   if (min(transform_data) < 0){
     transform_data <- transform_data - min(transform_data)
@@ -141,9 +147,14 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
 #' neworder <- similarity_reorderbyclass(mat)
 #' mat[neworder$indices, neworder$indices]
 #'
-#' sample_class <- data.frame(grp = rep(c("grp1", "grp2"), each = 5))
+#' sample_class <- data.frame(grp = rep(c("grp1", "grp2"), each = 5), stringsAsFactors = FALSE)
 #' rownames(sample_class) <- rownames(mat)
 #' neworder2 <- similarity_reorderbyclass(mat, sample_class[, "grp", drop = FALSE])
+#' 
+#' # if there is a class with only one member, it is dropped, with a warning
+#' sample_class[10, "grp"] = "grp3"
+#' neworder3 <- similarity_reorderbyclass(mat, sample_class[, "grp", drop = FALSE])
+#' neworder3$indices # 10 should be missing
 #' 
 #' mat[neworder2$indices, neworder2$indices]
 #' cbind(neworder$names, neworder2$names)
@@ -199,8 +210,17 @@ similarity_reorderbyclass <- function(similarity_matrix, sample_classes=NULL, tr
   
   
   split_indices <- split(num_indices, use_class)
+  n_indices <- lapply(split_indices, function(x){
+    length(x)
+  })
+  keep_indices <- n_indices > 1
   
-  new_order <- lapply(split_indices, function(x){
+  if (sum(!keep_indices) > 0) {
+    warning(paste0("Removing groups: ", paste(names(split_indices)[!keep_indices], collapse = ", ")))
+  }
+  
+  
+  new_order <- lapply(split_indices[keep_indices], function(x){
     similarity_reorder(similarity_matrix[x, x], x, transform = transform)
   })
   

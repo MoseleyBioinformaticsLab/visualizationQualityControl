@@ -19,4 +19,3 @@ given a data.frame of means and variances, use a two step non-linear least squar
 The first step is done on the mean vs sd, then the estimates are used in a second
 that estimates them using the mean vs rsd.
 }
-

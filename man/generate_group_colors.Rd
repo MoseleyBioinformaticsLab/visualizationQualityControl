@@ -25,4 +25,3 @@ the default for \code{randomize} is \code{NULL}, so that reordering
   used. If \code{randomize} is \code{TRUE} or \code{FALSE}, then it overrides
   the defaults.
 }
-

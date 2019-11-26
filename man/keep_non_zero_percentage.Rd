@@ -5,7 +5,7 @@
 \title{keep features with percentage of non-zeros}
 \usage{
 keep_non_zero_percentage(data_matrix, sample_classes = NULL,
-  keep_num = 0.75, zero_value = 0)
+  keep_num = 0.75, zero_value = 0, all = FALSE)
 }
 \arguments{
 \item{data_matrix}{the matrix of values to work with}
@@ -15,6 +15,8 @@ keep_non_zero_percentage(data_matrix, sample_classes = NULL,
 \item{keep_num}{what number of samples in each class need a non-zero value (see Details)}
 
 \item{zero_value}{what number represents zero values}
+
+\item{all}{is this an either / or OR does it need to be present in all?}
 }
 \value{
 matrix
@@ -30,4 +32,3 @@ The number of samples that must be non-zero can be expressed either as a whole
   number (that is greater than one), or as a fraction that will be be multiplied 
   by the number of samples in each class to get the lower limits for each of the classes.
 }
-
