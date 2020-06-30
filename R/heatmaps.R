@@ -94,7 +94,7 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
                            log = log(similarity_matrix),
                            euclidian = euclidian(similarity_matrix))
   
-  if (min(transform_data) < 0){
+  if (min(transform_data, na.rm = TRUE) < 0){
     transform_data <- transform_data - min(transform_data)
   }
   
@@ -305,12 +305,16 @@ visqc_heatmap <- function(matrix_data, color_values, title = "", row_color_data 
   if (!is.null(row_color_data) && !is.null(row_color_list)){
     row_annot <- rowAnnotation(df = row_color_data, col = row_color_list)
   } else{
-    row_annot = new("HeatmapAnnotation")
+    row_annot = NULL
   }
   if (!is.null(col_color_data) && !is.null(col_color_list)){
-    col_annot <- HeatmapAnnotation(df = col_color_data, col = col_color_list)
+    if (!is.null(row_color_data) && !is.null(row_color_list)) {
+      col_annot <- HeatmapAnnotation(df = col_color_data, col = col_color_list, show_legend = FALSE)
+    } else {
+      col_annot <- HeatmapAnnotation(df = col_color_data, col = col_color_list)
+    }
   } else{
-    col_annot <- new("HeatmapAnnotation")
+    col_annot <- NULL
   }
   
   heat_out <- Heatmap(matrix_data, col = color_values,
