@@ -4,8 +4,13 @@
 \alias{visqc_pca}
 \title{sensible principal components}
 \usage{
-visqc_pca(pca_decomp, princomps = c(1, 2), groups = NULL,
-  labels = NULL, dot_size = 4)
+visqc_pca(
+  pca_decomp,
+  princomps = c(1, 2),
+  groups = NULL,
+  labels = NULL,
+  dot_size = 4
+)
 }
 \arguments{
 \item{pca_decomp}{the results of \code{prcomp}}

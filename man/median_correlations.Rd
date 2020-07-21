@@ -4,8 +4,7 @@
 \alias{median_correlations}
 \title{calculate median correlations}
 \usage{
-median_correlations(cor_matrix, sample_classes = NULL,
-  between_classes = FALSE)
+median_correlations(cor_matrix, sample_classes = NULL, between_classes = FALSE)
 }
 \arguments{
 \item{cor_matrix}{the sample - sample correlations}

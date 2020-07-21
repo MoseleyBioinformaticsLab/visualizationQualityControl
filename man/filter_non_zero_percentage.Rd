@@ -4,8 +4,7 @@
 \alias{filter_non_zero_percentage}
 \title{keep features with percentage of non-zeros}
 \usage{
-filter_non_zero_percentage(data_matrix, sample_classes = NULL,
-  keep_num = 0.75)
+filter_non_zero_percentage(data_matrix, sample_classes = NULL, keep_num = 0.75)
 }
 \arguments{
 \item{data_matrix}{the matrix of values to work with}

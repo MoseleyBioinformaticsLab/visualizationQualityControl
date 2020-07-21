@@ -4,8 +4,12 @@
 \alias{pairwise_nonzero}
 \title{pairwise non-zero}
 \usage{
-pairwise_nonzero(data_matrix, use = "pairwise", exclude_na = TRUE,
-  exclude_inf = TRUE)
+pairwise_nonzero(
+  data_matrix,
+  use = "pairwise",
+  exclude_na = TRUE,
+  exclude_inf = TRUE
+)
 }
 \arguments{
 \item{data_matrix}{the data}

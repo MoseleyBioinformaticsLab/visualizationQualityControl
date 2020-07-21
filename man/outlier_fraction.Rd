@@ -4,8 +4,13 @@
 \alias{outlier_fraction}
 \title{fraction of outliers}
 \usage{
-outlier_fraction(data, sample_classes = NULL, n_trim = 3, n_sd = 5,
-  remove_0 = FALSE)
+outlier_fraction(
+  data,
+  sample_classes = NULL,
+  n_trim = 3,
+  n_sd = 5,
+  remove_0 = FALSE
+)
 }
 \arguments{
 \item{data}{the data matrix (samples are rows, columns are features)}

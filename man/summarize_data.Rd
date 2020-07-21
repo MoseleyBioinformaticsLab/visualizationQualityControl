@@ -4,8 +4,13 @@
 \alias{summarize_data}
 \title{summarize data}
 \usage{
-summarize_data(in_data, sample_classes = NULL, avg_function = mean,
-  log_transform = FALSE, remove_zeros = FALSE)
+summarize_data(
+  in_data,
+  sample_classes = NULL,
+  avg_function = mean,
+  log_transform = FALSE,
+  remove_zeros = FALSE
+)
 }
 \arguments{
 \item{in_data}{matrix or data.frame}

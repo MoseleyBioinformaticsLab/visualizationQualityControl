@@ -4,9 +4,14 @@
 \alias{pairwise_correlation_multicore}
 \title{pairwise correlation multicore}
 \usage{
-pairwise_correlation_multicore(data_matrix, use = "pairwise",
-  exclude_na = TRUE, exclude_inf = TRUE, exclude_0 = FALSE,
-  method = "pearson")
+pairwise_correlation_multicore(
+  data_matrix,
+  use = "pairwise",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE,
+  method = "pearson"
+)
 }
 \arguments{
 \item{data_matrix}{the data}

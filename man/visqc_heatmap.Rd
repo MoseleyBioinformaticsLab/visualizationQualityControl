@@ -4,9 +4,16 @@
 \alias{visqc_heatmap}
 \title{easier heatmaps}
 \usage{
-visqc_heatmap(matrix_data, color_values, title = "",
-  row_color_data = NULL, row_color_list = NULL,
-  col_color_data = NULL, col_color_list = NULL, ...)
+visqc_heatmap(
+  matrix_data,
+  color_values,
+  title = "",
+  row_color_data = NULL,
+  row_color_list = NULL,
+  col_color_data = NULL,
+  col_color_list = NULL,
+  ...
+)
 }
 \arguments{
 \item{matrix_data}{the matrix you want to plot as a heatmap}

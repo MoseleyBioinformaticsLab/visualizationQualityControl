@@ -4,9 +4,14 @@
 \alias{pairwise_correlation_both0}
 \title{pairwise correlation keep both zero}
 \usage{
-pairwise_correlation_both0(data_matrix, use = "pairwise",
-  exclude_na = TRUE, exclude_inf = TRUE, exclude_0 = FALSE,
-  method = "pearson")
+pairwise_correlation_both0(
+  data_matrix,
+  use = "pairwise",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE,
+  method = "pearson"
+)
 }
 \arguments{
 \item{data_matrix}{the data}

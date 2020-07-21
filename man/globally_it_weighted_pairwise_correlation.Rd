@@ -4,10 +4,16 @@
 \alias{globally_it_weighted_pairwise_correlation}
 \title{globally information theoretic weighted pairwise correlation}
 \usage{
-globally_it_weighted_pairwise_correlation(data_matrix,
-  use = "pairwise.complete.obs", exclude_na = TRUE,
-  exclude_inf = TRUE, exclude_0 = FALSE, zero_value = 0,
-  method = "pearson", scale_information_content = TRUE)
+globally_it_weighted_pairwise_correlation(
+  data_matrix,
+  use = "pairwise.complete.obs",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE,
+  zero_value = 0,
+  method = "pearson",
+  scale_information_content = TRUE
+)
 }
 \arguments{
 \item{data_matrix}{the data}

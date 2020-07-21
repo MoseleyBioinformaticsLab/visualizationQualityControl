@@ -4,8 +4,13 @@
 \alias{pairwise_distance}
 \title{pairwise distance}
 \usage{
-pairwise_distance(data_matrix, use = "pairwise", exclude_na = TRUE,
-  exclude_inf = TRUE, exclude_0 = FALSE)
+pairwise_distance(
+  data_matrix,
+  use = "pairwise",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE
+)
 }
 \arguments{
 \item{data_matrix}{the data}

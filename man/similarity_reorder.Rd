@@ -4,8 +4,11 @@
 \alias{similarity_reorder}
 \title{cluster and reorder}
 \usage{
-similarity_reorder(similarity_matrix, matrix_indices = NULL,
-  transform = "none")
+similarity_reorder(
+  similarity_matrix,
+  matrix_indices = NULL,
+  transform = "none"
+)
 }
 \arguments{
 \item{similarity_matrix}{matrix of similarities}

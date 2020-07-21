@@ -4,7 +4,9 @@
 \name{grp_cor_data}
 \alias{grp_cor_data}
 \title{grp_cor_data}
-\format{List with 2 entries, data and class}
+\format{
+List with 2 entries, data and class
+}
 \source{
 Robert M Flight
 }

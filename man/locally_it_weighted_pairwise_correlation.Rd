@@ -4,10 +4,15 @@
 \alias{locally_it_weighted_pairwise_correlation}
 \title{locally information theoretic weighted pairwise correlation}
 \usage{
-locally_it_weighted_pairwise_correlation(data_matrix,
-  use = "pairwise.complete.obs", exclude_na = TRUE,
-  exclude_inf = TRUE, exclude_0 = FALSE, zero_value = 0,
-  method = "pearson")
+locally_it_weighted_pairwise_correlation(
+  data_matrix,
+  use = "pairwise.complete.obs",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE,
+  zero_value = 0,
+  method = "pearson"
+)
 }
 \arguments{
 \item{data_matrix}{the data}

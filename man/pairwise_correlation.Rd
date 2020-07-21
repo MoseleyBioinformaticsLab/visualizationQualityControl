@@ -4,9 +4,15 @@
 \alias{pairwise_correlation}
 \title{pairwise correlation}
 \usage{
-pairwise_correlation(data_matrix, use = "pairwise.complete.obs",
-  exclude_na = TRUE, exclude_inf = TRUE, exclude_0 = FALSE,
-  zero_value = 0, method = "pearson")
+pairwise_correlation(
+  data_matrix,
+  use = "pairwise.complete.obs",
+  exclude_na = TRUE,
+  exclude_inf = TRUE,
+  exclude_0 = FALSE,
+  zero_value = 0,
+  method = "pearson"
+)
 }
 \arguments{
 \item{data_matrix}{the data}

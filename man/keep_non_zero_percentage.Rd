@@ -4,8 +4,13 @@
 \alias{keep_non_zero_percentage}
 \title{keep features with percentage of non-zeros}
 \usage{
-keep_non_zero_percentage(data_matrix, sample_classes = NULL,
-  keep_num = 0.75, zero_value = 0, all = FALSE)
+keep_non_zero_percentage(
+  data_matrix,
+  sample_classes = NULL,
+  keep_num = 0.75,
+  zero_value = 0,
+  all = FALSE
+)
 }
 \arguments{
 \item{data_matrix}{the matrix of values to work with}
