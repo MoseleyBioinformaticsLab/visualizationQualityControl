@@ -168,7 +168,7 @@ zeros, corresponding to missing data. A `log` transform would make them `-Inf`
 or `NaN`, and they should be removed automatically.
 
 ```{r calc_correlations}
-data_cor <- pairwise_correlation(t(log_data), exclude_0 = TRUE)
+data_cor <- globally_it_weighted_pairwise_correlation(t(log_data), exclude_0 = TRUE)
 ```
 
 This returns a list with some useful information, the actual correlations in `cor`,
@@ -187,7 +187,7 @@ dim(data_cor)
 We also do the same for our **mixed-up** data.
 
 ```{r mix_cor}
-mix_cor <- pairwise_correlation(t(log_mix))$cor
+mix_cor <- globally_it_weighted_pairwise_correlation(t(log_mix))$cor
 ```
 
 ### Reorder Correlations

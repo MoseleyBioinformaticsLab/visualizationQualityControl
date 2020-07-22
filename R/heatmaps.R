@@ -72,18 +72,22 @@ euclidian = function(values){
 #' @param similarity_matrix matrix of similarities
 #' @param matrix_indices indices to reorder
 #' @param transform should a transformation be applied to the data first
+#' @param hclust_method which method for clustering should be used?
+#' @param dendsort_type how should the reordering be done? (default is "min")
 #' 
 #' @import dendsort
 #' @importFrom stats as.dist hclust as.dendrogram
 #' @export
 #' 
 #' @return a \link{dendrogram} object. To get the order use \code{order.dendogram}.
-similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform = "none"){
+similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform = "none",
+                               hclust_method = "complete",
+                               dendsort_type = "min"){
   if (is.null(matrix_indices)){
     matrix_indices <- seq(1, nrow(similarity_matrix))
   }
   
-  if (class(similarity_matrix) != "dist"){
+  if (!inherits(similarity_matrix, "dist")){
     similarity_matrix <- as.dist(similarity_matrix)
   }
   
@@ -98,8 +102,8 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
     transform_data <- transform_data - min(transform_data)
   }
   
-  tmp_clust <- as.dendrogram(hclust(transform_data))
-  new_sort <- dendsort(tmp_clust)
+  tmp_clust <- as.dendrogram(hclust(transform_data, method = hclust_method))
+  new_sort <- dendsort::dendsort(tmp_clust, type = dendsort_type)
   return(list(dendrogram = new_sort, indices = matrix_indices[order.dendrogram(new_sort)]))
   #matrix_indices[order.dendrogram(new_sort)]
 }
@@ -114,6 +118,8 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
 #' @param similarity_matrix matrix of similarities between objects
 #' @param sample_classes data.frame or factor denoting classes
 #' @param transform a transformation to apply to the data
+#' @param hclust_method which method for clustering should be used
+#' @param dendsort_type how should dendsort do reordering?
 #' 
 #' @details 
 #' 
@@ -159,7 +165,9 @@ similarity_reorder <- function(similarity_matrix, matrix_indices=NULL, transform
 #' mat[neworder2$indices, neworder2$indices]
 #' cbind(neworder$names, neworder2$names)
 #' 
-similarity_reorderbyclass <- function(similarity_matrix, sample_classes=NULL, transform="none"){
+similarity_reorderbyclass <- function(similarity_matrix, sample_classes=NULL, transform="none",
+                                      hclust_method = "complete",
+                                      dendsort_type = "min"){
   num_indices <- seq(1, nrow(similarity_matrix))
   
   stopifnot(identical(rownames(similarity_matrix), colnames(similarity_matrix)))
@@ -221,7 +229,9 @@ similarity_reorderbyclass <- function(similarity_matrix, sample_classes=NULL, tr
   
   
   new_order <- lapply(split_indices[keep_indices], function(x){
-    similarity_reorder(similarity_matrix[x, x], x, transform = transform)
+    similarity_reorder(similarity_matrix[x, x], x, transform = transform,
+                       hclust_method = hclust_method,
+                       dendsort_type = dendsort_type)
   })
   
   out_dendrogram <- new_order[[1]][["dendrogram"]]
