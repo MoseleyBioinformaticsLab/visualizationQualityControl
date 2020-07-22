@@ -54,7 +54,6 @@ visqc_test_pca_loadings = function(loadings, test_columns, progress = FALSE){
     loading_results = test_loadings(use_loadings, other_loadings, progress_bar = progress_bar)
     loading_df = data.frame(p.value = loading_results, 
                             loading = use_loadings,
-                            id = rownames(loadings),
                             loading_index = in_loading,
                             stringsAsFactors = FALSE)
     loading_df
