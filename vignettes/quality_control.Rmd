@@ -2,7 +2,6 @@
 title: "Quality Control Example"
 author: "Robert M Flight"
 date: "`r Sys.time()`"
-commit: "r substr(git2r::branch_target(git2r::head(git2r::repository(getwd()))), 1, 8)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quality Control Example}
