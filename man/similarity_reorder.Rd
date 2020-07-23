@@ -7,7 +7,9 @@
 similarity_reorder(
   similarity_matrix,
   matrix_indices = NULL,
-  transform = "none"
+  transform = "none",
+  hclust_method = "complete",
+  dendsort_type = "min"
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ similarity_reorder(
 \item{matrix_indices}{indices to reorder}
 
 \item{transform}{should a transformation be applied to the data first}
+
+\item{hclust_method}{which method for clustering should be used?}
+
+\item{dendsort_type}{how should the reordering be done? (default is "min")}
 }
 \value{
 a \link{dendrogram} object. To get the order use \code{order.dendogram}.

@@ -8,7 +8,7 @@ vignette: >
   %\VignetteIndexEntry{Quality Control Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{visualizationQualityControl, ggplot2, ggbiplot, ComplexHeatmap,
+  %\VignetteDepends{visualizationQualityControl, ggplot2, ComplexHeatmap,
   viridis}
 ---
 
@@ -30,8 +30,13 @@ illustrate potential problems.
 
 ## Data
 
-```{r load_data}
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.width = 8, fig.height = 5)
+```
+
+```{r load_data, message=FALSE}
 library(visualizationQualityControl)
+library(ggplot2)
 data(grp_exp_data)
 exp_data <- grp_exp_data$data
 rownames(exp_data) <- paste0("f", seq(1, nrow(exp_data)))
@@ -73,7 +78,8 @@ incorrect results.
 Here I will show what the raw and transformed data looks like.
 
 ```{r raw_plot, figure.width = 5, figure.height = 4}
-plot(exp_data[,1], exp_data[,2], main = "Raw")
+exp_df = as.data.frame(exp_data)
+ggplot(exp_df, aes(x = s1, y = s2)) + geom_point() + labs(title = "Raw Data")
 ```
 
 Notice the dispersion in the values as the actual values increase. Most statistical
@@ -84,7 +90,8 @@ log_data <- log(exp_data)
 ```
 
 ```{r log_plot}
-plot(log_data[,1], log_data[,2], main = "Log Transform")
+log_df = as.data.frame(log_data)
+ggplot(log_df, aes(x = s1, y = s2)) + geom_point() + labs(title = "Log Transform")
 ```
 
 But, lots of other methods don't deal well with `NA` or `Inf` values, which is what you
@@ -129,17 +136,27 @@ pca_mixed <- prcomp(t(log_mix), center = TRUE)
 
 ### Visualize Them
 
-To visualize the data, we use the `visqc_pca` function, which calls `ggbiplot`
-under the hood with sensible defaults.
+To visualize the data, we plot the scores.
+If we want to know how much a PC contributes to the variances, we can get a summary of them using `visqc_score_contributions`.
 
-```{r plot_pca}
-gd_pca <- visqc_pca(pca_data, groups = sample_info$class) + ggtitle("Good Data")
-bad_pca <- visqc_pca(pca_mixed, groups = sample_info$class) + ggtitle("Bad Data")
+```{r plot_good}
+gd_scores = cbind(as.data.frame(pca_data$x), sample_info)
+gd_pca = ggplot(gd_scores, aes(x = PC1, y = PC2, color = class)) + geom_point() + ggtitle("Good Data")
+gd_pca
 ```
 
-```{r show_them, echo=FALSE}
-gd_pca
+```{r good_contributions}
+knitr::kable(visqc_score_contributions(pca_data$x))
+```
+
+```{r plot_bad}
+bad_scores = cbind(as.data.frame(pca_mixed$x), sample_info)
+bad_pca <- ggplot(bad_scores, aes(x = PC1, y = PC2, color = class)) + geom_point() + ggtitle("Bad Data")
 bad_pca
+```
+
+```{r bad_contributions}
+knitr::kable(visqc_score_contributions(pca_mixed$x))
 ```
 
 Note in this case **PC1** contains a large proportion of variance, and separates
@@ -153,14 +170,15 @@ correlations. In each sample-sample correlation, we calculate the correlation
 using the non-zero feature values.
 
 ```{r sample1_sample2_cor, fig.width = 5, fig.height=5}
-s1_s2_cor <- cor(log_data[,1], exp_data[,2])
+s1_s2_cor <- cor(log_data[,1], log_data[,2])
 s1_s2_val <- sprintf("%.4f", s1_s2_cor)
-plot(log_data[,1], log_data[,2], main = paste0("R = ", s1_s2_val))
+ggplot(log_df, aes(x = s1, y = s2)) + geom_point() + labs(title = paste0("R = ", s1_s2_val))
 ```
 
 ### Calculate Correlations
 
-All pairwise correlations are calculated with the `pairwise_correlation` function.
+All pairwise correlations should be calculated using either the `globally_it_weighted_pairwise_correlation` or `locally_it_weighted_pairwise_correlation` functions.
+These functions calculate a correlation where we remove missing or zero values in either sample, and in addition, weights the correlations by the information shared between the samples, as well as their consistency, that is how many shared present and missing values there are between them.
 Note that we take the transpose of the data, because this function assumes
 that data are organized with *features* as *columns* and *samples* as *rows*. 
 Also, because we used `log1p` to transform the data, we make sure to remove the

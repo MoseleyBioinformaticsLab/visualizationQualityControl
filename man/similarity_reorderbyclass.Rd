@@ -4,8 +4,13 @@
 \alias{similarity_reorderbyclass}
 \title{reorder by sample class}
 \usage{
-similarity_reorderbyclass(similarity_matrix, sample_classes = NULL,
-  transform = "none")
+similarity_reorderbyclass(
+  similarity_matrix,
+  sample_classes = NULL,
+  transform = "none",
+  hclust_method = "complete",
+  dendsort_type = "min"
+)
 }
 \arguments{
 \item{similarity_matrix}{matrix of similarities between objects}
@@ -13,6 +18,10 @@ similarity_reorderbyclass(similarity_matrix, sample_classes = NULL,
 \item{sample_classes}{data.frame or factor denoting classes}
 
 \item{transform}{a transformation to apply to the data}
+
+\item{hclust_method}{which method for clustering should be used}
+
+\item{dendsort_type}{how should dendsort do reordering?}
 }
 \value{
 a list containing the reordering of the matrix in a:

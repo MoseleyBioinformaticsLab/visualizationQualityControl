@@ -1,27 +1,21 @@
-#' sensible principal components
+#' calculate pca contributions
 #' 
-#' given the results of \code{\link{prcomp}}, generate decent looking 
-#' plot of selected components using \code{ggbiplot}.
+#' Given a set of PCA scores, calculates their variance contributions, cumulative
+#' contributions, and generates a percent label that can be used for labeling plots.
 #' 
-#' @param pca_decomp the results of \code{prcomp}
-#' @param princomps which principal components to plot
-#' @param groups factor defining the classes of each object
-#' @param labels labels of the points
-#' @param dot_size size of the points (default is 1)
-#'
-#' @import ggbiplot
-#' @import ggplot2
+#' @param pca_scores matrix of scores, columns are each PC
+#' 
 #' @export
-visqc_pca <- function(pca_decomp, princomps = c(1, 2), groups = NULL, labels = NULL, dot_size = 4){
-  x_data <- pca_decomp$x
-  n_obj <- nrow(x_data)
-  
-  if (is.null(groups)){
-    groups <- as.factor(rep("", n_obj))
-  } else if (is.data.frame(groups)){
-    groups <- as.factor(apply(groups, 1, paste, collapse = "."))
-  }
-  
-  
-  ggbiplot(pca_decomp, obs.scale = 1, groups = groups, labels = labels, var.axes = FALSE, choices = princomps) + geom_point(aes(color = groups), size = dot_size) + coord_cartesian()
+#' @return data.frame
+visqc_score_contributions = function(pca_scores){
+  pca_vars = apply(pca_scores, 2, var)
+  pca_vars = data.frame(pc = names(pca_vars), variance = pca_vars,
+                        stringsAsFactors = FALSE)
+  pca_vars = dplyr::mutate(pca_vars, percent = variance / sum(variance),
+                           cumulative = cumsum(percent))
+  pca_labels = purrr::map2_chr(pca_vars$pc, pca_vars$percent, function(.x, .y){
+    paste0(.x, " (", format(.y * 100, digits = 2, scientific = FALSE, justify = "none", trim = TRUE), "%)")
+  })
+  pca_vars$labels = pca_labels
+  pca_vars
 }
