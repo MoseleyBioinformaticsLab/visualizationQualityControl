@@ -11,36 +11,17 @@ This **readme** is documenting functionality as of **`r substr(git2r::branch_tar
 
 ### Dependencies
 
-Note that before installing, you will want to install the `ggbiplot` package, and at least `v1.2.1` of the `ComplexHeatmap` package. Robert M Flight maintains a fork of `ggbiplot` on GitHub because it is not part of CRAN, and as of July 2, 2015, `ComplexHeatmap` must be installed from GitHub:
+* `ComplexHeatmap`, for generating the heatmaps
+* `dendsort`, for reordering samples in heatmaps
 
-```r
-devtools::install_github("rmflight/ggbiplot")
-devtools::install_github("jokergoo/ComplexHeatmap")
-```
-
-Other odd dependencies that may not be present include the `dendsort` package, and
-the `viridis` package:
-
-```r
-install.packages("dendsort")
-install.packages("viridis")
-```
+These should get installed automatically.
 
 ### This Package
 
-This package can be installed by cloning from the GitLab repo:
+This package can be installed using the `remotes` package:
 
 ```r
-git clone https://gitlab.cesb.uky.edu/rmflight/visualizationQualityControl.git
-cd visualizationQualityControl
-R
-devtools::install(".", quick = FALSE) # builds the vignette, which you definitely want
-```
-
-Alternatively, you can install it from GitHub in one go:
-
-```r
-devtools::install_github("rmflight/visualizationQualityControl", quick = FALSE)
+remotes::install_github("moseleybioinformaticslab/visualizationQualityControl")
 ```
 
 ## Examples
@@ -48,28 +29,42 @@ devtools::install_github("rmflight/visualizationQualityControl", quick = FALSE)
 These examples show the primary functionality. We will apply the visualizations
 to a two group dataset. However, all of the functions are still applicable to datasets with more than two groups. The examples below are for a dataset where there has been a sample swapped
 between the two groups (i.e. there is a problem!). If you want to see how the 
-visualizations compare between a **good** dataset and a **bad** dataset, see the vignette.
+visualizations compare between a **good** dataset and a **bad** dataset, see the **quality_control** vignette.
 
-```{r example_data}
-library(visualizationQualityControl)
-data("grp_cor_data")
-exp_data <- grp_cor_data$data
-rownames(exp_data) <- paste0("f", seq(1, nrow(exp_data)))
-colnames(exp_data) <- paste0("s", seq(1, ncol(exp_data)))
-
-sample_info <- data.frame(id = colnames(exp_data), class = grp_cor_data$class)
-
-exp_data[, 5] <- grp_cor_data$data[, 19]
-exp_data[, 19] <- grp_cor_data$data[, 5]
-sample_classes <- sample_info$class
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.width = 8, fig.height = 5)
 ```
 
 
-### visqc_pca
+```{r example_data}
+library(visualizationQualityControl)
+library(ggplot2)
+data("grp_cor_data")
+exp_data = grp_cor_data$data
+rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
+colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
+
+sample_info = data.frame(id = colnames(exp_data), class = grp_cor_data$class)
+
+exp_data[, 5] = grp_cor_data$data[, 19]
+exp_data[, 19] = grp_cor_data$data[, 5]
+sample_classes = sample_info$class
+```
+
+
+### Visualize PCA Component Scores
 
 ```{r do_pca}
-pca_data <- prcomp(t(exp_data), center = TRUE)
-visqc_pca(pca_data, groups = sample_classes)
+pca_data = prcomp(t(exp_data), center = TRUE)
+pca_scores = as.data.frame(pca_data$x)
+pca_scores = cbind(pca_scores, sample_info)
+ggplot(pca_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
+```
+
+To see how much explained variance each PC has, you can calculate them:
+
+```{r show_variance}
+knitr::kable(visqc_score_contributions(pca_data$x))
 ```
 
 ### visqc_heatmap
@@ -77,23 +72,24 @@ visqc_pca(pca_data, groups = sample_classes)
 Calculate sample-sample correlations and reorder based on within class correlations
 
 ```{r correlation}
-data_cor <- pairwise_correlation(t(exp_data))
-data_order <- similarity_reorderbyclass(data_cor, sample_classes, transform = "sub_1")
+rownames(sample_info) = sample_info$sample
+data_cor = globally_it_weighted_pairwise_correlation(t(exp_data))
+data_order = similarity_reorderbyclass(data_cor$cor, sample_info[, "class", drop = FALSE], transform = "sub_1")
 ```
 
 And then generate a colormapping for the sample classes and plot the correlation heatmap.
 
 ```{r colormapandheatmap}
-data_legend <- generate_group_colors(2)
-names(data_legend) <- c("grp1", "grp2")
-row_data <- sample_info[, "class", drop = FALSE]
-row_annotation <- list(class = data_legend)
+data_legend = generate_group_colors(2)
+names(data_legend) = c("grp1", "grp2")
+row_data = sample_info[, "class", drop = FALSE]
+row_annotation = list(class = data_legend)
 
 library(viridis)
 library(circlize)
-colormap <- colorRamp2(seq(0.2, 1, length.out = 50), viridis::viridis(50))
+colormap = colorRamp2(seq(0.2, 1, length.out = 50), viridis::viridis(50))
 
-visqc_heatmap(data_cor, colormap, "Correlation", row_color_data = row_data,
+visqc_heatmap(data_cor$cor, colormap, "Correlation", row_color_data = row_data,
               row_color_list = row_annotation, col_color_data = row_data,
               col_color_list = row_annotation, row_order = data_order$indices,
               column_order = data_order$indices)
@@ -102,7 +98,7 @@ visqc_heatmap(data_cor, colormap, "Correlation", row_color_data = row_data,
 ### median_correlations
 
 ```{r median_correlations}
-data_medcor <- median_correlations(data_cor, sample_classes)
+data_medcor = median_correlations(data_cor$cor, sample_info$class)
 ggplot(data_medcor, aes(x = sample_id, y = med_cor)) + geom_point() + 
   facet_grid(. ~ sample_class, scales = "free") + ggtitle("Median Correlation")
 ```
@@ -110,7 +106,7 @@ ggplot(data_medcor, aes(x = sample_id, y = med_cor)) + geom_point() +
 ### outlier_fraction
 
 ```{r outlier_fraction}
-data_outlier <- outlier_fraction(t(exp_data), sample_classes)
+data_outlier = outlier_fraction(t(exp_data), sample_info$class)
 ggplot(data_outlier, aes(x = sample, y = frac)) + geom_point() + 
   facet_grid(. ~ class, scales = "free") + ggtitle("Outlier Fraction")
 ```
@@ -127,33 +123,30 @@ the correlations to account for missing data.
 Lets add some missingness to our data.
 
 ```{r}
-exp_data <- grp_cor_data$data
-rownames(exp_data) <- paste0("f", seq(1, nrow(exp_data)))
-colnames(exp_data) <- paste0("s", seq(1, ncol(exp_data)))
+exp_data = grp_cor_data$data
+rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
+colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
 ```
 
 ```{r add_random_missingness}
-make_na <- rep(FALSE, nrow(exp_data))
-s1_missing <- make_na
-s1_missing[sample(length(make_na), 20)] <- TRUE
-s2_missing <- make_na
-s2_missing[sample(which(!s1_missing), 20)] <- TRUE
+make_na = rep(FALSE, nrow(exp_data))
+s1_missing = make_na
+s1_missing[sample(length(make_na), 20)] = TRUE
+s2_missing = make_na
+s2_missing[sample(which(!s1_missing), 20)] = TRUE
 
-exp_data2[s1_missing, 1] <- NA
-exp_data2[s2_missing, 1] <- NA
+exp_data2 = exp_data
+exp_data2[s1_missing, 1] = NA
+exp_data2[s2_missing, 1] = NA
 ```
 
 ```{r cor_random_missingness}
-cor_random_missing <- pairwise_correlation(t(exp_data2))
+cor_random_missing = globally_it_weighted_pairwise_correlation(t(exp_data2))$cor
 cor_random_missing[1:4, 1:4]
 ```
-THere is a bug right here, s3 vs s4 should not be modified!
-Here you can see that the correlations for S1 and S2 have been knocked 0.9, 
-with their lowest correlations being with each 
-other, due to the random missingness.
 
 ```{r cor_random_missingness_noweight}
-cor_random_missing_nw <- pairwise_correlation(t(exp_data), weight = FALSE)$cor
+cor_random_missing_nw = globally_it_weighted_pairwise_correlation(t(exp_data))$cor
 cor_random_missing_nw[1:4, 1:4]
 ```
 
@@ -162,29 +155,17 @@ information, right? If the feature is missing in the same samples, that is
 worth something?
 
 ```{r cor_same_missingness}
-exp_data <- grp_cor_data$data
-rownames(exp_data) <- paste0("f", seq(1, nrow(exp_data)))
-colnames(exp_data) <- paste0("s", seq(1, ncol(exp_data)))
-exp_data[1:2, s1_missing] <- NA
+exp_data = grp_cor_data$data
+rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
+colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
+exp_data[s1_missing, 1:2] = NA
 
-cor_same_missing <- pairwise_correlation(t(exp_data))$cor
+cor_same_missing = globally_it_weighted_pairwise_correlation(t(exp_data))$cor
 cor_same_missing[1:4, 1:4]
 ```
 
 Here we can see that the correlations get dropped, but not as much as when it
 was random.
-
-## Open Vignette
-
-To open the vignette giving an example of examining data for quality control
-purposes, you should see the `quality_control` vignette using:
-
-```r
-vignette("quality_control", package = "visualizationQualityControl")
-```
-
-This will open the vignette in the help pane in `RStudio`, which is often what
-you want to happen.
 
 ## Fake Data Generation
 
@@ -195,73 +176,73 @@ function. It was generated by:
 library(fakeDataWithError)
 set.seed(1234)
 
-s1 <- runif(100, 0, 1)
-grp1 <- add_uniform_noise(10, s1, 0.1)
+s1 = runif(100, 0, 1)
+grp1 = add_uniform_noise(10, s1, 0.1)
 
-model_data <- data.frame(s1 = s1, s2 = grp1[, 1])
+model_data = data.frame(s1 = s1, s2 = grp1[, 1])
 
-lm_1 <- lm(s1 ~ s2, data = model_data)
+lm_1 = lm(s1 ~ s2, data = model_data)
 
-lm_1$coefficients[2] <- 0.5
+lm_1$coefficients[2] = 0.5
 
-s3 <- predict(lm_1)
-s4 <- add_uniform_noise(1, s3, 0.2)
+s3 = predict(lm_1)
+s4 = add_uniform_noise(1, s3, 0.2)
 
-grp2 <- add_uniform_noise(10, s4, 0.1)
+grp2 = add_uniform_noise(10, s4, 0.1)
 
-grp_class <- rep(c("grp1", "grp2"), each = 10)
+grp_class = rep(c("grp1", "grp2"), each = 10)
 
-grp_cor_data <- list(data = cbind(grp1, grp2), class = grp_class)
+grp_cor_data = list(data = cbind(grp1, grp2), class = grp_class)
 ```
 
 ```{r fakedata2, eval=FALSE}
 library(fakeDataWithError)
 set.seed(1234)
 
-n_point <- 1000
-n_rep <- 10
+n_point = 1000
+n_rep = 10
 
 # a nice log-normal distribution of points with points along the entire range
-simulated_data <- c(rlnorm(n_point / 2, meanlog = 1, sdlog = 1),
+simulated_data = c(rlnorm(n_point / 2, meanlog = 1, sdlog = 1),
                     runif(n_point / 2, 5, 100))
 
 # go to log to have decent correlations on the "transformed" data
-lsim1 <- log(simulated_data)
+lsim1 = log(simulated_data)
 
 # add some uniform noise to get lower than 1 correlations
-lgrp1 <- add_uniform_noise(n_rep, lsim1, .5)
+lgrp1 = add_uniform_noise(n_rep, lsim1, .5)
 
 # add some uniform noise to everything in normal space
-sim1_error <- add_uniform_noise(n_rep, simulated_data, 1, use_zero = TRUE)
+sim1_error = add_uniform_noise(n_rep, simulated_data, 1, use_zero = TRUE)
 # and generate the grp1 data in normal space
-ngrp1 <- exp(lgrp1) + sim1_error
+ngrp1 = exp(lgrp1) + sim1_error
 
 
 # do regression to generate some other data
-model_data <- data.frame(lsim1 = lsim1, lsim2 = lgrp1[, 1])
-lm_1 <- lm(lsim1 ~ lsim2, data = model_data)
+model_data = data.frame(lsim1 = lsim1, lsim2 = lgrp1[, 1])
+lm_1 = lm(lsim1 ~ lsim2, data = model_data)
 
 # reduce the correlation between them
-lm_1$coefficients[2] <- 0.5
-lsim3 <- predict(lm_1)
+lm_1$coefficients[2] = 0.5
+lsim3 = predict(lm_1)
 
 # and a bunch of error
-lsim4 <- add_uniform_noise(1, lsim3, 1.5)
+lsim4 = add_uniform_noise(1, lsim3, 1.5)
 
 # create group with added error to reduce correlation from 1
-lgrp2 <- add_uniform_noise(10, lsim4, .5)
+lgrp2 = add_uniform_noise(10, lsim4, .5)
 
 # add error in original space
-nsim4 <- exp(lsim4)
-sim4_error <- add_uniform_noise(10, nsim4, 1, use_zero = TRUE)
-ngrp2 <- exp(lgrp2) + sim4_error
+nsim4 = exp(lsim4)
+sim4_error = add_uniform_noise(10, nsim4, 1, use_zero = TRUE)
+ngrp2 = exp(lgrp2) + sim4_error
 
 # put all data together, and make negatives zero
-all_data <- cbind(ngrp1, ngrp2)
-all_data[(all_data < 0)] <- 0
+all_data = cbind(ngrp1, ngrp2)
+all_data[(all_data < 0)] = 0
 
-grp_class <- rep(c("grp1", "grp2"), each = 10)
+grp_class = rep(c("grp1", "grp2"), each = 10)
 
-grp_exp_data <- list(data = all_data, class = grp_class)
+grp_exp_data = list(data = all_data, class = grp_class)
 ```
 

@@ -1,10 +1,20 @@
-# 0.3.2
+# v 0.3.16
+
+* Removed requirement for `ggbiplot`, instead we added a function for calculating
+the variances of each of the PCs in the scores.
+
+* updated the vignette accordingly.
+
+* Now using `globally_it_weighted_correlation` and `locally_it_weighted_correlation`
+instead of `pairwise_correlation`.
+
+# v 0.3.2
 
 * `keep_non_zero_percentage` gains an argument, `all`, that defaults to `FALSE`
 to keep previous behavior. Setting `all = TRUE` means that the value must be
 non-zero in at least X% of **all** of the sample classes.
 
-# 0.3.0
+# v 0.3.0
 
 * `median_correlations` gains a new argument, `between_classes` to generate the
 median values to samples in other classes. This causes the appearance of two
