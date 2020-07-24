@@ -1,11 +1,16 @@
+---
+title: "Visualization Quality Control"
+author: "Robert M Flight"
+date: "`r Sys.time()`"
+output: md_document
+---
+
 # Visualization Quality Control
 
 Set of useful functions for calculating various measures from data and visualizing them.
 
 Takes a lot of inspiration from [Gierlinski et al., 2015](https://dx.doi.org/10.1093/bioinformatics/btv425), especially the `median_correlation` and
 `outlier_fraction` functions.
-
-This **readme** is documenting functionality as of **`r substr(git2r::branch_target(git2r::head(git2r::repository(getwd()))), 1, 8)`**.
 
 ## Installation
 
