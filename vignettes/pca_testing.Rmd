@@ -1,0 +1,120 @@
+---
+title: "PCA Testing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PCA Testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{visualizationQualityControl, ggplot2, patchwork}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r setup}
+library(visualizationQualityControl)
+library(ggplot2)
+library(patchwork)
+```
+
+## Purpose
+
+Principal components analysis (PCA) and related methods are very useful data decomposition methods.
+However, when one has hundreds or thousands of variables as many -omics methods do, any information beyond just examining PC1 and PC2 is often lost.
+
+However, there may be opportunities to examine the association of sample scores on each principal component to see if they are associated with any particular sample variable of interest.
+Following that, we can test the loadings of the variables on that PC to see if any are significantly associated with that PC.
+These variables may describe something important about the data that doesn't just come from statistically significant differential differences.
+
+## Data
+
+The data we will use is completely artificial, in that the differences are extreme and completely made up.
+We have 20 samples, 10 in each class, and 1000 variables.
+
+```{r load_data}
+data("grp_exp_data")
+data_matrix = grp_exp_data$data
+rownames(data_matrix) = paste0("f", seq(1, nrow(data_matrix)))
+colnames(data_matrix) = paste0("s", seq(1, ncol(data_matrix)))
+
+sample_info <- data.frame(id = colnames(data_matrix), class = grp_exp_data$class)
+
+dim(data_matrix)
+```
+
+This data has a proportional variance structure, where the variance increases with the value.
+We can see this by examining a plot of two columns in raw and log-transformed values.
+
+```{r check_proportional}
+data_df = as.data.frame(data_matrix)
+log_df = log1p(data_df)
+
+raw_plot = ggplot(data_df, aes(x = s1, y = s2)) + geom_point()
+log_plot = ggplot(log_df, aes(x = s1, y = s2)) + geom_point()
+raw_plot + log_plot
+```
+
+## PCA
+
+We will use the log-transformed values, because PCA doesn't do well with proportional variance data.
+
+```{r do_pca}
+log_pca = prcomp(t(log_df), center = TRUE)
+```
+
+We can summarize the variances of each principal component.
+
+```{r variances}
+log_variances = visqc_score_contributions(log_pca$x)
+knitr::kable(log_variances)
+```
+
+And we can add the scores to the sample info so we can plot them by sample type.
+
+```{r add_scores}
+log_scores = cbind(as.data.frame(log_pca$x), sample_info)
+ggplot(log_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
+```
+
+Great, our `class` variable is definitely associated with PC1.
+What if there was some variable we were interested in knowing if there was a PC associated with it?
+
+## Test PCs
+
+The only one here should be PC1, but lets go through and test them anyway.
+
+```{r test_pcs}
+pc_stats = visqc_test_pca_scores(log_pca$x, sample_info, "class")
+
+knitr::kable(pc_stats)
+```
+
+As this is an artificial data-set, we expect that only PC1 is going to come back with something significant.
+We can double check the ANOVA results by plotting the scores in one-dimension as well.
+
+```{r plot_single}
+ggplot(log_scores, aes(x = PC1, fill = class)) + geom_histogram(bins = 30, position = "identity")
+```
+
+Again, this is a contrived example, so things separate really, really well.
+
+## Test Loadings
+
+We can also run a statistical test on the loadings for each variable on each PC.
+The way this works is to construct a **null** distribution of loadings from all of the other variables in all of the other PCs outside of the current one being tested.
+We will test both PC1 and PC2 here, because we don't really expect that there should be that many on PC2.
+Note that for a large number of variables, this will take some time, because a slightly different null is created for each variable by excluding that variables loadings in the other PCs.
+
+```{r test_loadings}
+loading_sig = visqc_test_pca_loadings(log_pca$rotation, test_columns = c("PC1", "PC2"), progress = FALSE)
+```
+
+```{r n_sig}
+purrr::map_dbl(loading_sig, ~ sum(.x$p.value <= 0.05))
+```
