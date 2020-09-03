@@ -33,8 +33,8 @@ test_that("adding missing data works", {
   # should be less than they were before.
   expect_lt(data_cor2$cor[1,2], data_cor$cor[1,2])
   expect_equal_to_reference(data_cor2, "data_cor2")
-  expect_equal(data_cor2$cor[1,1], 0.8)
-  expect_equal(data_cor2$info[1,1], 0.8)
+  expect_equal(data_cor2$cor[1,1], 1)
+  expect_equal(data_cor2$keep[1,1], FALSE)
   # we didn't add any missing data to the other samples, so their correlation
   # should remain unchanged.
   expect_equal(data_cor2$cor[3:ncol(exp_data),3:ncol(exp_data)], data_cor$cor[3:ncol(exp_data),3:ncol(exp_data)])
