@@ -40,6 +40,9 @@ kendallt = function(x, y, remove_both_na = FALSE){
   
   sum_both_na = 0
   
+  na_concordant_pair = 0
+  na_discordant_pair = 0
+  
   
   if (sum(na_pairs) > 0) {
     x_na = x_pairs[na_pairs, ]
@@ -83,10 +86,7 @@ kendallt = function(x, y, remove_both_na = FALSE){
       }
       na_concordant_pair = sum(na_sign == 1)
       na_discordant_pair = sum(na_sign == -1)
-    } else {
-      na_concordant_pair = 0
-      na_discordant_pair = 0
-    }
+    } 
     
     if (remove_both_na) {
       sum_both_na = sum(both_na) 
