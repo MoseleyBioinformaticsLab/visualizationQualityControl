@@ -29,7 +29,7 @@ kendallt = function(x, y, perspective = "local"){
   if (length(x) != length(y)) {
     stop("x and y vector lengths are not the same!")
   }
-  pairpoints = combn(length(x), 2)
+  #pairpoints = combn(length(x), 2)
   
   # for local perspective
   # number of comparisons should be changed to (n * (n - 1)), this lets us modify n
@@ -49,90 +49,71 @@ kendallt = function(x, y, perspective = "local"){
   
   # creates two matrices to hold the pairwise data in columnar format
   # x_i in column 1, x_j in column 2, and same for y
-  x_pairs = cbind(x[pairpoints[1, ]], x[pairpoints[2, ]])
-  y_pairs = cbind(y[pairpoints[1, ]], y[pairpoints[2, ]])
+  # FIX THIS!!! It turns out NA's are bad for combn, need to use indices first and then make it
+  x_pairs = t(combn(x, 2))
+  y_pairs = t(combn(y, 2))
   
-  na_pairs = rowSums(is.na(x_pairs) > 0) | rowSums(is.na(y_pairs) > 0)
+  # this does not currently test for ties, those should be added using the 
+  # Tau-B 
+  # https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Tau-b
   
-  basic_x_sign = sign(x_pairs[!na_pairs, 1] - x_pairs[!na_pairs, 2])
-  basic_y_sign = sign(y_pairs[!na_pairs, 1] - y_pairs[!na_pairs, 2])
-  
-  basic_concordant_pair = sum((basic_x_sign * basic_y_sign) > 0)
-  basic_discordant_pair = sum((basic_x_sign * basic_y_sign) < 0)
-  
-  na_concordant_pair = 0
-  na_discordant_pair = 0
-  
-  
-  if (sum(na_pairs) > 0) {
-    x_na = x_pairs[na_pairs, ]
-    y_na = y_pairs[na_pairs, ]
-    
-    both_x_na = (rowSums(is.na(x_na)) == 2)
-    n_both_x_na = sum(both_x_na)
-    if (n_both_x_na == 0) {
-      n_both_x_na = 1
-    }
-    both_y_na = (rowSums(is.na(y_na)) == 2)
-    n_both_y_na = sum(both_y_na)
-    if (n_both_y_na == 0) {
-      n_both_y_na = 1
-    }
-    
-    both_na = both_x_na | both_y_na
-    n_both_na = sum(both_na)
-    
-    if (perspective %in% "local") {
-      n_pairs = n_pairs - n_both_na
-    }
-    
-    x_na = x_na[!both_na, ]
-    y_na = y_na[!both_na, ]
-    
-    if (nrow(x_na) > 0) {
-      na_sign = rep(NA, nrow(x_na))
-      
-      # instead of row-wise, can we just do a great big | like this
-      # (! is_na(x_i) and ! is_na(x_j) and x_i > x_j and ! is_na(y_i) and ! is_na(y_j) and y_i > y_j) | 
-      
-      for (irow in seq(1, nrow(x_na))) {
-        #message(irow)
-        if (is.na(x_na[irow, 1]) && is.na(y_na[irow, 1])) {
-          na_sign[irow] = 1
-        } else if (is.na(x_na[irow, 1]) && is.na(y_na[irow, 2])) {
-          na_sign[irow] = -1
-        } else if (is.na(x_na[irow, 2]) && is.na(y_na[irow, 1])) {
-          na_sign[irow] = -1
-        } else if (is.na(x_na[irow, 2]) && is.na(y_na[irow, 2])) {
-          na_sign[irow] = 1
-        } else if ((x_na[irow, 1] < x_na[irow, 2]) && (is.na(y_na[irow, 1]))) {
-          na_sign[irow] = 1
-        } else if ((x_na[irow, 1] < x_na[irow, 2]) && (is.na(y_na[irow, 2]))) {
-          na_sign[irow] = -1
-        } else if ((x_na[irow, 2] < x_na[irow, 1]) && (is.na(y_na[irow, 1]))) {
-          na_sign[irow] = -1
-        } else if ((x_na[irow, 2] < x_na[irow, 1]) && (is.na(y_na[irow, 2]))) {
-          na_sign[irow] = 1
-        } else if ((y_na[irow, 1] < y_na[irow, 2]) && (is.na(x_na[irow, 1]))) {
-          na_sign[irow] = 1
-        } else if ((y_na[irow, 1] < y_na[irow, 2]) && (is.na(x_na[irow, 2]))) {
-          na_sign[irow] = -1
-        } else if ((y_na[irow, 2] < y_na[irow, 1]) && (is.na(x_na[irow, 1]))) {
-          na_sign[irow] = -1
-        } else if ((y_na[irow, 2] < y_na[irow, 1]) && (is.na(x_na[irow, 2]))) {
-          na_sign[irow] = 1
-        }
-      }
-      na_concordant_pair = sum(na_sign == 1)
-      na_discordant_pair = sum(na_sign == -1)
-    } 
-    
-  } 
+
+  # instead of row-wise, can we just do a great big | like this
+  # xi > xj and yi > yj                ## 1
+  # xi < xj and yi < yj                ## 2
+  # xi > xj and yi and not yj          ## 3
+  # xi < xj and not yi and yj          ## 4
+  # xi and not xj and yi > yj          ## 5
+  # not xi and xj and yi < yj          ## 6
+  # xi and not xj and yi and not yj    ## 7
+  # not xi and xj and not yi and yj    ## 8
   
   
-  sum_concordant = basic_concordant_pair + na_concordant_pair
-  sum_discordant = basic_discordant_pair + na_discordant_pair
+  concordant_pairs = 
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |     #3 1
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |   ## 2
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                              ## 3
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |                              ## 4
+    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |                              ## 5
+    (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |                              ## 6
+    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                                                         ## 7
+    (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]))
   
-  k_tau = (sum_concordant - sum_discordant) / n_pairs
+  # xi > xj and yi < yj                 ## 1
+  # xi < xj and yi > yj                 ## 2
+  # xi > xj and not yi and yj           ## 3
+  # xi < xj and yi and not yj           ## 4
+  # xi and not xj and yi < yj           ## 5
+  # not xi and xj and yi > yj           ## 6
+  # xi and not xj and not yi and yj     ## 7
+  # not xi and xj and yi and not yj     ## 8
+  
+  discordant_pairs = 
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |
+    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2])  & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |
+    (is.na(x_pairs[, 1])  & !is.na(x_pairs[, 2])  & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |
+    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2])  & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |
+    (is.na(x_pairs[, 1])  & !is.na(x_pairs[, 2])  & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2]))
+  
+  x_ties = (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] == x_pairs[, 2]) & (!is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] != y_pairs[, 2]))) |
+    (is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] != y_pairs[, 2]))
+  
+  y_ties = (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] != x_pairs[, 2]) & (!is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] == y_pairs[, 2]))) |
+    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] != x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2]))
+  
+  both_ties = (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] == x_pairs[, 2]) & (!is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] == y_pairs[, 2]))) |
+    (is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2]))
+
+  
+  sum_concordant = sum(concordant_pairs)
+  sum_discordant = sum(discordant_pairs)
+  sum_x_ties = sum(x_ties)
+  sum_y_ties = sum(y_ties)
+  log_multiplier = log(sum_concordant + sum_discordant + sum_x_ties) + log(sum_concordant + sum_discordant + sum_y_ties)
+  log_tau = log((sum_concordant - sum_discordant)^2) - log_multiplier
+  k_tau = exp(log_tau)
   return(k_tau)
 }

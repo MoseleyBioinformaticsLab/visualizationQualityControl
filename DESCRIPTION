@@ -1,10 +1,10 @@
 Package: visualizationQualityControl
-Version: 0.3.27
+Version: 0.3.28
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.
 Author: Robert M Flight <rflight79@gmail.com>
-Date: 2020-09-04
+Date: 2020-09-05
 Maintainer: Robert M Flight <rflight79@gmail.com>
 Depends: R (>= 3.1.1)
 biocViews:
