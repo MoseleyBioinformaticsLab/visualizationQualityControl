@@ -49,9 +49,11 @@ kendallt = function(x, y, perspective = "local"){
   
   # creates two matrices to hold the pairwise data in columnar format
   # x_i in column 1, x_j in column 2, and same for y
-  # FIX THIS!!! It turns out NA's are bad for combn, need to use indices first and then make it
-  x_pairs = t(combn(x, 2))
-  y_pairs = t(combn(y, 2))
+  x_index = t(combn(length(x), 2))
+  y_index = t(combn(length(y), 2))
+  
+  x_pairs = matrix(x[c(x_index[, 1], x_index[, 2])], ncol = 2, byrow = FALSE)
+  y_pairs = matrix(y[c(y_index[, 1], y_index[, 2])], ncol = 2, byrow = FALSE)
   
   # this does not currently test for ties, those should be added using the 
   # Tau-B 
