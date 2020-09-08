@@ -36,13 +36,14 @@ kendallt = function(x, y, perspective = "local"){
   # when we have matching NA's in both x and y
   n = length(x)
   
-  matching_na = (is.na(x) & is.na(y))
-  n_matching_na = sum(matching_na)
-  x = x[!matching_na]
-  y = y[!matching_na]
-  
+  # if we don't do this, then they will get counted in the concordant pairs when they shouldn't
+  # in the local version.
+  # Note, we actually want to see these for the "global" version
   if (perspective %in% "local") {
-    n = length(x) - (n_matching_na)
+    matching_na = (is.na(x) & is.na(y))
+    n_matching_na = sum(matching_na)
+    x = x[!matching_na]
+    y = y[!matching_na]
   }
   
   n_pairs = (n * (n - 1)) / 2
@@ -108,12 +109,27 @@ kendallt = function(x, y, perspective = "local"){
   
   both_ties = (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] == x_pairs[, 2]) & (!is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] == y_pairs[, 2]))) |
     (is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2]))
+  
+  x_na_ties = is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & (!is.na(y_pairs[, 1]) | !is.na(y_pairs[, 2]))
+  sum_x_na_ties = sum(x_na_ties)
+  y_na_ties = (!is.na(x_pairs[, 1]) | !is.na(x_pairs[, 2])) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2]) 
+  sum_y_na_ties = sum(y_na_ties)
+  
+  all_na = is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])
+  sum_all_na = sum(all_na)
 
   
   sum_concordant = sum(concordant_pairs)
   sum_discordant = sum(discordant_pairs)
-  sum_x_ties = sum(x_ties)
-  sum_y_ties = sum(y_ties)
+  
+  if (perspective == "global") {
+    sum_x_ties = sum(x_ties) + sum_x_na_ties
+    sum_y_ties = sum(y_ties) + sum_y_na_ties
+  } else {
+    sum_x_ties = sum(x_ties)
+    sum_y_ties = sum(y_ties)
+  }
+  
   log_multiplier = log(sum_concordant + sum_discordant + sum_x_ties) + log(sum_concordant + sum_discordant + sum_y_ties)
   log_tau = log((sum_concordant - sum_discordant)^2) - log_multiplier
   k_tau = exp(log_tau)
