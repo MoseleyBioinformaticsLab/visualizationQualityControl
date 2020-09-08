@@ -83,7 +83,7 @@ kendallt = function(x, y, perspective = "local"){
   # xi and not xj and not yi and yj     ## 7
   # not xi and xj and yi and not yj     ## 8
   
-  if (perspecitive == "global") {
+  if (perspective == "global") {
     discordant_pairs = 
       (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |
       (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |
@@ -178,15 +178,26 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
   
   exclude_loc <- na_loc | zero_loc | inf_loc
   
+  exclude_data = data_matrix
+  exclude_data[exclude_loc] = NA
   # set everything to NA and let R take care of it
   
+  if (ncol(data_matrix) > 2) {
+    prog_bar = knitrProgressBar::progress_estimated(ncol(data_matrix) * (ncol(data_matrix) - 1)/ 2)
+  } else {
+    prog_bar = NULL
+  }
+  
   cor_matrix = matrix(NA, nrow = ncol(data_matrix), ncol = ncol(data_matrix))
+  ntotal = 0
   for (icol in seq(1, ncol(data_matrix) - 1)) {
-    for (jcol in seq(2, ncol(data_matrix))) {
+    for (jcol in seq(icol+1, ncol(data_matrix))) {
       cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(data_matrix[, icol], data_matrix[, jcol], perspective = perspective)
+      knitrProgressBar::update_progress(prog_bar)
+      # ntotal = ntotal + 1
+      # message(ntotal)
     }
   }
-  calc_cor <- cor(data_matrix, use = use, method = method)
   
-  return(list(cor = calc_cor, keep = t(!exclude_loc)))
+  return(list(cor = cor_matrix, keep = t(!exclude_loc)))
 }
