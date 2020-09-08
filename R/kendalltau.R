@@ -127,3 +127,40 @@ kendallt = function(x, y, perspective = "local"){
   k_tau = exp(log_tau)
   return(k_tau)
 }
+
+pairwise_kt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE, 
+                                    exclude_0 = TRUE, zero_value = min(data_matrix, na.rm = TRUE), perspective = "local"){
+  
+  # assume row-wise (because that is what the description states), so need to transpose
+  # because `cor` actually does things columnwise.
+  data_matrix <- t(data_matrix)
+  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
+  inf_loc <- na_loc
+  zero_loc <- na_loc
+  
+  if (exclude_na) {
+    na_loc <- is.na(data_matrix)
+  }
+  
+  if (exclude_inf) {
+    inf_loc <- is.infinite(data_matrix)
+  }
+  
+  if (exclude_0) {
+    zero_loc <- data_matrix == zero_value
+  }
+  
+  exclude_loc <- na_loc | zero_loc | inf_loc
+  
+  # set everything to NA and let R take care of it
+  
+  cor_matrix = matrix(NA, nrow = ncol(data_matrix), ncol = ncol(data_matrix))
+  for (icol in seq(1, ncol(data_matrix) - 1)) {
+    for (jcol in seq(2, ncol(data_matrix))) {
+      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(data_matrix[, icol], data_matrix[, jcol], perspective = perspective)
+    }
+  }
+  calc_cor <- cor(data_matrix, use = use, method = method)
+  
+  return(list(cor = calc_cor, keep = t(!exclude_loc)))
+}
