@@ -128,8 +128,23 @@ kendallt = function(x, y, perspective = "local"){
   return(k_tau)
 }
 
-pairwise_kt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE, 
-                                    exclude_0 = TRUE, zero_value = min(data_matrix, na.rm = TRUE), perspective = "local"){
+#' information-theoretic kendall tau
+#' 
+#' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+#' all samples.
+#' 
+#' @param data_matrix samples are rows, features are columns
+#' @param exclude_na should NA values be treated as NA?
+#' @param exclude_inf should Inf values be treated as NA?
+#' @param exclude_0 should zero values be treated as NA?
+#' @param zero_value what is the actual zero value?
+#' @param perspective how to treat missing data in denominator and ties, see details
+#' 
+#' @return numeric
+#' @export
+#' 
+visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE, 
+                                    exclude_0 = TRUE, zero_value = 0, perspective = "local"){
   
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
