@@ -46,8 +46,6 @@ kendallt = function(x, y, perspective = "local"){
     y = y[!matching_na]
   }
   
-  n_pairs = (n * (n - 1)) / 2
-  
   # creates two matrices to hold the pairwise data in columnar format
   # x_i in column 1, x_j in column 2, and same for y
   x_index = t(combn(length(x), 2))
@@ -56,12 +54,6 @@ kendallt = function(x, y, perspective = "local"){
   x_pairs = matrix(x[c(x_index[, 1], x_index[, 2])], ncol = 2, byrow = FALSE)
   y_pairs = matrix(y[c(y_index[, 1], y_index[, 2])], ncol = 2, byrow = FALSE)
   
-  # this does not currently test for ties, those should be added using the 
-  # Tau-B 
-  # https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Tau-b
-  
-
-  # instead of row-wise, can we just do a great big | like this
   # xi > xj and yi > yj                ## 1
   # xi < xj and yi < yj                ## 2
   # xi > xj and yi and not yj          ## 3
@@ -116,15 +108,15 @@ kendallt = function(x, y, perspective = "local"){
   sum_y_na_ties = sum(y_na_ties)
   
   all_na = is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])
-  sum_all_na = sum(all_na)
+  sum_all_na = sum(all_na) / 2
 
   
   sum_concordant = sum(concordant_pairs)
   sum_discordant = sum(discordant_pairs)
   
   if (perspective == "global") {
-    sum_x_ties = sum(x_ties) + sum_x_na_ties
-    sum_y_ties = sum(y_ties) + sum_y_na_ties
+    sum_x_ties = sum(x_ties) + sum_x_na_ties + sum_all_na
+    sum_y_ties = sum(y_ties) + sum_y_na_ties + sum_all_na
   } else {
     sum_x_ties = sum(x_ties)
     sum_y_ties = sum(y_ties)
