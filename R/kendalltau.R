@@ -142,33 +142,34 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
     sum_y_ties = sum(y_ties)
   }
   
-  if (sum_concordant == sum_discordant) {
-    k_tau = 0
-  } else {
-    log_multiplier = log(sum_concordant + sum_discordant + sum_x_ties) + log(sum_concordant + sum_discordant + sum_y_ties)
-    log_tau = log((sum_concordant - sum_discordant)^2) - log_multiplier
-    k_tau = sqrt(exp(log_tau))
-    if (sign(sum_concordant - sum_discordant) == -1) {
-      k_tau = k_tau * -1
-    }
-  }
-  
+  k_numerator = sum_discordant + sum_concordant
+  k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
+  k_tau = k_numerator / k_denominator
+
   if (output == "simple") {
     return(k_tau)
   } else {
     out_data = data.frame(variable = c("n_entry",
                                      "x_ties",
                                      "x_na_ties",
+                                     "x_na",
                                      "y_ties",
                                      "y_na_ties",
+                                     "y_na",
                                      "half_sum_na_ties",
+                                     "sum_numerator",
+                                     "sum_denominator",
                                      "k_tau"), 
                         value = c(length(x),
                                   sum(x_ties),
                                   sum_x_na_ties,
+                                  sum(is.na(x)),
                                   sum(y_ties),
                                   sum_y_na_ties,
+                                  sum(is.na(y)),
                                   half_sum_na_ties,
+                                  k_numerator,
+                                  k_denominator,
                                   k_tau))
     return(out_data)
   }
