@@ -142,12 +142,17 @@ kendallt = function(x, y, perspective = "local"){
     sum_y_ties = sum(y_ties)
   }
   
-  log_multiplier = log(sum_concordant + sum_discordant + sum_x_ties) + log(sum_concordant + sum_discordant + sum_y_ties)
-  log_tau = log((sum_concordant - sum_discordant)^2) - log_multiplier
-  k_tau = sqrt(exp(log_tau))
-  if (sign(sum_concordant - sum_discordant) == -1) {
-    k_tau = k_tau * -1
+  if (sum_concordant == sum_discordant) {
+    k_tau = 0
+  } else {
+    log_multiplier = log(sum_concordant + sum_discordant + sum_x_ties) + log(sum_concordant + sum_discordant + sum_y_ties)
+    log_tau = log((sum_concordant - sum_discordant)^2) - log_multiplier
+    k_tau = sqrt(exp(log_tau))
+    if (sign(sum_concordant - sum_discordant) == -1) {
+      k_tau = k_tau * -1
+    }
   }
+  
   return(k_tau)
 }
 
