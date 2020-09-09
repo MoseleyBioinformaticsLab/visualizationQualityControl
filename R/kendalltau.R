@@ -25,7 +25,7 @@
 #' kendallt(x, y)
 #' kendallt(x, y2, "global")
 #' kendallt(x, y2)
-kendallt = function(x, y, perspective = "local"){
+kendallt = function(x, y, perspective = "local", output = "simple"){
   if (length(x) != length(y)) {
     stop("x and y vector lengths are not the same!")
   }
@@ -128,15 +128,15 @@ kendallt = function(x, y, perspective = "local"){
   sum_y_na_ties = sum(y_na_ties)
   
   all_na = is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])
-  sum_all_na = sum(all_na) / 2
+  half_sum_na_ties = sum(all_na) / 2
 
   
   sum_concordant = sum(concordant_pairs)
   sum_discordant = sum(discordant_pairs)
   
   if (perspective == "global") {
-    sum_x_ties = sum(x_ties) + sum_x_na_ties + sum_all_na
-    sum_y_ties = sum(y_ties) + sum_y_na_ties + sum_all_na
+    sum_x_ties = sum(x_ties) + sum_x_na_ties + half_sum_na_ties
+    sum_y_ties = sum(y_ties) + sum_y_na_ties + half_sum_na_ties
   } else {
     sum_x_ties = sum(x_ties)
     sum_y_ties = sum(y_ties)
@@ -153,7 +153,26 @@ kendallt = function(x, y, perspective = "local"){
     }
   }
   
-  return(k_tau)
+  if (output == "simple") {
+    return(k_tau)
+  } else {
+    out_data = data.frame(variable = c("n_entry",
+                                     "x_ties",
+                                     "x_na_ties",
+                                     "y_ties",
+                                     "y_na_ties",
+                                     "half_sum_na_ties",
+                                     "k_tau"), 
+                        value = c(length(x),
+                                  sum(x_ties),
+                                  sum_x_na_ties,
+                                  sum(y_ties),
+                                  sum_y_na_ties,
+                                  half_sum_na_ties,
+                                  k_tau))
+    return(out_data)
+  }
+  
 }
 
 #' information-theoretic kendall tau
