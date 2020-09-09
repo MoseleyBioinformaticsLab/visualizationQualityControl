@@ -63,16 +63,29 @@ kendallt = function(x, y, perspective = "local"){
   # xi and not xj and yi and not yj    ## 7
   # not xi and xj and not yi and yj    ## 8
   
+  if (perspective == "global") {
+    concordant_pairs = 
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |     #3 1
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |   ## 2
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                              ## 3
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |                              ## 4
+      (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |                              ## 5
+      (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |                              ## 6
+      (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                                                         ## 7
+      (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]))
+    
+  } else {
+    concordant_pairs = 
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |     #3 1
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |   ## 2
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                              ## 3
+      (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |                              ## 4
+      (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |                              ## 5
+      (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) 
+    
+  }
   
-  concordant_pairs = 
-    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |     #3 1
-    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |   ## 2
-    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] > x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                              ## 3
-    (!is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & (x_pairs[, 1] < x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2])) |                              ## 4
-    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] > y_pairs[, 2])) |                              ## 5
-    (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]) & (y_pairs[, 1] < y_pairs[, 2])) |                              ## 6
-    (!is.na(x_pairs[, 1]) & is.na(x_pairs[, 2]) & !is.na(y_pairs[, 1]) & is.na(y_pairs[, 2])) |                                                         ## 7
-    (is.na(x_pairs[, 1]) & !is.na(x_pairs[, 2]) & is.na(y_pairs[, 1]) & !is.na(y_pairs[, 2]))
+  
   
   # xi > xj and yi < yj                 ## 1
   # xi < xj and yi > yj                 ## 2
