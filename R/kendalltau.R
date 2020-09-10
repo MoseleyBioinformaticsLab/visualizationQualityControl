@@ -142,7 +142,7 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
     sum_y_ties = sum(y_ties)
   }
   
-  k_numerator = sum_discordant + sum_concordant
+  k_numerator = sum_concordant - sum_discordant
   k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
   k_tau = k_numerator / k_denominator
 
