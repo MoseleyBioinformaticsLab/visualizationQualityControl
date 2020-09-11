@@ -190,12 +190,14 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @param exclude_0 should zero values be treated as NA?
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
+#' @param scale_max should everything be scaled compared to the maximum correlation?
 #' 
 #' @return numeric
 #' @export
 #' 
 visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE, 
-                                    exclude_0 = TRUE, zero_value = 0, perspective = "local"){
+                                    exclude_0 = TRUE, zero_value = 0, perspective = "local",
+                             scale_max = TRUE){
   
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
@@ -223,15 +225,15 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
   # set everything to NA and let R take care of it
   
   if (ncol(data_matrix) > 2) {
-    prog_bar = knitrProgressBar::progress_estimated(ncol(data_matrix) * (ncol(data_matrix) - 1)/ 2)
+    prog_bar = knitrProgressBar::progress_estimated(ncol(data_matrix) * (ncol(data_matrix))/ 2)
   } else {
     prog_bar = NULL
   }
   
   cor_matrix = matrix(NA, nrow = ncol(data_matrix), ncol = ncol(data_matrix))
   ntotal = 0
-  for (icol in seq(1, ncol(data_matrix) - 1)) {
-    for (jcol in seq(icol+1, ncol(data_matrix))) {
+  for (icol in seq(1, ncol(data_matrix))) {
+    for (jcol in seq(icol, ncol(data_matrix))) {
       cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(data_matrix[, icol], data_matrix[, jcol], perspective = perspective)
       knitrProgressBar::update_progress(prog_bar)
       # ntotal = ntotal + 1
@@ -239,5 +241,21 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
     }
   }
   
-  return(list(cor = cor_matrix, keep = t(!exclude_loc)))
+  # calculate the max-cor value for use in scaling across multiple comparisons
+  n_observations = nrow(cor_matrix)
+  n_na = sort(rowSums(exclude_data))
+  m_value = floor(sum(n_na[1:2]) / 2)
+  n_m = n_observations - m_value
+  max_cor_denominator = choose(n_m, 2) + n_observations * m_value
+  max_cor_numerator = n_m + n_observations * m_value + choose(m_value, 2)
+  max_cor = max_cor_denominator / max_cor_numerator
+  
+  if (scale_max) {
+    out_matrix = cor_matrix / max_cor
+  } else {
+    out_matrix = cor_matrix
+  }
+  
+  
+  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
 }
