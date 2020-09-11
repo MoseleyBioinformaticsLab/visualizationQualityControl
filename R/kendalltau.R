@@ -46,6 +46,9 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
     y = y[!matching_na]
   }
   
+  if (length(x) < 2) {
+    return(NA)
+  }
   # creates two matrices to hold the pairwise data in columnar format
   # x_i in column 1, x_j in column 2, and same for y
   x_index = t(combn(length(x), 2))
