@@ -191,13 +191,19 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
+#' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
 #' @return numeric
 #' @export
 #' 
-visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE, 
-                                    exclude_0 = TRUE, zero_value = 0, perspective = "local",
-                             scale_max = TRUE){
+visqc_it_kendallt = function(data_matrix, 
+                             exclude_na = TRUE, 
+                             exclude_inf = TRUE, 
+                             exclude_0 = TRUE, 
+                             zero_value = 0, 
+                             perspective = "local",
+                             scale_max = TRUE,
+                             diag_good = TRUE){
   
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
@@ -225,16 +231,16 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
   # set everything to NA and let R take care of it
   
   if (ncol(data_matrix) > 2) {
-    prog_bar = knitrProgressBar::progress_estimated(ncol(data_matrix) * (ncol(data_matrix))/ 2)
+    prog_bar = knitrProgressBar::progress_estimated(ncol(exclude_data) * (ncol(exclude_data))/ 2)
   } else {
     prog_bar = NULL
   }
   
-  cor_matrix = matrix(NA, nrow = ncol(data_matrix), ncol = ncol(data_matrix))
+  cor_matrix = matrix(NA, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
   ntotal = 0
-  for (icol in seq(1, ncol(data_matrix))) {
-    for (jcol in seq(icol, ncol(data_matrix))) {
-      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(data_matrix[, icol], data_matrix[, jcol], perspective = perspective)
+  for (icol in seq(1, ncol(exclude_data))) {
+    for (jcol in seq(icol, ncol(exclude_data))) {
+      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
       knitrProgressBar::update_progress(prog_bar)
       # ntotal = ntotal + 1
       # message(ntotal)
@@ -242,12 +248,12 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
   }
   
   # calculate the max-cor value for use in scaling across multiple comparisons
-  n_observations = nrow(cor_matrix)
-  n_na = sort(rowSums(exclude_data))
+  n_observations = nrow(exclude_data)
+  n_na = sort(colSums(exclude_loc))
   m_value = floor(sum(n_na[1:2]) / 2)
   n_m = n_observations - m_value
   max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  max_cor_numerator = n_m + n_observations * m_value + choose(m_value, 2)
+  max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
   max_cor = max_cor_denominator / max_cor_numerator
   
   if (scale_max) {
@@ -256,6 +262,10 @@ visqc_it_kendallt = function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
     out_matrix = cor_matrix
   }
   
+  if (diag_good) {
+    n_good = colSums(!exclude_loc)
+    diag(out_matrix) = n_good / max(n_good)
+  }
   
   return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
 }
