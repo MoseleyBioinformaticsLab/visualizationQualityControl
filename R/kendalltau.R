@@ -160,6 +160,8 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
                                      "y_na_ties",
                                      "y_na",
                                      "half_sum_na_ties",
+                                     "sum_concordant",
+                                     "sum_discordant",
                                      "sum_numerator",
                                      "sum_denominator",
                                      "k_tau"), 
@@ -171,6 +173,8 @@ kendallt = function(x, y, perspective = "local", output = "simple"){
                                   sum_y_na_ties,
                                   sum(is.na(y)),
                                   half_sum_na_ties,
+                                  sum_concordant,
+                                  sum_discordant,
                                   k_numerator,
                                   k_denominator,
                                   k_tau))
