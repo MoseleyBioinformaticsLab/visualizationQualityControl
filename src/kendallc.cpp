@@ -2,8 +2,17 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+//' Calculates it-kendall-tau
+//' 
+//' @param x numeric vector
+//' @param y numeric vector
+//' @param perspective should we consider the "local" or "global" perspective?
+//' 
+//' @importFrom Rcpp sourceCpp
+//' @name kendallc
+//' @return kendall tau correlation
 // [[Rcpp::export]]
-double kendallc(NumericVector x, NumericVector y, String perspective) {
+double kendallc(NumericVector x, NumericVector y, String perspective = "local") {
   
   int sum_concordant = 0;
   int sum_discordant = 0;

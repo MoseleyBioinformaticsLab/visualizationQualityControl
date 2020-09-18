@@ -10,7 +10,9 @@ visqc_it_kendallt(
   exclude_inf = TRUE,
   exclude_0 = TRUE,
   zero_value = 0,
-  perspective = "local"
+  perspective = "local",
+  scale_max = TRUE,
+  diag_good = TRUE
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ visqc_it_kendallt(
 \item{zero_value}{what is the actual zero value?}
 
 \item{perspective}{how to treat missing data in denominator and ties, see details}
+
+\item{scale_max}{should everything be scaled compared to the maximum correlation?}
+
+\item{diag_not_na}{should the diagonal entries reflect how many entries in the sample were "good"?}
 }
 \value{
 numeric

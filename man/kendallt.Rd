@@ -4,7 +4,7 @@
 \alias{kendallt}
 \title{compute kendall tau}
 \usage{
-kendallt(x, y, perspective = "local")
+kendallt(x, y, perspective = "local", output = "simple")
 }
 \arguments{
 \item{x}{vector of x data}

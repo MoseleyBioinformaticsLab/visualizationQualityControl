@@ -1,3 +1,15 @@
+#' compute kendall tau in C
+#' 
+#' computes kendall tau 
+#' 
+#' @param x vector of x
+#' @param y vector of y
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @name kendallc
+#' @export
+NULL
+
 #' compute kendall tau
 #' 
 #' Given two vectors of data, computes the Kendall Tau correlation between them.
