@@ -241,6 +241,7 @@ visqc_it_kendallt = function(data_matrix,
   }
   
   cor_matrix = matrix(NA, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
+  rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
   ntotal = 0
   for (icol in seq(1, ncol(exclude_data))) {
     for (jcol in seq(icol, ncol(exclude_data))) {
