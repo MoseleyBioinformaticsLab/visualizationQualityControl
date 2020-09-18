@@ -5,22 +5,22 @@
 
 using namespace Rcpp;
 
-// kendallc
-double kendallc(NumericVector x, NumericVector y, String perspective);
-RcppExport SEXP _visualizationQualityControl_kendallc(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP) {
+// kendallt
+double kendallt(NumericVector x, NumericVector y, String perspective);
+RcppExport SEXP _visualizationQualityControl_kendallt(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< String >::type perspective(perspectiveSEXP);
-    rcpp_result_gen = Rcpp::wrap(kendallc(x, y, perspective));
+    rcpp_result_gen = Rcpp::wrap(kendallt(x, y, perspective));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_visualizationQualityControl_kendallc", (DL_FUNC) &_visualizationQualityControl_kendallc, 3},
+    {"_visualizationQualityControl_kendallt", (DL_FUNC) &_visualizationQualityControl_kendallt, 3},
     {NULL, NULL, 0}
 };
 
