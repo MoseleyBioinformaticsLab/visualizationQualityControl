@@ -14,7 +14,7 @@ using namespace Rcpp;
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-double kendallc(NumericVector x, NumericVector y, String perspective = "local") {
+double kendallt(NumericVector x, NumericVector y, String perspective = "local") {
   
   double sum_concordant = 0;
   double sum_discordant = 0;

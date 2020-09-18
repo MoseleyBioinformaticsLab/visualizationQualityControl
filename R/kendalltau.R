@@ -1,6 +1,6 @@
 #' compute kendall tau
 #' 
-#' Given two vectors of data, computes the Kendall Tau correlation between them.
+#' Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
 #' This version has logic for handling missing data in X and Y.
 #' 
 #' @param x vector of x data
@@ -8,7 +8,6 @@
 #' @param perspective how to treat missing data, see details
 #' 
 #' @return numeric
-#' @export
 #' 
 #' @examples 
 #' data("grp_cor_data")
@@ -25,7 +24,7 @@
 #' kendallt(x, y)
 #' kendallt(x, y2, "global")
 #' kendallt(x, y2)
-kendallt = function(x, y, perspective = "local", output = "simple"){
+ref_kendallt = function(x, y, perspective = "local", output = "simple"){
   if (length(x) != length(y)) {
     stop("x and y vector lengths are not the same!")
   }
