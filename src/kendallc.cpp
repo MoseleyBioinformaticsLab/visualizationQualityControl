@@ -168,3 +168,32 @@ double kendallt(NumericVector &x, NumericVector &y, String perspective = "local"
   return k_tau;
 }
 
+//' Calculates it-kendall-tau matrix
+//' 
+//' @param x data matrix
+//' @param perspective should we consider the "local" or "global" perspective?
+//' 
+//'
+//' @name kendallt_matrix
+//' @export
+//' @useDynLib visualizationQualityControl
+//' @return kendall tau correlation
+// [[Rcpp::export]]
+NumericMatrix kendall_matrix(NumericMatrix &x, String perspective = "local") {
+  int x_col = x.ncol();
+  
+  NumericMatrix cor_matrix(x_col);
+  
+  for (int i = 0; i < x_col; i++) {
+    NumericVector x_i = x(_ , i);
+    for (int j = i; j < x_col; j++) {
+      NumericVector x_j = x(_ , j);
+      double kendall_cor = kendallt(x_i, x_j, perspective);
+      cor_matrix(i, j) = kendall_cor;
+      cor_matrix(j, i) = kendall_cor;
+    }
+  } 
+  
+  return cor_matrix;
+  
+}
