@@ -8,8 +8,24 @@ using namespace Rcpp;
 //' @param y numeric vector
 //' @param perspective should we consider the "local" or "global" perspective?
 //' 
+//' @examples 
+//' data("grp_cor_data")
+//' exp_data = grp_cor_data$data
+//' x = exp_data[, 1]
+//' y = exp_data[, 2]
+//' kendallt(x, y)
+//' cor(x, y, method = "kendall") 
+//' 
+//' x = sort(rnorm(100))
+//' y = x + 1
+//' y2 = y
+//' y2[1:10] = NA
+//' kendallt(x, y)
+//' kendallt(x, y2, "global")
+//' kendallt(x, y2)
+//' 
 //' @importFrom Rcpp sourceCpp
-//' @name kendallc
+//' @name kendallt
 //' @export
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
@@ -37,7 +53,7 @@ double kendallt(NumericVector x, NumericVector y, String perspective = "local") 
   double k_tau;
   
   LogicalVector matching_na;
-  double n_matching_na;
+  //double n_matching_na;
   
   if (perspective == "local") {
     matching_na = is_na(x) & is_na(y);
