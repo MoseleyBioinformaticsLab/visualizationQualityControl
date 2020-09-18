@@ -10,6 +10,8 @@ using namespace Rcpp;
 //' 
 //' @importFrom Rcpp sourceCpp
 //' @name kendallc
+//' @export
+//' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
 double kendallc(NumericVector x, NumericVector y, String perspective = "local") {
@@ -47,7 +49,7 @@ double kendallc(NumericVector x, NumericVector y, String perspective = "local") 
   int n_entry = x.size();
   
   if (n_entry < 2) {
-    return NAN;
+    return NA_REAL;
   }
   
   for (int i = 0; i < (n_entry - 1); i++) {

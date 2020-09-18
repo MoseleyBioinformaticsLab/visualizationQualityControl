@@ -9,6 +9,8 @@
 #' 
 #' @importFrom Rcpp sourceCpp
 #' @name kendallc
+#' @export
+#' @useDynLib visualizationQualityControl
 #' @return kendall tau correlation
 kendallc <- function(x, y, perspective = "local") {
     .Call('_visualizationQualityControl_kendallc', PACKAGE = 'visualizationQualityControl', x, y, perspective)
