@@ -30,7 +30,7 @@ using namespace Rcpp;
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-double kendallt(NumericVector x, NumericVector y, String perspective = "local") {
+double kendallt(NumericVector &x, NumericVector &y, String perspective = "local") {
   
   double sum_concordant = 0;
   double sum_discordant = 0;
@@ -68,49 +68,49 @@ double kendallt(NumericVector x, NumericVector y, String perspective = "local") 
     return NA_REAL;
   }
   
-  for (double i = 0; i < (n_entry - 1); i++) {
-    for (double j = (i+1); j < n_entry; j++) {
+  for (int i = 0; i < (n_entry - 1); i++) {
+    for (int j = (i+1); j < n_entry; j++) {
       if (perspective == "global") {
-        is_concordant = (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||     //3 1
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||   // ## 2
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j])) ||                             // ## 3
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j])) ||                            //  ## 4
-          (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||                            //  ## 5
-          (NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||                            //  ## 6
-          (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j]) & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j])) ||                                             //            ## 7
-          (NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]));
+        is_concordant = (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||     //3 1
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||   // ## 2
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j])) ||                             // ## 3
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j])) ||                            //  ## 4
+          (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||                            //  ## 5
+          (NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||                            //  ## 6
+          (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j]) && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j])) ||                                             //            ## 7
+          (NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]));
         
-        is_discordant = (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j])) ||
-          (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j])  & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||
-          (NumericVector::is_na(x[i])  & !NumericVector::is_na(x[j])  & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||
-          (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j])  & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j])) ||
-          (NumericVector::is_na(x[i])  & !NumericVector::is_na(x[j])  & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j]));
+        is_discordant = (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j])) ||
+          (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j])  && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||
+          (NumericVector::is_na(x[i])  && !NumericVector::is_na(x[j])  && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||
+          (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j])  && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j])) ||
+          (NumericVector::is_na(x[i])  && !NumericVector::is_na(x[j])  && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j]));
       } else {
         is_concordant = 
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||    // #3 1
-        (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||  // ## 2
-        (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j])) ||                             // ## 3
-        (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j])) ||                             // ## 4
-        (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||                             // ## 5
-        (NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])); 
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||    // #3 1
+        (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||  // ## 2
+        (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j])) ||                             // ## 3
+        (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j])) ||                             // ## 4
+        (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||                             // ## 5
+        (NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])); 
         
         is_discordant = 
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] > x[j]) & NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j])) ||
-          (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] < x[j]) & !NumericVector::is_na(y[i]) & NumericVector::is_na(y[j])) ||
-          (!NumericVector::is_na(x[i]) & NumericVector::is_na(x[j])  & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] < y[j])) ||
-          (NumericVector::is_na(x[i])  & !NumericVector::is_na(x[j])  & !NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] > y[j]));
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] > x[j]) && NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j])) ||
+          (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] < x[j]) && !NumericVector::is_na(y[i]) && NumericVector::is_na(y[j])) ||
+          (!NumericVector::is_na(x[i]) && NumericVector::is_na(x[j])  && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] < y[j])) ||
+          (NumericVector::is_na(x[i])  && !NumericVector::is_na(x[j])  && !NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] > y[j]));
       }
       
-      is_tied_x = (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] == x[j]) & (!NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] != y[j])));
-      is_tied_y = (!NumericVector::is_na(x[i]) & !NumericVector::is_na(x[j]) & (x[i] != x[j]) & (!NumericVector::is_na(y[i]) & !NumericVector::is_na(y[j]) & (y[i] == y[j])));
-      is_tied_x_na = NumericVector::is_na(x[i]) & NumericVector::is_na(x[j]) & (!NumericVector::is_na(y[i]) | !NumericVector::is_na(y[j]));
-      is_tied_y_na = (!NumericVector::is_na(x[i]) | !NumericVector::is_na(x[j])) & NumericVector::is_na(y[i]) & NumericVector::is_na(y[j]);
-      is_all_na = NumericVector::is_na(x[i]) & NumericVector::is_na(x[j]) & NumericVector::is_na(y[i]) & NumericVector::is_na(y[j]);
+      is_tied_x = (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] == x[j]) && (!NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] != y[j])));
+      is_tied_y = (!NumericVector::is_na(x[i]) && !NumericVector::is_na(x[j]) && (x[i] != x[j]) && (!NumericVector::is_na(y[i]) && !NumericVector::is_na(y[j]) && (y[i] == y[j])));
+      is_tied_x_na = NumericVector::is_na(x[i]) && NumericVector::is_na(x[j]) && (!NumericVector::is_na(y[i]) | !NumericVector::is_na(y[j]));
+      is_tied_y_na = (!NumericVector::is_na(x[i]) | !NumericVector::is_na(x[j])) && NumericVector::is_na(y[i]) && NumericVector::is_na(y[j]);
+      is_all_na = NumericVector::is_na(x[i]) && NumericVector::is_na(x[j]) && NumericVector::is_na(y[i]) && NumericVector::is_na(y[j]);
 
       if (is_concordant) {
         sum_concordant++;
