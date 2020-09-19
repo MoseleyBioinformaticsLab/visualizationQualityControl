@@ -293,7 +293,7 @@ visqc_it_kendallt = function(data_matrix,
 #' @return numeric
 #' @export
 #' 
-visqc_it_kendallt_cpp = function(data_matrix, 
+visqc_it_kendallt_splitup = function(data_matrix, 
                              exclude_na = TRUE, 
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
@@ -325,15 +325,55 @@ visqc_it_kendallt_cpp = function(data_matrix,
   
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
+  n_sample = ncol(exclude_data)
   # set everything to NA and let R take care of it
   
-  if (ncol(data_matrix) > 2) {
-    prog_bar = knitrProgressBar::progress_estimated(ncol(exclude_data) * (ncol(exclude_data))/ 2)
-  } else {
-    prog_bar = NULL
+  ncore = future::nbrOfWorkers()
+  names(ncore) = NULL
+  
+  n_each_col = seq(n_sample, 1, -1)
+  n_todo = sum(n_each_col)
+  n_each = ceiling(n_todo / ncore)
+  
+  split_indices = vector("list", ncore)
+  start_loc = 1
+  
+  for (isplit in seq_along(split_indices)) {
+    curr_cumsum = cumsum(n_each_col[seq(start_loc, n_sample)])
+    is_over = sum(curr_cumsum > n_each)
+    if (is_over >= 1) {
+      stop_loc = min(which(curr_cumsum > n_each)) + start_loc
+    } else {
+      stop_loc = n_sample
+    }
+    split_indices[[isplit]] = seq(start_loc, stop_loc)
+    start_loc = stop_loc + 1
   }
   
-  cor_matrix = kendall_matrix(exclude_data, perspective)
+  do_split = function(seq_range, exclude_data, perspective) {
+    #seq_range = seq(in_range[1], in_range[2])
+    #print(seq_range)
+    tmp_cor = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
+    rownames(tmp_cor) = colnames(tmp_cor) = colnames(exclude_data)
+    
+    for (icol in seq_range) {
+      for (jcol in seq(icol, ncol(exclude_data))) {
+        #print(c(icol, jcol))
+        tmp_cor[icol, jcol] = tmp_cor[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
+      }
+    }
+    tmp_cor
+  }
+  #tictoc::tic()
+  split_cor = furrr::future_map(split_indices, do_split, exclude_data, perspective)
+  #tictoc::toc()
+  
+  
+  cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
+  rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
+  for (isplit in split_cor) {
+    cor_matrix = cor_matrix + isplit
+  }
   
   # calculate the max-cor value for use in scaling across multiple comparisons
   n_observations = nrow(exclude_data)
