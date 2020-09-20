@@ -347,8 +347,13 @@ visqc_it_kendallt_splitup = function(data_matrix,
       stop_loc = n_sample
     }
     split_indices[[isplit]] = seq(start_loc, stop_loc)
+    if (stop_loc == n_sample) {
+      return()
+    }
     start_loc = stop_loc + 1
   }
+  null_indices = purrr::map_lgl(split_indices, is.null)
+  split_indices = split_indices[!null_indices]
   
   do_split = function(seq_range, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
