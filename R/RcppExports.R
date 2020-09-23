@@ -32,3 +32,17 @@ kendallt <- function(x, y, perspective = "local") {
     .Call('_visualizationQualityControl_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective)
 }
 
+#' Calculates it-kendall-tau matrix
+#' 
+#' @param x data matrix
+#' @param perspective should we consider the "local" or "global" perspective?
+#' 
+#'
+#' @name kendallt_matrix
+#' @export
+#' @useDynLib visualizationQualityControl
+#' @return kendall tau correlation
+kendall_matrix <- function(x, perspective = "local") {
+    .Call('_visualizationQualityControl_kendall_matrix', PACKAGE = 'visualizationQualityControl', x, perspective)
+}
+
