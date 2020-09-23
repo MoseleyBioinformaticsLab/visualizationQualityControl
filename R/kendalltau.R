@@ -348,7 +348,7 @@ visqc_it_kendallt_splitup = function(data_matrix,
     }
     split_indices[[isplit]] = seq(start_loc, stop_loc)
     if (stop_loc == n_sample) {
-      return()
+      break()
     }
     start_loc = stop_loc + 1
   }
