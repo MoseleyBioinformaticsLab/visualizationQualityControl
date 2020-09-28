@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//' Calculates it-kendall-tau
+//' Calculates ici-kendall-tau
 //' 
 //' @param x numeric vector
 //' @param y numeric vector
@@ -30,7 +30,7 @@ using namespace Rcpp;
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-double kendallt(NumericVector x, NumericVector y, String perspective = "local") {
+double ici_kendallt(NumericVector x, NumericVector y, String perspective = "local") {
   
   double sum_concordant = 0;
   double sum_discordant = 0;
@@ -156,7 +156,7 @@ double kendallt(NumericVector x, NumericVector y, String perspective = "local") 
   return k_tau;
 }
 
-//' Calculates it-kendall-tau matrix
+//' Calculates ici-kendall-tau matrix
 //' 
 //' @param x data matrix
 //' @param perspective should we consider the "local" or "global" perspective?
@@ -167,7 +167,7 @@ double kendallt(NumericVector x, NumericVector y, String perspective = "local") 
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-NumericMatrix kendall_matrix(NumericMatrix &x, String perspective = "local") {
+NumericMatrix ici_kendall_matrix(NumericMatrix &x, String perspective = "local") {
   int x_col = x.ncol();
   
   NumericMatrix cor_matrix(x_col);
@@ -176,7 +176,7 @@ NumericMatrix kendall_matrix(NumericMatrix &x, String perspective = "local") {
     NumericVector x_i = x(_ , i);
     for (int j = i; j < x_col; j++) {
       NumericVector x_j = x(_ , j);
-      double kendall_cor = kendallt(x_i, x_j, perspective);
+      double kendall_cor = ici_kendallt(x_i, x_j, perspective);
       cor_matrix(i, j) = kendall_cor;
       cor_matrix(j, i) = kendall_cor;
     }
