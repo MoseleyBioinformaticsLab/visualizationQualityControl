@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.70</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.72</span>
       </span>
     </div>
 
@@ -262,14 +262,14 @@
   times = <span class="fl">5</span>
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;                                              expr        min         lq</span>
-<span class="co">#&gt;                     cor(x, y, method = "kendall")   13.31343   13.40658</span>
-<span class="co">#&gt;                                ici_kendallt(x, y)  210.96857  211.55595</span>
-<span class="co">#&gt;  visualizationQualityControl:::ref_kendallt(x, y) 1223.69803 1225.01912</span>
+<span class="co">#&gt;                                              expr       min         lq</span>
+<span class="co">#&gt;                     cor(x, y, method = "kendall")   13.5761   13.86954</span>
+<span class="co">#&gt;                                ici_kendallt(x, y)  212.0416  216.26162</span>
+<span class="co">#&gt;  visualizationQualityControl:::ref_kendallt(x, y) 1207.2518 1242.40566</span>
 <span class="co">#&gt;        mean     median         uq        max neval</span>
-<span class="co">#&gt;    13.64506   13.45232   13.65154   14.40142     5</span>
-<span class="co">#&gt;   213.17023  212.83766  213.97296  216.51601     5</span>
-<span class="co">#&gt;  1310.82757 1240.47458 1241.81633 1623.12979     5</span>
+<span class="co">#&gt;    14.23169   13.88212   14.01654   15.81416     5</span>
+<span class="co">#&gt;   231.74232  221.62472  248.21222  260.57141     5</span>
+<span class="co">#&gt;  1330.53925 1263.73655 1354.24603 1585.05620     5</span>
 </pre></div>
 <p>10X slower than the C implementation, but 10X faster than the base R implementation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
