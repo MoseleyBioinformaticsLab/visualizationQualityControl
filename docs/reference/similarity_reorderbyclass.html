@@ -74,7 +74,7 @@ hierarchical clustering and dendsort to sort entries in a distance matrix." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.70</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@ hierarchical clustering and dendsort to sort entries in a distance matrix." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -135,11 +138,11 @@ hierarchical clustering and dendsort to sort entries in a distance matrix.</p>
     </div>
 
     <pre class="usage"><span class='fu'>similarity_reorderbyclass</span>(
-  <span class='no'>similarity_matrix</span>,
-  <span class='kw'>sample_classes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>transform</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>hclust_method</span> <span class='kw'>=</span> <span class='st'>"complete"</span>,
-  <span class='kw'>dendsort_type</span> <span class='kw'>=</span> <span class='st'>"min"</span>
+  <span class='kw'>similarity_matrix</span>,
+  sample_classes = <span class='kw'>NULL</span>,
+  transform = <span class='st'>"none"</span>,
+  hclust_method = <span class='st'>"complete"</span>,
+  dendsort_type = <span class='st'>"min"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -189,12 +192,13 @@ data.frame do not correspond to the rownames or colnames of the matrix, then
 it is assumed that the ordering in the matrix and the data.frame are identical.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>visualizationQualityControl</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>visualizationQualityControl</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1234</span>)
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>2</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>0.5</span>), <span class='fl'>10</span>, <span class='fl'>10</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>mat</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>mat</span>) <span class='kw'>&lt;-</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>10</span>]
-<span class='no'>neworder</span> <span class='kw'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='no'>mat</span>)
-<span class='no'>mat</span>[<span class='no'>neworder</span>$<span class='no'>indices</span>, <span class='no'>neworder</span>$<span class='no'>indices</span>]</div><div class='output co'>#&gt;           a         d        g        b        c        f        e        h
+<span class='kw'>mat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>2</span>, sd = <span class='fl'>0.5</span>), <span class='fl'>10</span>, <span class='fl'>10</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>mat</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>mat</span>) <span class='op'>&lt;-</span> <span class='kw'>letters</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>]
+<span class='kw'>neworder</span> <span class='op'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='kw'>mat</span>)
+<span class='kw'>mat</span>[<span class='kw'>neworder</span><span class='op'>$</span><span class='kw'>indices</span>, <span class='kw'>neworder</span><span class='op'>$</span><span class='kw'>indices</span>]
+</div><div class='output co'>#&gt;           a         d        g        b        c        f        e        h
 #&gt; a 1.3964671 2.5511488 2.328294 1.761404 2.067044 1.096984 2.724748 2.003446
 #&gt; d 0.8271511 1.7493710 1.665183 2.032229 2.229795 1.492519 1.859688 2.324143
 #&gt; g 1.7126300 0.9099802 1.430696 1.744495 2.287378 2.823909 1.446341 1.304650
@@ -216,14 +220,17 @@ it is assumed that the ordering in the matrix and the data.frame are identical.<
 #&gt; h 1.798634 2.439102
 #&gt; i 1.904203 2.486458
 #&gt; j 1.402736 3.060559</div><div class='input'>
-<span class='no'>sample_class</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>grp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"grp1"</span>, <span class='st'>"grp2"</span>), <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>5</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>sample_class</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>mat</span>)
-<span class='no'>neworder2</span> <span class='kw'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='no'>mat</span>, <span class='no'>sample_class</span>[, <span class='st'>"grp"</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>])
+<span class='kw'>sample_class</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(grp = <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"grp1"</span>, <span class='st'>"grp2"</span>), each = <span class='fl'>5</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>sample_class</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>mat</span>)
+<span class='kw'>neworder2</span> <span class='op'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='kw'>mat</span>, <span class='kw'>sample_class</span>[, <span class='st'>"grp"</span>, drop = <span class='fl'>FALSE</span>])
 
 <span class='co'># if there is a class with only one member, it is dropped, with a warning</span>
-<span class='no'>sample_class</span>[<span class='fl'>10</span>, <span class='st'>"grp"</span>] <span class='kw'>=</span> <span class='st'>"grp3"</span>
-<span class='no'>neworder3</span> <span class='kw'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='no'>mat</span>, <span class='no'>sample_class</span>[, <span class='st'>"grp"</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>])</div><div class='output co'>#&gt; <span class='warning'>Warning: Removing groups: grp3</span></div><div class='input'><span class='no'>neworder3</span>$<span class='no'>indices</span> <span class='co'># 10 should be missing</span></div><div class='output co'>#&gt; [1] 1 4 5 2 3 6 8 7 9</div><div class='input'>
-<span class='no'>mat</span>[<span class='no'>neworder2</span>$<span class='no'>indices</span>, <span class='no'>neworder2</span>$<span class='no'>indices</span>]</div><div class='output co'>#&gt;           a         d        e        b        c        i        j        g
+<span class='kw'>sample_class</span>[<span class='fl'>10</span>, <span class='st'>"grp"</span>] <span class='op'>=</span> <span class='st'>"grp3"</span>
+<span class='kw'>neworder3</span> <span class='op'>&lt;-</span> <span class='fu'>similarity_reorderbyclass</span>(<span class='kw'>mat</span>, <span class='kw'>sample_class</span>[, <span class='st'>"grp"</span>, drop = <span class='fl'>FALSE</span>])
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Removing groups: grp3</span></div><div class='input'><span class='kw'>neworder3</span><span class='op'>$</span><span class='kw'>indices</span> <span class='co'># 10 should be missing</span>
+</div><div class='output co'>#&gt; [1] 1 4 5 2 3 6 8 7 9</div><div class='input'>
+<span class='kw'>mat</span>[<span class='kw'>neworder2</span><span class='op'>$</span><span class='kw'>indices</span>, <span class='kw'>neworder2</span><span class='op'>$</span><span class='kw'>indices</span>]
+</div><div class='output co'>#&gt;           a         d        e        b        c        i        j        g
 #&gt; a 1.3964671 2.5511488 2.724748 1.761404 2.067044 1.911105 1.973421 2.328294
 #&gt; d 0.8271511 1.7493710 1.859688 2.032229 2.229795 1.913106 2.500757 1.665183
 #&gt; e 2.2145623 1.1854533 1.502830 2.479747 1.653140 2.425116 1.752208 1.996198
@@ -244,7 +251,8 @@ it is assumed that the ordering in the matrix and the data.frame are identical.<
 #&gt; j 1.421096 1.841470
 #&gt; g 2.823909 1.304650
 #&gt; f 2.281528 1.923301
-#&gt; h 1.613323 1.638209</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>neworder</span>$<span class='no'>names</span>, <span class='no'>neworder2</span>$<span class='no'>names</span>)</div><div class='output co'>#&gt;       [,1] [,2]
+#&gt; h 1.613323 1.638209</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>neworder</span><span class='op'>$</span><span class='kw'>names</span>, <span class='kw'>neworder2</span><span class='op'>$</span><span class='kw'>names</span>)
+</div><div class='output co'>#&gt;       [,1] [,2]
 #&gt;  [1,] "a"  "a" 
 #&gt;  [2,] "d"  "d" 
 #&gt;  [3,] "g"  "e" 
@@ -271,7 +279,7 @@ it is assumed that the ordering in the matrix and the data.frame are identical.<
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

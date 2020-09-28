@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>pairwise non-zero — pairwise_nonzero • visualizationQualityControl</title>
+<title>compute kendall tau — ref_kendallt • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="pairwise non-zero — pairwise_nonzero" />
-<meta property="og:description" content="given a data matrix, how many entries are non-zero on a pairwise basis" />
+<meta property="og:title" content="compute kendall tau — ref_kendallt" />
+<meta property="og:description" content="Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+This version has logic for handling missing data in X and Y." />
 
 
 
@@ -124,47 +125,55 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>pairwise non-zero</h1>
+    <h1>compute kendall tau</h1>
     
-    <div class="hidden name"><code>pairwise_nonzero.Rd</code></div>
+    <div class="hidden name"><code>ref_kendallt.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>given a data matrix, how many entries are non-zero on a pairwise basis</p>
+    <p>Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+This version has logic for handling missing data in X and Y.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pairwise_nonzero</span>(
-  <span class='kw'>data_matrix</span>,
-  use = <span class='st'>"pairwise"</span>,
-  exclude_na = <span class='fl'>TRUE</span>,
-  exclude_inf = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ref_kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, perspective = <span class='st'>"local"</span>, output = <span class='st'>"simple"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data_matrix</th>
-      <td><p>the data</p></td>
+      <th>x</th>
+      <td><p>vector of x data</p></td>
     </tr>
     <tr>
-      <th>use</th>
-      <td><p>how to work with the data</p></td>
+      <th>y</th>
+      <td><p>vector of y data</p></td>
     </tr>
     <tr>
-      <th>exclude_na</th>
-      <td><p>should NA values be excluded (default TRUE)</p></td>
-    </tr>
-    <tr>
-      <th>exclude_inf</th>
-      <td><p>should Inf values be excluded (default TRUE)</p></td>
+      <th>perspective</th>
+      <td><p>how to treat missing data, see details</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix</p>
+    <p>numeric</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"grp_cor_data"</span>)
+<span class='kw'>exp_data</span> <span class='op'>=</span> <span class='kw'>grp_cor_data</span><span class='op'>$</span><span class='kw'>data</span>
+<span class='kw'>x</span> <span class='op'>=</span> <span class='kw'>exp_data</span>[, <span class='fl'>1</span>]
+<span class='kw'>y</span> <span class='op'>=</span> <span class='kw'>exp_data</span>[, <span class='fl'>2</span>]
+<span class='fu'><a href='kendallt.html'>kendallt</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y): could not find function "kendallt"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cor</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, method = <span class='st'>"kendall"</span>) 
+</div><div class='output co'>#&gt; [1] 0.6953535</div><div class='input'>
+<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>))
+<span class='kw'>y</span> <span class='op'>=</span> <span class='kw'>x</span> <span class='op'>+</span> <span class='fl'>1</span>
+<span class='kw'>y2</span> <span class='op'>=</span> <span class='kw'>y</span>
+<span class='kw'>y2</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>] <span class='op'>=</span> <span class='fl'>NA</span>
+<span class='fu'><a href='kendallt.html'>kendallt</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y): could not find function "kendallt"</span></div><div class='input'><span class='fu'><a href='kendallt.html'>kendallt</a></span>(<span class='kw'>x</span>, <span class='kw'>y2</span>, <span class='st'>"global"</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y2, "global"): could not find function "kendallt"</span></div><div class='input'><span class='fu'><a href='kendallt.html'>kendallt</a></span>(<span class='kw'>x</span>, <span class='kw'>y2</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y2): could not find function "kendallt"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

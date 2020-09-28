@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.70</span>
       </span>
     </div>
 
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -131,12 +134,12 @@
     </div>
 
     <pre class="usage"><span class='fu'>pairwise_correlation_multicore</span>(
-  <span class='no'>data_matrix</span>,
-  <span class='kw'>use</span> <span class='kw'>=</span> <span class='st'>"pairwise"</span>,
-  <span class='kw'>exclude_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>exclude_inf</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>exclude_0</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>
+  <span class='kw'>data_matrix</span>,
+  use = <span class='st'>"pairwise"</span>,
+  exclude_na = <span class='fl'>TRUE</span>,
+  exclude_inf = <span class='fl'>TRUE</span>,
+  exclude_0 = <span class='fl'>FALSE</span>,
+  method = <span class='st'>"pearson"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -187,7 +190,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

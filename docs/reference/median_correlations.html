@@ -74,7 +74,7 @@ the same class. May be useful for determining outliers." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.70</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@ the same class. May be useful for determining outliers." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -134,7 +137,7 @@ calculates the median correlations of each sample to all other samples in
 the same class. May be useful for determining outliers.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>median_correlations</span>(<span class='no'>cor_matrix</span>, <span class='kw'>sample_classes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>between_classes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>median_correlations</span>(<span class='kw'>cor_matrix</span>, sample_classes = <span class='kw'>NULL</span>, between_classes = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,7 +162,7 @@ the same class. May be useful for determining outliers.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The data.frame may have 5 columns, first three are always present,
-  the second two come up if <code>between_classes = TRUE</code>:</p><dl'>
+  the second two come up if <code>between_classes = TRUE</code>:</p><dl>
   <dt>med_cor</dt><dd><p>the median correlation with other samples</p></dd>
   <dt>sample_id</dt><dd><p>the sample id, either the rowname or an index</p></dd>
   <dt>sample_class</dt><dd><p>the class of the sample. If not provided, set to "C1"</p></dd>
@@ -184,7 +187,7 @@ the same class. May be useful for determining outliers.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

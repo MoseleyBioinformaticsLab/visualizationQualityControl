@@ -73,7 +73,7 @@ by information content and information consistency." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.70</span>
       </span>
     </div>
 
@@ -95,6 +95,9 @@ by information content and information consistency." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -133,14 +136,14 @@ by information content and information consistency.</p>
     </div>
 
     <pre class="usage"><span class='fu'>globally_it_weighted_pairwise_correlation</span>(
-  <span class='no'>data_matrix</span>,
-  <span class='kw'>use</span> <span class='kw'>=</span> <span class='st'>"pairwise.complete.obs"</span>,
-  <span class='kw'>exclude_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>exclude_inf</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>exclude_0</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>zero_value</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>,
-  <span class='kw'>scale_information_content</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>data_matrix</span>,
+  use = <span class='st'>"pairwise.complete.obs"</span>,
+  exclude_na = <span class='fl'>TRUE</span>,
+  exclude_inf = <span class='fl'>TRUE</span>,
+  exclude_0 = <span class='fl'>FALSE</span>,
+  zero_value = <span class='fl'>0</span>,
+  method = <span class='st'>"pearson"</span>,
+  scale_information_content = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,7 +188,7 @@ by information content and information consistency.</p>
     <p>list</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function returns a named list with:</p><dl'>
+    <p>The function returns a named list with:</p><dl>
     <dt>cor</dt><dd><p>the weighted correlation matrix</p></dd>
     <dt>keep</dt><dd><p>a logical matrix indicating which points passed filtering</p></dd>
     <dt>raw</dt><dd><p>the raw correlations</p></dd>
@@ -210,7 +213,7 @@ by information content and information consistency.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

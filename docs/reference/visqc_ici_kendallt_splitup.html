@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>pairwise non-zero — pairwise_nonzero • visualizationQualityControl</title>
+<title>information-content-informed kendall tau — visqc_ici_kendallt_splitup • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="pairwise non-zero — pairwise_nonzero" />
-<meta property="og:description" content="given a data matrix, how many entries are non-zero on a pairwise basis" />
+<meta property="og:title" content="information-content-informed kendall tau — visqc_ici_kendallt_splitup" />
+<meta property="og:description" content="Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+all samples." />
 
 
 
@@ -124,20 +125,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>pairwise non-zero</h1>
+    <h1>information-content-informed kendall tau</h1>
     
-    <div class="hidden name"><code>pairwise_nonzero.Rd</code></div>
+    <div class="hidden name"><code>visqc_ici_kendallt_splitup.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>given a data matrix, how many entries are non-zero on a pairwise basis</p>
+    <p>Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+all samples.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pairwise_nonzero</span>(
+    <pre class="usage"><span class='fu'>visqc_ici_kendallt_splitup</span>(
   <span class='kw'>data_matrix</span>,
-  use = <span class='st'>"pairwise"</span>,
   exclude_na = <span class='fl'>TRUE</span>,
-  exclude_inf = <span class='fl'>TRUE</span>
+  exclude_inf = <span class='fl'>TRUE</span>,
+  exclude_0 = <span class='fl'>TRUE</span>,
+  zero_value = <span class='fl'>0</span>,
+  perspective = <span class='st'>"local"</span>,
+  scale_max = <span class='fl'>TRUE</span>,
+  diag_good = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -145,25 +151,41 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data_matrix</th>
-      <td><p>the data</p></td>
-    </tr>
-    <tr>
-      <th>use</th>
-      <td><p>how to work with the data</p></td>
+      <td><p>samples are rows, features are columns</p></td>
     </tr>
     <tr>
       <th>exclude_na</th>
-      <td><p>should NA values be excluded (default TRUE)</p></td>
+      <td><p>should NA values be treated as NA?</p></td>
     </tr>
     <tr>
       <th>exclude_inf</th>
-      <td><p>should Inf values be excluded (default TRUE)</p></td>
+      <td><p>should Inf values be treated as NA?</p></td>
+    </tr>
+    <tr>
+      <th>exclude_0</th>
+      <td><p>should zero values be treated as NA?</p></td>
+    </tr>
+    <tr>
+      <th>zero_value</th>
+      <td><p>what is the actual zero value?</p></td>
+    </tr>
+    <tr>
+      <th>perspective</th>
+      <td><p>how to treat missing data in denominator and ties, see details</p></td>
+    </tr>
+    <tr>
+      <th>scale_max</th>
+      <td><p>should everything be scaled compared to the maximum correlation?</p></td>
+    </tr>
+    <tr>
+      <th>diag_not_na</th>
+      <td><p>should the diagonal entries reflect how many entries in the sample were "good"?</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix</p>
+    <p>numeric</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
