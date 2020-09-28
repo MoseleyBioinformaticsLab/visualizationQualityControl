@@ -2,9 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{kendallt}
 \alias{kendallt}
-\title{Calculates it-kendall-tau}
+\alias{ici_kendallt}
+\title{Calculates ici-kendall-tau}
 \usage{
-kendallt(x, y, perspective = "local")
+ici_kendallt(x, y, perspective = "local")
 }
 \arguments{
 \item{x}{numeric vector}
@@ -17,7 +18,7 @@ kendallt(x, y, perspective = "local")
 kendall tau correlation
 }
 \description{
-Calculates it-kendall-tau
+Calculates ici-kendall-tau
 }
 \examples{
 data("grp_cor_data")

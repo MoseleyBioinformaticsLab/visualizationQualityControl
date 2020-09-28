@@ -182,7 +182,7 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
   
 }
 
-#' information-theoretic kendall tau
+#' information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
@@ -199,7 +199,7 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @return numeric
 #' @export
 #' 
-visqc_it_kendallt = function(data_matrix, 
+visqc_ici_kendallt = function(data_matrix, 
                              exclude_na = TRUE, 
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
@@ -276,7 +276,7 @@ visqc_it_kendallt = function(data_matrix,
 }
 
 
-#' information-theoretic kendall tau
+#' information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
@@ -293,7 +293,7 @@ visqc_it_kendallt = function(data_matrix,
 #' @return numeric
 #' @export
 #' 
-visqc_it_kendallt_splitup = function(data_matrix, 
+visqc_ici_kendallt_splitup = function(data_matrix, 
                              exclude_na = TRUE, 
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
