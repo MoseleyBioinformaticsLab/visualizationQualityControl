@@ -364,14 +364,14 @@ visqc_ici_kendallt_splitup = function(data_matrix,
     for (icol in seq_range) {
       for (jcol in seq(icol, ncol(exclude_data))) {
         #print(c(icol, jcol))
-        tmp_cor[icol, jcol] = tmp_cor[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
+        tmp_cor[icol, jcol] = tmp_cor[jcol, icol] = ici_kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
       }
     }
     tmp_cor
   }
-  #tictoc::tic()
+  tictoc::tic()
   split_cor = furrr::future_map(split_indices, do_split, exclude_data, perspective)
-  #tictoc::toc()
+  tictoc::toc()
   
   
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
