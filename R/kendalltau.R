@@ -245,7 +245,7 @@ visqc_ici_kendallt = function(data_matrix,
   ntotal = 0
   for (icol in seq(1, ncol(exclude_data))) {
     for (jcol in seq(icol, ncol(exclude_data))) {
-      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
+      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = ici_kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
       knitrProgressBar::update_progress(prog_bar)
       # ntotal = ntotal + 1
       # message(ntotal)
