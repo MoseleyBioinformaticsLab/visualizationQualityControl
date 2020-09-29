@@ -331,47 +331,46 @@ visqc_ici_kendallt_splitup = function(data_matrix,
   ncore = future::nbrOfWorkers()
   names(ncore) = NULL
   
-  n_each_col = seq(n_sample, 1, -1)
-  n_todo = sum(n_each_col)
+  pairwise_comparisons = combn(n_sample, 2)
+  
+  if (!diag_good) {
+    extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
+    pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
+  }
+  
+  n_todo = ncol(pairwise_comparisons)
   n_each = ceiling(n_todo / ncore)
   
-  split_indices = vector("list", ncore)
+  split_comparisons = vector("list", ncore)
   start_loc = 1
   
-  for (isplit in seq_along(split_indices)) {
-    curr_cumsum = cumsum(n_each_col[seq(start_loc, n_sample)])
-    is_over = sum(curr_cumsum > n_each)
-    if (is_over >= 1) {
-      stop_loc = min(which(curr_cumsum > n_each)) + start_loc
-    } else {
-      stop_loc = n_sample
-    }
-    split_indices[[isplit]] = seq(start_loc, stop_loc)
-    if (stop_loc == n_sample) {
-      break()
-    }
+  for (isplit in seq_along(split_comparisons)) {
+    stop_loc = min(start_loc + n_each, n_todo)
+    
+    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc]
     start_loc = stop_loc + 1
   }
-  null_indices = purrr::map_lgl(split_indices, is.null)
-  split_indices = split_indices[!null_indices]
   
-  do_split = function(seq_range, exclude_data, perspective) {
+  null_comparisons = purrr::map_lgl(split_comparisons, is.null)
+  split_comparisons = split_comparisons[!null_comparisons]
+  
+  do_split = function(do_comparisons, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
     tmp_cor = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(tmp_cor) = colnames(tmp_cor) = colnames(exclude_data)
     
-    for (icol in seq_range) {
-      for (jcol in seq(icol, ncol(exclude_data))) {
-        #print(c(icol, jcol))
-        tmp_cor[icol, jcol] = tmp_cor[jcol, icol] = ici_kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
-      }
+    for (icol in seq(1, ncol(do_comparisons))) {
+      iloc = do_comparisons[1, icol]
+      jloc = do_comparisons[2, icol]
+      tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_kendallt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
     }
+    
     tmp_cor
   }
-  tictoc::tic()
-  split_cor = furrr::future_map(split_indices, do_split, exclude_data, perspective)
-  tictoc::toc()
+  #tictoc::tic()
+  split_cor = furrr::future_map(split_comparisons, do_split, exclude_data, perspective)
+  #tictoc::toc()
   
   
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
