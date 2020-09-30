@@ -1,4 +1,5 @@
-use itertools::Itertools;
+// use itertools::Itertools;
+use rayon::prelude::*;
 
 pub type Numeric = f64;
 
@@ -9,16 +10,19 @@ pub enum Perspective {
 }
 
 /// Calculates ici-kendall-tau
+///
+/// ### Note
+///
 pub fn ici_kendall_tau(x: Vec<Numeric>, y: Vec<Numeric>, perspective: Perspective) -> Numeric {
-    let mut sum_concordant: u64 = 0;
-    let mut sum_discordant: u64 = 0;
-    let mut sum_x_ties: u64;
-    let mut sum_y_ties: u64;
-    let mut sum_tied_x: u64 = 0;
-    let mut sum_tied_y: u64 = 0;
-    let mut sum_tied_x_na: u64 = 0;
-    let mut sum_tied_y_na: u64 = 0;
-    let mut sum_all_na: u64 = 0;
+    let sum_x_ties: u64;
+    let sum_y_ties: u64;
+    // let mut sum_concordant: u64 = 0;
+    // let mut sum_discordant: u64 = 0;
+    // let mut sum_tied_x: u64 = 0;
+    // let mut sum_tied_y: u64 = 0;
+    // let mut sum_tied_x_na: u64 = 0;
+    // let mut sum_tied_y_na: u64 = 0;
+    // let mut sum_all_na: u64 = 0;
     let _is_concordant: bool;
     let _is_discordant: bool;
     let _is_tied_x: bool;
@@ -57,101 +61,113 @@ pub fn ici_kendall_tau(x: Vec<Numeric>, y: Vec<Numeric>, perspective: Perspectiv
         return f64::NAN;
     }
 
-    match perspective {
+    #[derive(derive_more::Add, derive_more::Sum)]
+    struct Term {
+        sum_concordant: u64,
+        sum_discordant: u64,
+        sum_tied_x: u64,
+        sum_tied_y: u64,
+        sum_tied_x_na: u64,
+        sum_tied_y_na: u64,
+        sum_all_na: u64,
+    }
+
+    let terms = match perspective {
         Perspective::Global => todo!(),
         Perspective::Local => {
-            // for ((xi, yi), (xj, yj)) in x.iter().zip(y.iter()).tuple_combinations() {
-            // for ((xi, yi), (xj, yj)) in x
-            //     .iter()
-            //     .cartesian_product(y.into_iter())
-            //     .tuple_combinations()
-            for (i, j) in (0..n_entry - 1)
-                .map(|x| ((x + 1)..n_entry).map(move |xx| (x, xx)))
+            (0..n_entry - 1)
+                .into_par_iter()
+                .map(|x| ((x + 1)..n_entry).into_par_iter().map(move |xx| (x, xx)))
                 .flatten()
-            {
-                let xi = x[i];
-                let xj = x[j];
-                let yi = y[i];
-                let yj = y[j];
-                sum_concordant += ((!(xi.is_nan()) && !(xj.is_nan()) && (xi > xj) && !(yi.is_nan()) && !(yj.is_nan()) && (yi > yj)) ||    // #3 1
-                    (!(xi.is_nan()) && !(xj.is_nan()) && (xi < xj) && !(yi.is_nan()) && !(yj.is_nan()) && (yi < yj)) ||  // ## 2
-                    (!(xi.is_nan()) && !(xj.is_nan()) && (xi > xj) && !(yi.is_nan()) && (yj.is_nan())) ||                             // ## 3
-                    (!(xi.is_nan()) && !(xj.is_nan()) && (xi < xj) && (yi.is_nan()) && !(yj.is_nan())) ||                             // ## 4
-                    (!(xi.is_nan()) && (xj.is_nan()) && !(yi.is_nan()) && !(yj.is_nan()) && (yi > yj)) ||                             // ## 5
-                    ((xi.is_nan()) && !(xj.is_nan()) && !(yi.is_nan()) && !(yj.is_nan()) && (yi < yj)))
-                    as u64;
+                .map(|(i, j)|
+                    {
+                        let xi = x[i];
+                        let xj = x[j];
+                        let yi = y[i];
+                        let yj = y[j];
+                        // {
+                        Term {
+                            sum_concordant: ((!(xi.is_nan()) && !(xj.is_nan()) && (xi > xj) && !(yi.is_nan()) && !(yj.is_nan()) && (yi > yj)) ||    // #3 1
+                                (!(xi.is_nan()) && !(xj.is_nan()) && (xi < xj) && !(yi.is_nan()) && !(yj.is_nan()) && (yi < yj)) ||  // ## 2
+                                (!(xi.is_nan()) && !(xj.is_nan()) && (xi > xj) && !(yi.is_nan()) && (yj.is_nan())) ||                             // ## 3
+                                (!(xi.is_nan()) && !(xj.is_nan()) && (xi < xj) && (yi.is_nan()) && !(yj.is_nan())) ||                             // ## 4
+                                (!(xi.is_nan()) && (xj.is_nan()) && !(yi.is_nan()) && !(yj.is_nan()) && (yi > yj)) ||                             // ## 5
+                                ((xi.is_nan()) && !(xj.is_nan()) && !(yi.is_nan()) && !(yj.is_nan()) && (yi < yj)))
+                                as u64,
 
-                sum_discordant += ((!(xi.is_nan())
-                    && !(xj.is_nan())
-                    && (xi > xj)
-                    && !(yi.is_nan())
-                    && !(yj.is_nan())
-                    && (yi < yj))
-                    || (!(xi.is_nan())
-                        && !(xj.is_nan())
-                        && (xi < xj)
-                        && !(yi.is_nan())
-                        && !(yj.is_nan())
-                        && (yi > yj))
-                    || (!(xi.is_nan())
-                        && !(xj.is_nan())
-                        && (xi > xj)
-                        && (yi.is_nan())
-                        && !(yj.is_nan()))
-                    || (!(xi.is_nan())
-                        && !(xj.is_nan())
-                        && (xi < xj)
-                        && !(yi.is_nan())
-                        && (yj.is_nan()))
-                    || (!(xi.is_nan())
-                        && (xj.is_nan())
-                        && !(yi.is_nan())
-                        && !(yj.is_nan())
-                        && (yi < yj))
-                    || ((xi.is_nan())
-                        && !(xj.is_nan())
-                        && !(yi.is_nan())
-                        && !(yj.is_nan())
-                        && (yi > yj))) as u64;
+                            sum_discordant: ((!(xi.is_nan())
+                                && !(xj.is_nan())
+                                && (xi > xj)
+                                && !(yi.is_nan())
+                                && !(yj.is_nan())
+                                && (yi < yj))
+                                || (!(xi.is_nan())
+                                && !(xj.is_nan())
+                                && (xi < xj)
+                                && !(yi.is_nan())
+                                && !(yj.is_nan())
+                                && (yi > yj))
+                                || (!(xi.is_nan())
+                                && !(xj.is_nan())
+                                && (xi > xj)
+                                && (yi.is_nan())
+                                && !(yj.is_nan()))
+                                || (!(xi.is_nan())
+                                && !(xj.is_nan())
+                                && (xi < xj)
+                                && !(yi.is_nan())
+                                && (yj.is_nan()))
+                                || (!(xi.is_nan())
+                                && (xj.is_nan())
+                                && !(yi.is_nan())
+                                && !(yj.is_nan())
+                                && (yi < yj))
+                                || ((xi.is_nan())
+                                && !(xj.is_nan())
+                                && !(yi.is_nan())
+                                && !(yj.is_nan())
+                                && (yi > yj))) as u64,
 
-                sum_tied_x += (!(xi.is_nan())
-                    && !(xj.is_nan())
-                    // && (xi == xj)
-                    && float_eq::float_eq!(xi, xj, ulps <= 4)
-                    // && (!(yi.is_nan()) && !(yj.is_nan()) && (yi != yj)))
-                    && (!(yi.is_nan()) && !(yj.is_nan()) && float_eq::float_ne!(yi, yj, ulps <= 4)))
-                    as u64;
-                sum_tied_y += (!(xi.is_nan())
-                    && !(xj.is_nan())
-                    // && (xi != xj)
-                    && float_eq::float_ne!(xi, xj, ulps <= 4)
-                    // && (!(yi.is_nan()) && !(yj.is_nan()) && (yi == yj)))
-                    && (!(yi.is_nan()) && !(yj.is_nan()) && float_eq::float_eq!(yi, yj, ulps <= 4)))
-                    as u64;
-                sum_tied_x_na +=
-                    ((xi.is_nan()) && (xj.is_nan()) && (!(yi.is_nan()) | !(yj.is_nan()))) as u64;
-                sum_tied_y_na +=
-                    ((!(xi.is_nan()) | !(xj.is_nan())) && (yi.is_nan()) && (yj.is_nan())) as u64;
-                sum_all_na +=
-                    ((xi.is_nan()) && (xj.is_nan()) && (yi.is_nan()) && (yj.is_nan())) as u64;
-            }
+                            sum_tied_x: (!(xi.is_nan())
+                                && !(xj.is_nan())
+                                // && (xi == xj)
+                                && float_eq::float_eq!(xi, xj, ulps <= 4)
+                                // && (!(yi.is_nan()) && !(yj.is_nan()) && (yi != yj)))
+                                && (!(yi.is_nan()) && !(yj.is_nan()) && float_eq::float_ne!(yi, yj, ulps <= 4)))
+                                as u64,
+                            sum_tied_y: (!(xi.is_nan())
+                                && !(xj.is_nan())
+                                // && (xi != xj)
+                                && float_eq::float_ne!(xi, xj, ulps <= 4)
+                                // && (!(yi.is_nan()) && !(yj.is_nan()) && (yi == yj)))
+                                && (!(yi.is_nan()) && !(yj.is_nan()) && float_eq::float_eq!(yi, yj, ulps <= 4)))
+                                as u64,
+                            sum_tied_x_na:
+                            ((xi.is_nan()) && (xj.is_nan()) && (!(yi.is_nan()) | !(yj.is_nan()))) as u64,
+                            sum_tied_y_na:
+                            ((!(xi.is_nan()) | !(xj.is_nan())) && (yi.is_nan()) && (yj.is_nan())) as u64,
+                            sum_all_na:
+                            ((xi.is_nan()) && (xj.is_nan()) && (yi.is_nan()) && (yj.is_nan())) as u64,
+                        }
+                    })
+                .sum::<Term>()
         }
-    }
+    };
 
-    let half_sum_na_ties = sum_all_na / 2;
+    let half_sum_na_ties = terms.sum_all_na / 2;
     match perspective {
         Perspective::Global => {
-            sum_x_ties = sum_tied_x + sum_tied_x_na + half_sum_na_ties;
-            sum_y_ties = sum_tied_y + sum_tied_y_na + half_sum_na_ties;
+            sum_x_ties = terms.sum_tied_x + terms.sum_tied_x_na + half_sum_na_ties;
+            sum_y_ties = terms.sum_tied_y + terms.sum_tied_y_na + half_sum_na_ties;
         }
         Perspective::Local => {
-            sum_x_ties = sum_tied_x;
-            sum_y_ties = sum_tied_y;
+            sum_x_ties = terms.sum_tied_x;
+            sum_y_ties = terms.sum_tied_y;
         }
     }
 
-    k_numerator = sum_concordant as f64 - sum_discordant as f64;
-    k_denominator = (sum_discordant + sum_concordant + sum_x_ties + sum_y_ties) as f64;
+    k_numerator = terms.sum_concordant as f64 - terms.sum_discordant as f64;
+    k_denominator = (terms.sum_discordant + terms.sum_concordant + sum_x_ties + sum_y_ties) as f64;
 
     k_tau = k_numerator / k_denominator;
     k_tau
