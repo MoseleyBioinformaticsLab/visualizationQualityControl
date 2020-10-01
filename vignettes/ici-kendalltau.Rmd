@@ -86,7 +86,7 @@ where:
   
 $$\tau = \frac{\left | pairs_{concordant} \right | - \left | pairs_{discordant} \right |}{\left | pairs_{concordant} \right | + \left | pairs_{discordant} \right | + \left | pairs_{xties} \right | + \left | pairs_{yties} \right |}$$
 
-The nice thing about this, is based on the above definitions of concordant and discordant, I think this is directly the *local* version. Therefore, to get the *global* version, we count the ties of NA's and other things, and appropriately inflate the *x* and *y* tie counts in the bottom.
+The nice thing about this approach is that it is based on the above definitions of concordant and discordant. Also, I think this is directly the *local* version. Therefore, to get the *global* version, we count the ties of NA's and other things, and appropriately inflate the *x* and *y* tie counts in the bottom.
 
 ## Scaling by the correlation with the highest information content
    
