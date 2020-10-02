@@ -106,9 +106,6 @@ Where:
 
 ## Speed
 
-Even with the main calculation written in C++, it still tends to be pretty slow. 
-Faster than the pure R implementation (kept for reference in case of algorithmic modifications), but still slow.
-
 ```{r speed}
 x = rnorm(1000)
 y = rnorm(1000)
@@ -117,14 +114,11 @@ library(microbenchmark)
 
 microbenchmark(
   cor(x, y, method = "kendall"),
-  ici_kendallt(x, y),
-  visualizationQualityControl:::ref_kendallt(x, y),
+  ici_kendallt(x, y, "global"),
   times = 5
 )
 ```
 
-10X slower than the C implementation, but 10X faster than the base R implementation.
-
 ```{r check_values}
-all.equal(ici_kendallt(x, y), cor(x, y, method = "kendall"))
+all.equal(ici_kendallt(x, y, "global"), cor(x, y, method = "kendall"))
 ```
