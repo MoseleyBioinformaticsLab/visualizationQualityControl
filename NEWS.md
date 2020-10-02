@@ -1,3 +1,9 @@
+# v 0.3.85
+
+* Added a function for calculating the information-content-informed Kendall-tau
+correlation, `ici_kendallt`, and variants around calculating all pairwise correlations
+between samples; `visqc_ici_kendallt` and `visqc_ici_kendallt_splitup` for parallel processing.
+
 # v 0.3.16
 
 * Removed requirement for `ggbiplot`, instead we added a function for calculating
