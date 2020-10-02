@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cluster and reorder — similarity_reorder • visualizationQualityControl</title>
+<title>MIT License • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
-<link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script>
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
@@ -33,15 +33,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="cluster and reorder — similarity_reorder" />
-<meta property="og:description" content="given a matrix (maybe a distance matrix), cluster and then re-order using
-dendsort." />
+<meta property="og:title" content="MIT License" />
 
 
 
@@ -60,7 +58,7 @@ dendsort." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -72,7 +70,7 @@ dendsort." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
+        <a class="navbar-link" href="index.html">visualizationQualityControl</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.85</span>
       </span>
     </div>
@@ -80,13 +78,13 @@ dendsort." />
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
+  <a href="index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -96,18 +94,18 @@ dendsort." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+      <a href="articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
     </li>
     <li>
-      <a href="../articles/pca_testing.html">PCA Testing</a>
+      <a href="articles/pca_testing.html">PCA Testing</a>
     </li>
     <li>
-      <a href="../articles/quality_control.html">Quality Control Example</a>
+      <a href="articles/quality_control.html">Quality Control Example</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -123,62 +121,29 @@ dendsort." />
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>cluster and reorder</h1>
-    
-    <div class="hidden name"><code>similarity_reorder.Rd</code></div>
+      <h1>MIT License</h1>
     </div>
 
-    <div class="ref-description">
-    <p>given a matrix (maybe a distance matrix), cluster and then re-order using
-dendsort.</p>
-    </div>
+<div id="mit-license" class="section level1">
 
-    <pre class="usage"><span class='fu'>similarity_reorder</span>(
-  <span class='kw'>similarity_matrix</span>,
-  matrix_indices = <span class='kw'>NULL</span>,
-  transform = <span class='st'>"none"</span>,
-  hclust_method = <span class='st'>"complete"</span>,
-  dendsort_type = <span class='st'>"min"</span>
-)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>similarity_matrix</th>
-      <td><p>matrix of similarities</p></td>
-    </tr>
-    <tr>
-      <th>matrix_indices</th>
-      <td><p>indices to reorder</p></td>
-    </tr>
-    <tr>
-      <th>transform</th>
-      <td><p>should a transformation be applied to the data first</p></td>
-    </tr>
-    <tr>
-      <th>hclust_method</th>
-      <td><p>which method for clustering should be used?</p></td>
-    </tr>
-    <tr>
-      <th>dendsort_type</th>
-      <td><p>how should the reordering be done? (default is "min")</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a <a href='https://rdrr.io/r/stats/dendrogram.html'>dendrogram</a> object. To get the order use <code>order.dendogram</code>.</p>
+<p>Copyright (c) 2020 Robert M Flight and Hunter NB Moseley</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+</div>
 
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
+
 
 
       <footer>

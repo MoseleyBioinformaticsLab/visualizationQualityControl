@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cluster and reorder — similarity_reorder • visualizationQualityControl</title>
+<title>compute kendall tau — ref_diff_kendallt • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="cluster and reorder — similarity_reorder" />
-<meta property="og:description" content="given a matrix (maybe a distance matrix), cluster and then re-order using
-dendsort." />
+<meta property="og:title" content="compute kendall tau — ref_diff_kendallt" />
+<meta property="og:description" content="Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+This version has logic for handling missing data in X and Y." />
 
 
 
@@ -125,53 +125,55 @@ dendsort." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cluster and reorder</h1>
+    <h1>compute kendall tau</h1>
     
-    <div class="hidden name"><code>similarity_reorder.Rd</code></div>
+    <div class="hidden name"><code>ref_diff_kendallt.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>given a matrix (maybe a distance matrix), cluster and then re-order using
-dendsort.</p>
+    <p>Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+This version has logic for handling missing data in X and Y.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>similarity_reorder</span>(
-  <span class='kw'>similarity_matrix</span>,
-  matrix_indices = <span class='kw'>NULL</span>,
-  transform = <span class='st'>"none"</span>,
-  hclust_method = <span class='st'>"complete"</span>,
-  dendsort_type = <span class='st'>"min"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ref_diff_kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, perspective = <span class='st'>"local"</span>, output = <span class='st'>"simple"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>similarity_matrix</th>
-      <td><p>matrix of similarities</p></td>
+      <th>x</th>
+      <td><p>vector of x data</p></td>
     </tr>
     <tr>
-      <th>matrix_indices</th>
-      <td><p>indices to reorder</p></td>
+      <th>y</th>
+      <td><p>vector of y data</p></td>
     </tr>
     <tr>
-      <th>transform</th>
-      <td><p>should a transformation be applied to the data first</p></td>
-    </tr>
-    <tr>
-      <th>hclust_method</th>
-      <td><p>which method for clustering should be used?</p></td>
-    </tr>
-    <tr>
-      <th>dendsort_type</th>
-      <td><p>how should the reordering be done? (default is "min")</p></td>
+      <th>perspective</th>
+      <td><p>how to treat missing data, see details</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <a href='https://rdrr.io/r/stats/dendrogram.html'>dendrogram</a> object. To get the order use <code>order.dendogram</code>.</p>
+    <p>numeric</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"grp_cor_data"</span>)
+<span class='kw'>exp_data</span> <span class='op'>=</span> <span class='kw'>grp_cor_data</span><span class='op'>$</span><span class='kw'>data</span>
+<span class='kw'>x</span> <span class='op'>=</span> <span class='kw'>exp_data</span>[, <span class='fl'>1</span>]
+<span class='kw'>y</span> <span class='op'>=</span> <span class='kw'>exp_data</span>[, <span class='fl'>2</span>]
+<span class='fu'>kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y): could not find function "kendallt"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cor</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, method = <span class='st'>"kendall"</span>) 
+</div><div class='output co'>#&gt; [1] 0.6953535</div><div class='input'>
+<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>))
+<span class='kw'>y</span> <span class='op'>=</span> <span class='kw'>x</span> <span class='op'>+</span> <span class='fl'>1</span>
+<span class='kw'>y2</span> <span class='op'>=</span> <span class='kw'>y</span>
+<span class='kw'>y2</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>] <span class='op'>=</span> <span class='fl'>NA</span>
+<span class='fu'>kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y): could not find function "kendallt"</span></div><div class='input'><span class='fu'>kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y2</span>, <span class='st'>"global"</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y2, "global"): could not find function "kendallt"</span></div><div class='input'><span class='fu'>kendallt</span>(<span class='kw'>x</span>, <span class='kw'>y2</span>)
+</div><div class='output co'>#&gt; <span class='error'>Error in kendallt(x, y2): could not find function "kendallt"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
