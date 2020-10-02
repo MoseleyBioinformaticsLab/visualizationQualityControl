@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.85</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.87</span>
       </span>
     </div>
 
@@ -261,11 +261,11 @@
 )
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;                           expr      min       lq     mean   median       uq</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 14.66172 14.91047 15.13118 15.17929 15.26431</span>
-<span class="co">#&gt;   ici_kendallt(x, y, "global") 71.82848 75.70087 79.24382 81.13915 83.27164</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 13.22335 13.28224 13.52812 13.43654 13.45346</span>
+<span class="co">#&gt;   ici_kendallt(x, y, "global") 12.40772 12.41187 12.59525 12.50561 12.75169</span>
 <span class="co">#&gt;       max neval</span>
-<span class="co">#&gt;  15.64013     5</span>
-<span class="co">#&gt;  84.27894     5</span>
+<span class="co">#&gt;  14.24504     5</span>
+<span class="co">#&gt;  12.89935     5</span>
 </pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="fu"><a href="../reference/ici_kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, <span class="st">"global"</span>), <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>))
