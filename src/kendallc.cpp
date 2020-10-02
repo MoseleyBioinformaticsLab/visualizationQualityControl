@@ -70,13 +70,18 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
   NumericVector x2 = clone(x);
   NumericVector y2 = clone(y);
   
+  int n_na_x = sum(is_na(x));
+  int n_na_y = sum(is_na(y));
+  
+  if ((n_na_x == x.size()) || (n_na_y == y.size())) {
+    return 0.0;
+  }
+  
   x2 = x[!is_na(x)];
   y2 = y[!is_na(y)];
   
   double min_value = min(NumericVector::create(min(x2), min(y2)));
   double na_value = min_value - (0.1 * abs(min_value));
-  //Rprintf("%f \n", min_value);
-  //Rprintf("%f \n", na_value);
   
   x2 = clone(x);
   y2 = clone(y);
@@ -145,6 +150,9 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
   
   // debugging
   if (output != "simple") {
+    Rprintf("min_value: %f \n", min_value);
+    Rprintf("na_value: %f \n", na_value);
+    
     Rprintf("n_entry: %f \n", n_entry);
     Rprintf("x_ties: %f \n", sum_tied_x);
     Rprintf("x_na_ties: %f \n", sum_tied_x_na);
@@ -307,7 +315,11 @@ double ici_ref_kendallt(NumericVector x, NumericVector y, String perspective = "
     Rprintf("k_denominator: %f \n", k_denominator);
   }
   // 
-  k_tau = k_numerator / k_denominator;
+  if (k_denominator == 0) {
+    k_tau = 0;
+  } else {
+    k_tau = k_numerator / k_denominator;
+  }
   
   return k_tau;
 }
