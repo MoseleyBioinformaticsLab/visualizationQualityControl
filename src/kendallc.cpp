@@ -92,7 +92,7 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
   double n_entry = x.size();
   
   if (n_entry < 2) {
-    return NA_REAL;
+    return 0.0;
   }
   
   if (perspective == "global") {
@@ -166,8 +166,11 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
     Rprintf("k_denominator: %f \n", k_denominator);
   }
   
-  // 
-  k_tau = k_numerator / k_denominator;
+  if (k_denominator == 0) {
+    k_tau = 0;
+  } else {
+    k_tau = k_numerator / k_denominator;
+  }
   
   return k_tau;
 }
@@ -228,7 +231,7 @@ double ici_ref_kendallt(NumericVector x, NumericVector y, String perspective = "
   double n_entry = x.size();
   
   if (n_entry < 2) {
-    return NA_REAL;
+    return 0.0;
   }
   
   if (perspective == "global") {
