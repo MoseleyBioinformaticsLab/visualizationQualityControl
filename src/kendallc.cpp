@@ -35,7 +35,6 @@ double signC(double x) {
 //' kendallt(x, y2)
 //' 
 //' @importFrom Rcpp sourceCpp
-//' @name kendallt
 //' @export
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
@@ -199,8 +198,8 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
 //' kendallt(x, y2)
 //' 
 //' @importFrom Rcpp sourceCpp
-//' @name kendallt
 //' @useDynLib visualizationQualityControl
+//' @keywords internal
 //' @return kendall tau correlation
 // [[Rcpp::export]]
 double ici_ref_kendallt(NumericVector x, NumericVector y, String perspective = "local", String output = "simple") {

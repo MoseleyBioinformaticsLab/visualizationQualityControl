@@ -7,6 +7,8 @@
 #' @param y vector of y data
 #' @param perspective how to treat missing data, see details
 #' 
+#' @keywords internal
+#' 
 #' @return numeric
 #' 
 #' @examples 
@@ -157,6 +159,8 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @param x vector of x data
 #' @param y vector of y data
 #' @param perspective how to treat missing data, see details
+#' 
+#' @keywords internal
 #' 
 #' @return numeric
 #' 

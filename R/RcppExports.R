@@ -24,7 +24,6 @@
 #' kendallt(x, y2)
 #' 
 #' @importFrom Rcpp sourceCpp
-#' @name kendallt
 #' @export
 #' @useDynLib visualizationQualityControl
 #' @return kendall tau correlation
@@ -55,8 +54,8 @@ ici_kendallt <- function(x, y, perspective = "local", output = "simple") {
 #' kendallt(x, y2)
 #' 
 #' @importFrom Rcpp sourceCpp
-#' @name kendallt
 #' @useDynLib visualizationQualityControl
+#' @keywords internal
 #' @return kendall tau correlation
 ici_ref_kendallt <- function(x, y, perspective = "local", output = "simple") {
     .Call('_visualizationQualityControl_ici_ref_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective, output)
