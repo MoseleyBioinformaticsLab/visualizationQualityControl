@@ -24,6 +24,157 @@
 #' kendallt(x, y)
 #' kendallt(x, y2, "global")
 #' kendallt(x, y2)
+ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
+  if (length(x) != length(y)) {
+    stop("x and y vector lengths are not the same!")
+  }
+  #pairpoints = combn(length(x), 2)
+  
+  # for local perspective
+  # number of comparisons should be changed to (n * (n - 1)), this lets us modify n
+  # when we have matching NA's in both x and y
+  n = length(x)
+  
+  # if we don't do this, then they will get counted in the concordant pairs when they shouldn't
+  # in the local version.
+  # Note, we actually want to see these for the "global" version
+  if (perspective %in% "local") {
+    matching_na = (is.na(x) & is.na(y))
+    n_matching_na = sum(matching_na)
+    x = x[!matching_na]
+    y = y[!matching_na]
+  }
+  
+  min_value = min(c(x, y), na.rm = TRUE)
+  na_value = min_value - (.1 * abs(min_value))
+  x[is.na(x)] = na_value
+  y[is.na(y)] = na_value
+  
+  if (length(x) < 2) {
+    return(NA)
+  }
+  # creates two matrices to hold the pairwise data in columnar format
+  # x_i in column 1, x_j in column 2, and same for y
+  x_index = t(combn(length(x), 2))
+  y_index = t(combn(length(y), 2))
+  
+  x_pairs = matrix(x[c(x_index[, 1], x_index[, 2])], ncol = 2, byrow = FALSE)
+  y_pairs = matrix(y[c(y_index[, 1], y_index[, 2])], ncol = 2, byrow = FALSE)
+  
+  # xi > xj and yi > yj                ## 1
+  # xi < xj and yi < yj                ## 2
+  # xi > xj and yi and not yj          ## 3
+  # xi < xj and not yi and yj          ## 4
+  # xi and not xj and yi > yj          ## 5
+  # not xi and xj and yi < yj          ## 6
+  # xi and not xj and yi and not yj    ## 7
+  # not xi and xj and not yi and yj    ## 8
+  
+  x_pair_sign = sign(x_pairs[, 2] - x_pairs[, 1])
+  y_pair_sign = sign(y_pairs[, 2] - y_pairs[, 1])
+  
+  if (perspective == "global") {
+    
+    sum_concordant = sum((x_pair_sign * y_pair_sign) > 0)
+    
+    sum_discordant = sum((x_pair_sign * y_pair_sign) < 0)
+    
+  } else {
+    sum_concordant = sum((x_pair_sign * y_pair_sign) > 0)
+    
+    sum_discordant = sum((x_pair_sign * y_pair_sign) < 0)
+  }
+  
+  x_paired_tie = x_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
+  y_paired_tie = y_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
+  
+  x_ties = (x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] == x_paired_tie[, 2]) & (y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] != y_paired_tie[, 2]) 
+  
+  y_ties = ((x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] != x_paired_tie[, 2]) & ((y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] == y_paired_tie[, 2]))) 
+  
+  
+  x_na_ties = (x_pairs[, 1] == na_value) & (x_pairs[, 2] == na_value) & ((y_pairs[, 1] != na_value) | (y_pairs[, 2] != na_value))
+  sum_x_na_ties = sum(x_na_ties)
+  y_na_ties = ((x_paired_tie[, 1] != na_value) | (x_paired_tie[, 2] != na_value)) & (y_paired_tie[, 1] == na_value) & (y_paired_tie[, 2] == na_value) 
+  sum_y_na_ties = sum(y_na_ties)
+  
+  all_na = (x_paired_tie[, 1] == na_value) & (x_paired_tie[, 2] == na_value) & (y_paired_tie[, 1] == na_value) & (y_paired_tie[, 2] == na_value)
+  half_sum_na_ties = sum(all_na) / 2
+  
+  
+  if (perspective == "global") {
+    sum_x_ties = sum(x_ties) + sum_x_na_ties + half_sum_na_ties
+    sum_y_ties = sum(y_ties) + sum_y_na_ties + half_sum_na_ties
+  } else {
+    sum_x_ties = sum(x_ties)
+    sum_y_ties = sum(y_ties)
+  }
+  
+  k_numerator = sum_concordant - sum_discordant
+  k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
+  k_tau = k_numerator / k_denominator
+  
+  if (output == "simple") {
+    return(k_tau)
+  } else {
+    out_data = data.frame(variable = c("n_entry",
+                                       "x_ties",
+                                       "x_na_ties",
+                                       "x_na",
+                                       "y_ties",
+                                       "y_na_ties",
+                                       "y_na",
+                                       "half_sum_na_ties",
+                                       "sum_concordant",
+                                       "sum_discordant",
+                                       "sum_numerator",
+                                       "sum_denominator",
+                                       "k_tau"), 
+                          value = c(length(x),
+                                    sum(x_ties),
+                                    sum_x_na_ties,
+                                    sum((x == na_value)),
+                                    sum(y_ties),
+                                    sum_y_na_ties,
+                                    sum((y == na_value)),
+                                    half_sum_na_ties,
+                                    sum_concordant,
+                                    sum_discordant,
+                                    k_numerator,
+                                    k_denominator,
+                                    k_tau))
+    return(out_data)
+  }
+  
+}
+
+
+#' compute kendall tau
+#' 
+#' Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+#' This version has logic for handling missing data in X and Y.
+#' 
+#' @param x vector of x data
+#' @param y vector of y data
+#' @param perspective how to treat missing data, see details
+#' 
+#' @return numeric
+#' 
+#' @examples 
+#' data("grp_cor_data")
+#' exp_data = grp_cor_data$data
+#' x = exp_data[, 1]
+#' y = exp_data[, 2]
+#' kendallt(x, y)
+#' cor(x, y, method = "kendall") 
+#' 
+#' x = sort(rnorm(100))
+#' y = x + 1
+#' y2 = y
+#' y2[1:10] = NA
+#' kendallt(x, y)
+#' kendallt(x, y2, "global")
+#' kendallt(x, y2)
 ref_kendallt = function(x, y, perspective = "local", output = "simple"){
   if (length(x) != length(y)) {
     stop("x and y vector lengths are not the same!")
