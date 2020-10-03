@@ -10,7 +10,7 @@ visqc_ici_kendallt_splitup(
   exclude_inf = TRUE,
   exclude_0 = TRUE,
   zero_value = 0,
-  perspective = "local",
+  perspective = "global",
   scale_max = TRUE,
   diag_good = TRUE
 )
@@ -38,4 +38,8 @@ numeric
 \description{
 Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 all samples.
+}
+\details{
+For more details, see the ICI-Kendall-tau vignette:
+  \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
 }

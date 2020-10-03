@@ -339,7 +339,7 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 
 #' information-content-informed kendall tau
 #' 
-#' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+#' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 #' all samples.
 #' 
 #' @param data_matrix samples are rows, features are columns
@@ -351,6 +351,9 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
+#' @details For more details, see the ICI-Kendall-tau vignette:
+#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#' 
 #' @return numeric
 #' @export
 #' 
@@ -359,7 +362,7 @@ visqc_ici_kendallt = function(data_matrix,
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
                              zero_value = 0, 
-                             perspective = "local",
+                             perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE,
                              progress = FALSE){
@@ -445,6 +448,9 @@ visqc_ici_kendallt = function(data_matrix,
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
+#' @details For more details, see the ICI-Kendall-tau vignette:
+#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#' 
 #' @return numeric
 #' @export
 #' 
@@ -453,7 +459,7 @@ visqc_ici_kendallt_splitup = function(data_matrix,
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
                              zero_value = 0, 
-                             perspective = "local",
+                             perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE){
   

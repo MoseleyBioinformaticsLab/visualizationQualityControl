@@ -18,6 +18,14 @@ double signC(double x) {
 //' @param y numeric vector
 //' @param perspective should we consider the "local" or "global" perspective?
 //' 
+//' @details Calculates the information-content-informed Kendall-tau correlation measure.
+//'   This correlation is based on concordant and discordant ranked pairs, like Kendall-tau,
+//'   but also includes missing values (as NA). Missing values are assumed to be *primarily* due
+//'   to lack of detection due to instrumental sensitivity, and therefore encode *some* information.
+//'   
+//'   For more details see the ICI-Kendall-tau vignette:
+//'   \code{vignette("ici-kendalltau", package = "visualizationQualityControl")}
+//' 
 //' @examples 
 //' data("grp_cor_data")
 //' exp_data = grp_cor_data$data

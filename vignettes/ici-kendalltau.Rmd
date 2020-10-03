@@ -100,9 +100,19 @@ Where:
   * m is the count of missing values across the two variables divided by two rounded down.
     * This formula is based on perfect correlation with a given number of (NA,NA) pairs added. 
 
+## Functions
+
+The functions that implement this include:
+
+* `ici_kendallt`: the workhorse, actually calculating a correlation between an X and Y.
+  * The option `perspective` will control how the `NA` values influence ties.
+  * When comparing samples, you likely want to use `perspective = "global"`.
+* `visqc_ici_kendallt`: Handles comparisons for a matrix.
+  * Rows are samples, columns are features.
+* `visqc_ici_kendallt_splitup`: Allows for multiprocessing using `furrr`.
+  * Have to set up a plan first.
+
 ## Examples
-
-
 
 ## Speed
 
