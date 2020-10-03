@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.87</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.92</span>
       </span>
     </div>
 
@@ -241,6 +241,33 @@
 </li>
 </ul>
 </div>
+<div id="functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#functions" class="anchor"></a>Functions</h2>
+<p>The functions that implement this include:</p>
+<ul>
+<li>
+<code>ici_kendallt</code>: the workhorse, actually calculating a correlation between an X and Y.
+<ul>
+<li>The option <code>perspective</code> will control how the <code>NA</code> values influence ties.</li>
+<li>When comparing samples, you likely want to use <code>perspective = "global"</code>.</li>
+</ul>
+</li>
+<li>
+<code>visqc_ici_kendallt</code>: Handles comparisons for a matrix.
+<ul>
+<li>Rows are samples, columns are features.</li>
+</ul>
+</li>
+<li>
+<code>visqc_ici_kendallt_splitup</code>: Allows for multiprocessing using <code>furrr</code>.
+<ul>
+<li>Have to set up a plan first!</li>
+<li>On a 835 feature by 179 sample data set, the <em>splitup</em> version took ~ 30 seconds on an 8 core laptop, while the <em>sequential</em> version took 140 seconds.</li>
+</ul>
+</li>
+</ul>
+</div>
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
@@ -261,11 +288,11 @@
 )
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;                           expr      min       lq     mean   median       uq</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 13.22335 13.28224 13.52812 13.43654 13.45346</span>
-<span class="co">#&gt;   ici_kendallt(x, y, "global") 12.40772 12.41187 12.59525 12.50561 12.75169</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 13.77956 13.86557 14.09193 14.13838 14.20175</span>
+<span class="co">#&gt;   ici_kendallt(x, y, "global") 12.78948 12.85345 13.10906 12.90728 12.92384</span>
 <span class="co">#&gt;       max neval</span>
-<span class="co">#&gt;  14.24504     5</span>
-<span class="co">#&gt;  12.89935     5</span>
+<span class="co">#&gt;  14.47441     5</span>
+<span class="co">#&gt;  14.07125     5</span>
 </pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="fu"><a href="../reference/ici_kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, <span class="st">"global"</span>), <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>))

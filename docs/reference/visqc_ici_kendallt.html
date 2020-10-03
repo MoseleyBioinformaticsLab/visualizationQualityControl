@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="information-content-informed kendall tau — visqc_ici_kendallt" />
-<meta property="og:description" content="Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+<meta property="og:description" content="Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 all samples." />
 
 
@@ -73,7 +73,7 @@ all samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.87</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.92</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@ all samples." />
     </div>
 
     <div class="ref-description">
-    <p>Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+    <p>Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 all samples.</p>
     </div>
 
@@ -141,7 +141,7 @@ all samples.</p>
   exclude_inf = <span class='fl'>TRUE</span>,
   exclude_0 = <span class='fl'>TRUE</span>,
   zero_value = <span class='fl'>0</span>,
-  perspective = <span class='st'>"local"</span>,
+  perspective = <span class='st'>"global"</span>,
   scale_max = <span class='fl'>TRUE</span>,
   diag_good = <span class='fl'>TRUE</span>,
   progress = <span class='fl'>FALSE</span>
@@ -187,6 +187,10 @@ all samples.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>numeric</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For more details, see the ICI-Kendall-tau vignette:
+  <a href='../doc/ici-kendalltau.html'><code><a href='../articles/ici-kendalltau.html'>vignette("ici-kendalltau", package = "visualizationQualityControl")</a></code></a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
