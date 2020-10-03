@@ -110,7 +110,9 @@ The functions that implement this include:
 * `visqc_ici_kendallt`: Handles comparisons for a matrix.
   * Rows are samples, columns are features.
 * `visqc_ici_kendallt_splitup`: Allows for multiprocessing using `furrr`.
-  * Have to set up a plan first.
+  * Have to set up a plan first!
+  * On a 835 feature by 179 sample data set, the *splitup* version took ~ 30 seconds on an 8 core laptop,
+  while the *sequential* version took 140 seconds.
 
 ## Examples
 
