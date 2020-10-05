@@ -1,7 +1,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use rand::prelude::*;
 use rand_distr::StandardNormal;
-use rustlib::{ici_kendall_tau, Perspective};
+use rustlib::kendall_tau::{ici_kendall_tau, ici_kendall_tau2, Perspective};
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("ici-kendall-tau 1000", |b| {
@@ -13,6 +13,13 @@ fn criterion_benchmark(c: &mut Criterion) {
 
         b.iter(|| {
             ici_kendall_tau(
+                black_box(x.clone()),
+                black_box(y.clone()),
+                Perspective::Local,
+            )
+        });
+        b.iter(|| {
+            ici_kendall_tau2(
                 black_box(x.clone()),
                 black_box(y.clone()),
                 Perspective::Local,
