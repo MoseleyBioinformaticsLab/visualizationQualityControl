@@ -49,6 +49,11 @@ double signC(double x) {
 // [[Rcpp::export]]
 double ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String output = "simple") {
   
+  if (x.length() != y.length()) {
+    throw std::range_error("X and Y are not the same length!");
+    exit(-1);
+  }
+  
   double sum_concordant = 0;
   double sum_discordant = 0;
   double sum_x_ties = 0;
@@ -119,7 +124,7 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
     for (int i = 0; i < (n_entry - 1); i++) {
       for (int j = (i+1); j < n_entry; j++) {
         reject_concordant = ((x2[i] != na_value) && (x2[j] == na_value) && (y2[i] != na_value) && (y2[j] == na_value)) ||                                             //            ## 7
-          ((x[i] == na_value) && (x[j] != na_value) && (y[i] == na_value) && (y[j] != na_value));
+          ((x2[i] == na_value) && (x2[j] != na_value) && (y2[i] == na_value) && (y2[j] != na_value));
         reject_discordant = ((x2[i] != na_value) && (x2[j] == na_value)  && (y2[i] == na_value) && (y2[j] != na_value)) ||
           ((x2[i] == na_value)  && (x2[j] != na_value)  && (y2[i] != na_value) && (y2[j] == na_value));
         
