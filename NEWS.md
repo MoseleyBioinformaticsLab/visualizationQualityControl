@@ -1,3 +1,7 @@
+# v 0.3.96
+
+* Now throw an error if X and Y are not the same length in `ici_kendallt`.
+
 # v 0.3.85
 
 * Added a function for calculating the information-content-informed Kendall-tau
