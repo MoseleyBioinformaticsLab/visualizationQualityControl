@@ -2,3 +2,8 @@
 .RData
 .Rproj.user
 inst/doc
+src/*.o
+src/*.so
+src/*.dll
+doc
+Meta

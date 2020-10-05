@@ -7,6 +7,14 @@
 #' @param y numeric vector
 #' @param perspective should we consider the "local" or "global" perspective?
 #' 
+#' @details Calculates the information-content-informed Kendall-tau correlation measure.
+#'   This correlation is based on concordant and discordant ranked pairs, like Kendall-tau,
+#'   but also includes missing values (as NA). Missing values are assumed to be *primarily* due
+#'   to lack of detection due to instrumental sensitivity, and therefore encode *some* information.
+#'   
+#'   For more details see the ICI-Kendall-tau vignette:
+#'   \code{vignette("ici-kendalltau", package = "visualizationQualityControl")}
+#' 
 #' @examples 
 #' data("grp_cor_data")
 #' exp_data = grp_cor_data$data
@@ -24,12 +32,41 @@
 #' kendallt(x, y2)
 #' 
 #' @importFrom Rcpp sourceCpp
-#' @name kendallt
 #' @export
 #' @useDynLib visualizationQualityControl
 #' @return kendall tau correlation
-ici_kendallt <- function(x, y, perspective = "local") {
-    .Call('_visualizationQualityControl_ici_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective)
+ici_kendallt <- function(x, y, perspective = "local", output = "simple") {
+    .Call('_visualizationQualityControl_ici_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective, output)
+}
+
+#' Calculates ici-kendall-tau
+#' 
+#' @param x numeric vector
+#' @param y numeric vector
+#' @param perspective should we consider the "local" or "global" perspective?
+#' 
+#' @examples 
+#' data("grp_cor_data")
+#' exp_data = grp_cor_data$data
+#' x = exp_data[, 1]
+#' y = exp_data[, 2]
+#' kendallt(x, y)
+#' cor(x, y, method = "kendall") 
+#' 
+#' x = sort(rnorm(100))
+#' y = x + 1
+#' y2 = y
+#' y2[1:10] = NA
+#' kendallt(x, y)
+#' kendallt(x, y2, "global")
+#' kendallt(x, y2)
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib visualizationQualityControl
+#' @keywords internal
+#' @return kendall tau correlation
+ici_ref_kendallt <- function(x, y, perspective = "local", output = "simple") {
+    .Call('_visualizationQualityControl_ici_ref_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective, output)
 }
 
 #' Calculates ici-kendall-tau matrix

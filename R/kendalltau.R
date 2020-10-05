@@ -7,6 +7,161 @@
 #' @param y vector of y data
 #' @param perspective how to treat missing data, see details
 #' 
+#' @keywords internal
+#' 
+#' @return numeric
+#' 
+#' @examples 
+#' data("grp_cor_data")
+#' exp_data = grp_cor_data$data
+#' x = exp_data[, 1]
+#' y = exp_data[, 2]
+#' kendallt(x, y)
+#' cor(x, y, method = "kendall") 
+#' 
+#' x = sort(rnorm(100))
+#' y = x + 1
+#' y2 = y
+#' y2[1:10] = NA
+#' kendallt(x, y)
+#' kendallt(x, y2, "global")
+#' kendallt(x, y2)
+ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
+  if (length(x) != length(y)) {
+    stop("x and y vector lengths are not the same!")
+  }
+  #pairpoints = combn(length(x), 2)
+  
+  # for local perspective
+  # number of comparisons should be changed to (n * (n - 1)), this lets us modify n
+  # when we have matching NA's in both x and y
+  n = length(x)
+  
+  # if we don't do this, then they will get counted in the concordant pairs when they shouldn't
+  # in the local version.
+  # Note, we actually want to see these for the "global" version
+  if (perspective %in% "local") {
+    matching_na = (is.na(x) & is.na(y))
+    n_matching_na = sum(matching_na)
+    x = x[!matching_na]
+    y = y[!matching_na]
+  }
+  
+  min_value = min(c(x, y), na.rm = TRUE)
+  na_value = min_value - (.1 * abs(min_value))
+  x[is.na(x)] = na_value
+  y[is.na(y)] = na_value
+  
+  if (length(x) < 2) {
+    return(NA)
+  }
+  # creates two matrices to hold the pairwise data in columnar format
+  # x_i in column 1, x_j in column 2, and same for y
+  x_index = t(combn(length(x), 2))
+  y_index = t(combn(length(y), 2))
+  
+  x_pairs = matrix(x[c(x_index[, 1], x_index[, 2])], ncol = 2, byrow = FALSE)
+  y_pairs = matrix(y[c(y_index[, 1], y_index[, 2])], ncol = 2, byrow = FALSE)
+  
+  # xi > xj and yi > yj                ## 1
+  # xi < xj and yi < yj                ## 2
+  # xi > xj and yi and not yj          ## 3
+  # xi < xj and not yi and yj          ## 4
+  # xi and not xj and yi > yj          ## 5
+  # not xi and xj and yi < yj          ## 6
+  # xi and not xj and yi and not yj    ## 7
+  # not xi and xj and not yi and yj    ## 8
+  
+  x_pair_sign = sign(x_pairs[, 2] - x_pairs[, 1])
+  y_pair_sign = sign(y_pairs[, 2] - y_pairs[, 1])
+  
+  if (perspective == "global") {
+    
+    sum_concordant = sum((x_pair_sign * y_pair_sign) > 0)
+    
+    sum_discordant = sum((x_pair_sign * y_pair_sign) < 0)
+    
+  } else {
+    sum_concordant = sum((x_pair_sign * y_pair_sign) > 0)
+    
+    sum_discordant = sum((x_pair_sign * y_pair_sign) < 0)
+  }
+  
+  x_paired_tie = x_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
+  y_paired_tie = y_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
+  
+  x_ties = (x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] == x_paired_tie[, 2]) & (y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] != y_paired_tie[, 2]) 
+  
+  y_ties = ((x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] != x_paired_tie[, 2]) & ((y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] == y_paired_tie[, 2]))) 
+  
+  
+  x_na_ties = (x_pairs[, 1] == na_value) & (x_pairs[, 2] == na_value) & ((y_pairs[, 1] != na_value) | (y_pairs[, 2] != na_value))
+  sum_x_na_ties = sum(x_na_ties)
+  y_na_ties = ((x_paired_tie[, 1] != na_value) | (x_paired_tie[, 2] != na_value)) & (y_paired_tie[, 1] == na_value) & (y_paired_tie[, 2] == na_value) 
+  sum_y_na_ties = sum(y_na_ties)
+  
+  all_na = (x_paired_tie[, 1] == na_value) & (x_paired_tie[, 2] == na_value) & (y_paired_tie[, 1] == na_value) & (y_paired_tie[, 2] == na_value)
+  half_sum_na_ties = sum(all_na) / 2
+  
+  
+  if (perspective == "global") {
+    sum_x_ties = sum(x_ties) + sum_x_na_ties + half_sum_na_ties
+    sum_y_ties = sum(y_ties) + sum_y_na_ties + half_sum_na_ties
+  } else {
+    sum_x_ties = sum(x_ties)
+    sum_y_ties = sum(y_ties)
+  }
+  
+  k_numerator = sum_concordant - sum_discordant
+  k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
+  k_tau = k_numerator / k_denominator
+  
+  if (output == "simple") {
+    return(k_tau)
+  } else {
+    out_data = data.frame(variable = c("n_entry",
+                                       "x_ties",
+                                       "x_na_ties",
+                                       "x_na",
+                                       "y_ties",
+                                       "y_na_ties",
+                                       "y_na",
+                                       "half_sum_na_ties",
+                                       "sum_concordant",
+                                       "sum_discordant",
+                                       "sum_numerator",
+                                       "sum_denominator",
+                                       "k_tau"), 
+                          value = c(length(x),
+                                    sum(x_ties),
+                                    sum_x_na_ties,
+                                    sum((x == na_value)),
+                                    sum(y_ties),
+                                    sum_y_na_ties,
+                                    sum((y == na_value)),
+                                    half_sum_na_ties,
+                                    sum_concordant,
+                                    sum_discordant,
+                                    k_numerator,
+                                    k_denominator,
+                                    k_tau))
+    return(out_data)
+  }
+  
+}
+
+
+#' compute kendall tau
+#' 
+#' Reference version for IT-kendall-tau. Given two vectors of data, computes the Kendall Tau correlation between them.
+#' This version has logic for handling missing data in X and Y.
+#' 
+#' @param x vector of x data
+#' @param y vector of y data
+#' @param perspective how to treat missing data, see details
+#' 
+#' @keywords internal
+#' 
 #' @return numeric
 #' 
 #' @examples 
@@ -184,7 +339,7 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 
 #' information-content-informed kendall tau
 #' 
-#' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
+#' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 #' all samples.
 #' 
 #' @param data_matrix samples are rows, features are columns
@@ -196,6 +351,9 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
+#' @details For more details, see the ICI-Kendall-tau vignette:
+#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#' 
 #' @return numeric
 #' @export
 #' 
@@ -204,7 +362,7 @@ visqc_ici_kendallt = function(data_matrix,
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
                              zero_value = 0, 
-                             perspective = "local",
+                             perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE,
                              progress = FALSE){
@@ -245,7 +403,7 @@ visqc_ici_kendallt = function(data_matrix,
   ntotal = 0
   for (icol in seq(1, ncol(exclude_data))) {
     for (jcol in seq(icol, ncol(exclude_data))) {
-      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
+      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = ici_kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
       knitrProgressBar::update_progress(prog_bar)
       # ntotal = ntotal + 1
       # message(ntotal)
@@ -290,6 +448,9 @@ visqc_ici_kendallt = function(data_matrix,
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
+#' @details For more details, see the ICI-Kendall-tau vignette:
+#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#' 
 #' @return numeric
 #' @export
 #' 
@@ -298,7 +459,7 @@ visqc_ici_kendallt_splitup = function(data_matrix,
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
                              zero_value = 0, 
-                             perspective = "local",
+                             perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE){
   
@@ -331,46 +492,45 @@ visqc_ici_kendallt_splitup = function(data_matrix,
   ncore = future::nbrOfWorkers()
   names(ncore) = NULL
   
-  n_each_col = seq(n_sample, 1, -1)
-  n_todo = sum(n_each_col)
+  pairwise_comparisons = combn(n_sample, 2)
+  
+  if (!diag_good) {
+    extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
+    pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
+  }
+  
+  n_todo = ncol(pairwise_comparisons)
   n_each = ceiling(n_todo / ncore)
   
-  split_indices = vector("list", ncore)
+  split_comparisons = vector("list", ncore)
   start_loc = 1
   
-  for (isplit in seq_along(split_indices)) {
-    curr_cumsum = cumsum(n_each_col[seq(start_loc, n_sample)])
-    is_over = sum(curr_cumsum > n_each)
-    if (is_over >= 1) {
-      stop_loc = min(which(curr_cumsum > n_each)) + start_loc
-    } else {
-      stop_loc = n_sample
-    }
-    split_indices[[isplit]] = seq(start_loc, stop_loc)
-    if (stop_loc == n_sample) {
-      break()
-    }
+  for (isplit in seq_along(split_comparisons)) {
+    stop_loc = min(start_loc + n_each, n_todo)
+    
+    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc]
     start_loc = stop_loc + 1
   }
-  null_indices = purrr::map_lgl(split_indices, is.null)
-  split_indices = split_indices[!null_indices]
   
-  do_split = function(seq_range, exclude_data, perspective) {
+  null_comparisons = purrr::map_lgl(split_comparisons, is.null)
+  split_comparisons = split_comparisons[!null_comparisons]
+  
+  do_split = function(do_comparisons, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
     tmp_cor = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(tmp_cor) = colnames(tmp_cor) = colnames(exclude_data)
     
-    for (icol in seq_range) {
-      for (jcol in seq(icol, ncol(exclude_data))) {
-        #print(c(icol, jcol))
-        tmp_cor[icol, jcol] = tmp_cor[jcol, icol] = kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
-      }
+    for (icol in seq(1, ncol(do_comparisons))) {
+      iloc = do_comparisons[1, icol]
+      jloc = do_comparisons[2, icol]
+      tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_kendallt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
     }
+    
     tmp_cor
   }
   #tictoc::tic()
-  split_cor = furrr::future_map(split_indices, do_split, exclude_data, perspective)
+  split_cor = furrr::future_map(split_comparisons, do_split, exclude_data, perspective)
   #tictoc::toc()
   
   

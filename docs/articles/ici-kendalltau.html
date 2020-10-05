@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.72</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.92</span>
       </span>
     </div>
 
@@ -224,7 +224,7 @@
 <h2 class="hasAnchor">
 <a href="#alternative-tau-b" class="anchor"></a>Alternative Tau-b</h2>
 <p><span class="math display">\[\tau = \frac{\left | pairs_{concordant} \right | - \left | pairs_{discordant} \right |}{\left | pairs_{concordant} \right | + \left | pairs_{discordant} \right | + \left | pairs_{xties} \right | + \left | pairs_{yties} \right |}\]</span></p>
-<p>The nice thing about this, is based on the above definitions of concordant and discordant, I think this is directly the <em>local</em> version. Therefore, to get the <em>global</em> version, we count the ties of NA’s and other things, and appropriately inflate the <em>x</em> and <em>y</em> tie counts in the bottom.</p>
+<p>The nice thing about this approach is that it is based on the above definitions of concordant and discordant. Also, I think this is directly the <em>local</em> version. Therefore, to get the <em>global</em> version, we count the ties of NA’s and other things, and appropriately inflate the <em>x</em> and <em>y</em> tie counts in the bottom.</p>
 </div>
 <div id="scaling-by-the-correlation-with-the-highest-information-content" class="section level2">
 <h2 class="hasAnchor">
@@ -241,6 +241,33 @@
 </li>
 </ul>
 </div>
+<div id="functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#functions" class="anchor"></a>Functions</h2>
+<p>The functions that implement this include:</p>
+<ul>
+<li>
+<code>ici_kendallt</code>: the workhorse, actually calculating a correlation between an X and Y.
+<ul>
+<li>The option <code>perspective</code> will control how the <code>NA</code> values influence ties.</li>
+<li>When comparing samples, you likely want to use <code>perspective = "global"</code>.</li>
+</ul>
+</li>
+<li>
+<code>visqc_ici_kendallt</code>: Handles comparisons for a matrix.
+<ul>
+<li>Rows are samples, columns are features.</li>
+</ul>
+</li>
+<li>
+<code>visqc_ici_kendallt_splitup</code>: Allows for multiprocessing using <code>furrr</code>.
+<ul>
+<li>Have to set up a plan first!</li>
+<li>On a 835 feature by 179 sample data set, the <em>splitup</em> version took ~ 30 seconds on an 8 core laptop, while the <em>sequential</em> version took 140 seconds.</li>
+</ul>
+</li>
+</ul>
+</div>
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
@@ -248,7 +275,6 @@
 <div id="speed" class="section level2">
 <h2 class="hasAnchor">
 <a href="#speed" class="anchor"></a>Speed</h2>
-<p>Even with the main calculation written in C++, it still tends to be pretty slow. Faster than the pure R implementation (kept for reference in case of algorithmic modifications), but still slow.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">1000</span>)
 <span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">1000</span>)
@@ -257,23 +283,19 @@
 
 <span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span>(
   <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>),
-  <span class="fu"><a href="../reference/kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>),
-  <span class="kw">visualizationQualityControl</span>:::<span class="fu"><a href="../reference/ref_kendallt.html">ref_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>),
+  <span class="fu"><a href="../reference/ici_kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, <span class="st">"global"</span>),
   times = <span class="fl">5</span>
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;                                              expr       min         lq</span>
-<span class="co">#&gt;                     cor(x, y, method = "kendall")   13.5761   13.86954</span>
-<span class="co">#&gt;                                ici_kendallt(x, y)  212.0416  216.26162</span>
-<span class="co">#&gt;  visualizationQualityControl:::ref_kendallt(x, y) 1207.2518 1242.40566</span>
-<span class="co">#&gt;        mean     median         uq        max neval</span>
-<span class="co">#&gt;    14.23169   13.88212   14.01654   15.81416     5</span>
-<span class="co">#&gt;   231.74232  221.62472  248.21222  260.57141     5</span>
-<span class="co">#&gt;  1330.53925 1263.73655 1354.24603 1585.05620     5</span>
+<span class="co">#&gt;                           expr      min       lq     mean   median       uq</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 13.77956 13.86557 14.09193 14.13838 14.20175</span>
+<span class="co">#&gt;   ici_kendallt(x, y, "global") 12.78948 12.85345 13.10906 12.90728 12.92384</span>
+<span class="co">#&gt;       max neval</span>
+<span class="co">#&gt;  14.47441     5</span>
+<span class="co">#&gt;  14.07125     5</span>
 </pre></div>
-<p>10X slower than the C implementation, but 10X faster than the base R implementation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="fu"><a href="../reference/kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>), <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="fu"><a href="../reference/ici_kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, <span class="st">"global"</span>), <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>))
 <span class="co">#&gt; [1] TRUE</span>
 </pre></div>
 </div>
@@ -290,7 +312,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Robert M Flight.</p>
+  <p>Developed by Robert M Flight, Hunter NB Moseley.</p>
 </div>
 
 <div class="pkgdown">

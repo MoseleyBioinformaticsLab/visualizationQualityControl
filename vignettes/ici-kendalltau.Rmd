@@ -86,7 +86,7 @@ where:
   
 $$\tau = \frac{\left | pairs_{concordant} \right | - \left | pairs_{discordant} \right |}{\left | pairs_{concordant} \right | + \left | pairs_{discordant} \right | + \left | pairs_{xties} \right | + \left | pairs_{yties} \right |}$$
 
-The nice thing about this, is based on the above definitions of concordant and discordant, I think this is directly the *local* version. Therefore, to get the *global* version, we count the ties of NA's and other things, and appropriately inflate the *x* and *y* tie counts in the bottom.
+The nice thing about this approach is that it is based on the above definitions of concordant and discordant. Also, I think this is directly the *local* version. Therefore, to get the *global* version, we count the ties of NA's and other things, and appropriately inflate the *x* and *y* tie counts in the bottom.
 
 ## Scaling by the correlation with the highest information content
    
@@ -100,14 +100,23 @@ Where:
   * m is the count of missing values across the two variables divided by two rounded down.
     * This formula is based on perfect correlation with a given number of (NA,NA) pairs added. 
 
+## Functions
+
+The functions that implement this include:
+
+* `ici_kendallt`: the workhorse, actually calculating a correlation between an X and Y.
+  * The option `perspective` will control how the `NA` values influence ties.
+  * When comparing samples, you likely want to use `perspective = "global"`.
+* `visqc_ici_kendallt`: Handles comparisons for a matrix.
+  * Rows are samples, columns are features.
+* `visqc_ici_kendallt_splitup`: Allows for multiprocessing using `furrr`.
+  * Have to set up a plan first!
+  * On a 835 feature by 179 sample data set, the *splitup* version took ~ 30 seconds on an 8 core laptop,
+  while the *sequential* version took 140 seconds.
+
 ## Examples
 
-
-
 ## Speed
-
-Even with the main calculation written in C++, it still tends to be pretty slow. 
-Faster than the pure R implementation (kept for reference in case of algorithmic modifications), but still slow.
 
 ```{r speed}
 x = rnorm(1000)
@@ -117,14 +126,11 @@ library(microbenchmark)
 
 microbenchmark(
   cor(x, y, method = "kendall"),
-  ici_kendallt(x, y),
-  visualizationQualityControl:::ref_kendallt(x, y),
+  ici_kendallt(x, y, "global"),
   times = 5
 )
 ```
 
-10X slower than the C implementation, but 10X faster than the base R implementation.
-
 ```{r check_values}
-all.equal(ici_kendallt(x, y), cor(x, y, method = "kendall"))
+all.equal(ici_kendallt(x, y, "global"), cor(x, y, method = "kendall"))
 ```
