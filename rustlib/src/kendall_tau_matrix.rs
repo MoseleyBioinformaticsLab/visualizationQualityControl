@@ -1,4 +1,11 @@
-use crate::kendall_tau::Perspective;
+use crate::kendall_tau::{ici_kendall_tau, Perspective};
+use crate::Numeric;
+use itertools::Itertools;
+use ndarray::{Array2, Axis};
+use rand_distr::num_traits::Zero;
+use rayon::prelude::*;
+use statrs::statistics::Statistics;
+use std::collections::HashMap;
 
 /// information-content-informed kendall tau
 /// Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
@@ -16,93 +23,152 @@ use crate::kendall_tau::Perspective;
 /// Default call: `function(data_matrix, exclude_na = TRUE, exclude_inf = TRUE,
 ///     exclude_0 = TRUE, zero_value = 0, perspective = "global", scale_max = TRUE,
 ///     diag_good = TRUE, progress = FALSE)`
-pub fn visqc_ici_kendall_tau(data_matrix,
-exclude_na:bool,
-exclude_inf: bool,
-exclude_0: bool,
-zero_value: f64,
-perspective: Perspective,
-scale_max:bool,
-diag_good: bool,
-progress: bool){
-    unimplemented!()
-}
+pub fn visqc_ici_kendall_tau(
+    data_matrix: ndarray::Array2<Numeric>,
+    exclude_na: bool,
+    exclude_inf: bool,
+    exclude_0: bool,
+    _zero_value: f64,
+    perspective: Perspective,
+    scale_max: bool,
+    diag_good: bool,
+    _progress: bool,
+) -> Array2<f64> {
+    // unimplemented!()
+    // it is assumed now that the data-matrix is features x observations (atleast accoring to the code)
 
-/*
-visqc_ici_kendallt = function(data_matrix,
-                             exclude_na = TRUE,
-                             exclude_inf = TRUE,
-                             exclude_0 = TRUE,
-                             zero_value = 0,
-                             perspective = "global",
-                             scale_max = TRUE,
-                             diag_good = TRUE,
-                             progress = FALSE){
+    // these are all initially `false`
+    let exclude_nothing = Array2::from_elem(data_matrix.dim(), false);
 
-  # assume row-wise (because that is what the description states), so need to transpose
-  # because `cor` actually does things columnwise.
-  data_matrix <- t(data_matrix)
-  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  inf_loc <- na_loc
-  zero_loc <- na_loc
+    let na_loc: Array2<bool> = if exclude_na {
+        //FIXME: this should be a check for NA values.
+        data_matrix.map(|v| v.is_nan())
+    } else {
+        exclude_nothing.clone()
+    };
+    let inf_loc: Array2<bool> = if exclude_inf {
+        data_matrix.map(|x| x.is_infinite())
+    } else {
+        exclude_nothing.clone()
+    };
+    let zero_loc: Array2<bool> = if exclude_0 {
+        data_matrix.map(|v| v.is_zero())
+    } else {
+        exclude_nothing
+    };
 
-  if (exclude_na) {
-    na_loc <- is.na(data_matrix)
-  }
+    let exclude_loc: Array2<bool> = na_loc | zero_loc | inf_loc;
+    //TODO: set these to be NA as well.
+    let mut data_matrix = data_matrix;
+    (ndarray::Zip::from(&mut data_matrix).and(&exclude_loc)).apply(|d, &f| {
+        if f {
+            //FIXME: this should be NA
+            *d = std::f64::NAN;
+        }
+    });
+    //TODO: maybe implement a progress bar {pbr} here?
+    // Only reason this is not done immediately, is that the pbr-crate is made for io-stuff, etc.
+    // and there is no readily available trait/impl to use with rayon/ndarray.
+    let ncols = data_matrix.ncols();
+    let cor_map = (0..ncols)
+        .into_par_iter()
+        .map(|c| (c..ncols).into_par_iter().map(move |x| (c, x)))
+        .flatten()
+        .into_par_iter()
+        .map(|(icol, jcol)| {
+            (
+                (icol, jcol),
+                ici_kendall_tau(
+                    data_matrix.column(icol).into_owned().into_raw_vec(),
+                    data_matrix.column(jcol).into_owned().into_raw_vec(),
+                    perspective.clone(),
+                ),
+            )
+        })
+        .collect::<HashMap<(usize, usize), Numeric>>();
 
-  if (exclude_inf) {
-    inf_loc <- is.infinite(data_matrix)
-  }
+    let cor_matrix: Array2<Numeric> = Array2::from_shape_fn((ncols, ncols), |(i, j)| {
+        // ensure that i<=j when accessing the correlation records
+        let (i, j) = (i.min(j), i.max(j));
+        // dbg!(i, j);
+        *cor_map.get(&(i, j)).unwrap()
+    });
 
-  if (exclude_0) {
-    zero_loc <- data_matrix == zero_value
-  }
+    // calculate the max-cor value for use in scaling across multiple comparisons
+    let n_observations = data_matrix.nrows() as u64;
+    let n_na = exclude_loc.mapv(|x| x as u64).sum_axis(Axis(0));
+    debug_assert_eq!(n_na.len(), data_matrix.ncols());
+    let mut n_na = n_na.into_raw_vec();
+    n_na.sort();
+    let m_value = (n_na[0] + n_na[1]) / 2;
+    let n_m = n_observations - m_value;
+    let max_cor_denominator =
+        statrs::function::factorial::binomial(n_m, 2) + (n_observations * m_value) as f64;
+    let max_cor_numerator = statrs::function::factorial::binomial(n_m, 2)
+        + (n_observations * m_value) as f64
+        + statrs::function::factorial::binomial(m_value, 2);
+    let max_cor = max_cor_denominator / max_cor_numerator;
 
-  exclude_loc <- na_loc | zero_loc | inf_loc
+    let mut out_matrix = if scale_max {
+        cor_matrix / max_cor
+    } else {
+        cor_matrix
+    };
 
-  exclude_data = data_matrix
-  exclude_data[exclude_loc] = NA
-  # set everything to NA and let R take care of it
-
-  if (ncol(data_matrix) > 2 && progress) {
-    prog_bar = knitrProgressBar::progress_estimated(ncol(exclude_data) * (ncol(exclude_data))/ 2)
-  } else {
-    prog_bar = NULL
-  }
-
-  cor_matrix = matrix(NA, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
-  rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
-  ntotal = 0
-  for (icol in seq(1, ncol(exclude_data))) {
-    for (jcol in seq(icol, ncol(exclude_data))) {
-      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = ici_kendallt(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
-      knitrProgressBar::update_progress(prog_bar)
-      # ntotal = ntotal + 1
-      # message(ntotal)
+    if diag_good {
+        let n_good = exclude_loc.mapv(|x| (!x) as u64).sum_axis(Axis(0));
+        let max_n_good = *n_good.into_iter().max().unwrap() as f64;
+        out_matrix
+            .diag_mut()
+            .zip_mut_with(&n_good, |v, good_v| *v = *good_v as f64 / max_n_good);
     }
-  }
 
-  # calculate the max-cor value for use in scaling across multiple comparisons
-  n_observations = nrow(exclude_data)
-  n_na = sort(colSums(exclude_loc))
-  m_value = floor(sum(n_na[1:2]) / 2)
-  n_m = n_observations - m_value
-  max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
-  max_cor = max_cor_denominator / max_cor_numerator
-
-  if (scale_max) {
-    out_matrix = cor_matrix / max_cor
-  } else {
-    out_matrix = cor_matrix
-  }
-
-  if (diag_good) {
-    n_good = colSums(!exclude_loc)
-    diag(out_matrix) = n_good / max(n_good)
-  }
-
-  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
+    out_matrix
 }
 
-*/
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use csv::WriterBuilder;
+    use ndarray_csv::{Array2Reader, Array2Writer};
+    use std::env::current_dir;
+    use std::fs::File;
+
+    #[test]
+    fn test_wine_example() {
+        let wine_file = File::open(format!(
+            "{}/data/wine.csv",
+            current_dir().unwrap().display()
+        ))
+        .unwrap();
+        let mut reader = csv::ReaderBuilder::new()
+            .has_headers(true)
+            .delimiter(b',')
+            .flexible(false)
+            .from_reader(wine_file);
+        let wine_dataset: Array2<Numeric> = reader.deserialize_array2((178, 14)).unwrap();
+        println!("Dims: {:?}", wine_dataset.dim());
+        // println!("{:#?}", wine_dataset);
+
+        let ici_kendall_tau_mat = visqc_ici_kendall_tau(
+            wine_dataset,
+            true,
+            true,
+            true,
+            0.,
+            Perspective::Global,
+            true,
+            true,
+            false,
+        );
+        let kendall_wine_mat_file = File::create(format!(
+            "{}/result/wine_kendall_tau.csv",
+            current_dir().unwrap().display()
+        ))
+        .unwrap();
+        let mut writer = WriterBuilder::new()
+            .has_headers(false)
+            .from_writer(kendall_wine_mat_file);
+        writer.serialize_array2(&ici_kendall_tau_mat).unwrap();
+    }
+}

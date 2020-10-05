@@ -1,7 +1,8 @@
 use crate::Numeric;
 use itertools::Itertools;
+use rayon::prelude::*;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Perspective {
     Local,
     Global,
@@ -264,6 +265,12 @@ pub fn ici_kendall_tau(x: Vec<Numeric>, y: Vec<Numeric>, perspective: Perspectiv
     #[warn(clippy::float_cmp)]
     for i in 0..(n_entry - 1) {
         for j in (i + 1)..n_entry {
+            // (0..n_entry - 1)
+            //     .into_par_iter()
+            //     .map(|x| ((x + 1)..n_entry).into_par_iter().map(move |xx| (x, xx)))
+            //     .flatten()
+            //     .map(|(i, j)| (x2[i], x2[j], y2[i], y2[j]))
+            //     .for_each(|(x2i, x2j, y2i, y2j)| {
             // let x2i = x2[i];
             // let x2j = x2[j];
             // let y2i = y2[i];
@@ -317,6 +324,8 @@ pub fn ici_kendall_tau(x: Vec<Numeric>, y: Vec<Numeric>, perspective: Perspectiv
                     as u64;
         }
     }
+    // });
+    // }
 
     let half_sum_na_ties: Numeric = sum_all_na as f64 / 2.;
 

@@ -1,0 +1,83 @@
+---
+title: "Infomration-Content-Informed Kendall Tau Matrix"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Infomration-Content-Informed Kendall Tau Matrix}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(visualizationQualityControl)
+```
+
+
+```{r}
+# 1. DOWNLOAD the wine dataset from UCI:
+URL  <- "ftp://ftp.ics.uci.edu/pub/machine-learning-databases/wine/wine.data"
+wine <-  read.csv(URL, header = FALSE) 
+
+
+# 2. SET variables' names as header:
+colnames(wine) <- c('Type', 'Alcohol', 'Malic', 'Ash', 
+                    'Alcalinity', 'Magnesium', 'Phenols', 
+                    'Flavanoids', 'Nonflavanoids', 'Proanthocyanins',
+                    'Color', 'Hue', 'Dilution', 'Proline')
+wine %>% readr::write_csv("rustlib/data/wine.csv", col_names = TRUE)
+wine %>% dim()
+
+```
+
+```{r}
+
+visqc_ici_kendallt(wine, progress = FALSE) -> 
+  wine_ici_mat
+wine_ici_mat$cor %>% graphics::image.default()
+
+```
+
+Loading the one from the `rustlib`-implementation
+
+```{r}
+readr::read_csv("")
+```
+
+
+Let us benchmark this:
+
+```{r}
+
+bench::mark(
+  visqc_ici_kendallt(wine, progress = FALSE)
+)
+
+```
+
+
+<!-- The below doesn't work because there is no correlation really (obvious) but the case is bigger.. -->
+
+<!-- Let us simulate some stuff and see where that takes us: -->
+
+
+<!-- ```{r} -->
+<!-- bm_dimensions <- c(835, 179) -->
+
+<!-- bm_dataset <- mvtnorm::rmvnorm(n = bm_dimensions[1], mean = rep(0, bm_dimensions[2])) -->
+
+<!-- bm_dataset %>% visqc_ici_kendallt(progress = FALSE) ->  -->
+<!--   bm_dataset_ici -->
+<!-- bm_dataset_ici$cor %>% graphics::image.default() -->
+
+<!-- bench::mark( -->
+<!--   visqc_ici_kendallt(bm_dataset) -->
+<!-- ) -->
+
+<!-- ``` -->
+
