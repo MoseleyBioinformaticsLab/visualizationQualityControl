@@ -5,35 +5,35 @@
 
 using namespace Rcpp;
 
-// kendallt
-double kendallt(NumericVector x, NumericVector y, String perspective);
-RcppExport SEXP _visualizationQualityControl_kendallt(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP) {
+// ici_kendallt
+double ici_kendallt(NumericVector x, NumericVector y, String perspective);
+RcppExport SEXP _visualizationQualityControl_ici_kendallt(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< String >::type perspective(perspectiveSEXP);
-    rcpp_result_gen = Rcpp::wrap(kendallt(x, y, perspective));
+    rcpp_result_gen = Rcpp::wrap(ici_kendallt(x, y, perspective));
     return rcpp_result_gen;
 END_RCPP
 }
-// kendall_matrix
-NumericMatrix kendall_matrix(NumericMatrix& x, String perspective);
-RcppExport SEXP _visualizationQualityControl_kendall_matrix(SEXP xSEXP, SEXP perspectiveSEXP) {
+// ici_kendall_matrix
+NumericMatrix ici_kendall_matrix(NumericMatrix& x, String perspective);
+RcppExport SEXP _visualizationQualityControl_ici_kendall_matrix(SEXP xSEXP, SEXP perspectiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
     Rcpp::traits::input_parameter< String >::type perspective(perspectiveSEXP);
-    rcpp_result_gen = Rcpp::wrap(kendall_matrix(x, perspective));
+    rcpp_result_gen = Rcpp::wrap(ici_kendall_matrix(x, perspective));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_visualizationQualityControl_kendallt", (DL_FUNC) &_visualizationQualityControl_kendallt, 3},
-    {"_visualizationQualityControl_kendall_matrix", (DL_FUNC) &_visualizationQualityControl_kendall_matrix, 2},
+    {"_visualizationQualityControl_ici_kendallt", (DL_FUNC) &_visualizationQualityControl_ici_kendallt, 3},
+    {"_visualizationQualityControl_ici_kendall_matrix", (DL_FUNC) &_visualizationQualityControl_ici_kendall_matrix, 2},
     {NULL, NULL, 0}
 };
 
