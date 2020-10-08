@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>calculate F-ratio — calculate_fratio • visualizationQualityControl</title>
+<title>information-content-informed kendall tau — visqc_ici_kendallt_ref • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="calculate F-ratio — calculate_fratio" />
-<meta property="og:description" content="given a data matrix of samples (rows) and features (columns), and a vector of classes (character or factor),
-calculate an F-ratio for each feature." />
+<meta property="og:title" content="information-content-informed kendall tau — visqc_ici_kendallt_ref" />
+<meta property="og:description" content="Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
+all samples." />
 
 
 
@@ -125,34 +125,72 @@ calculate an F-ratio for each feature." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>calculate F-ratio</h1>
+    <h1>information-content-informed kendall tau</h1>
     
-    <div class="hidden name"><code>calculate_fratio.Rd</code></div>
+    <div class="hidden name"><code>visqc_ici_kendallt_ref.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>given a data matrix of samples (rows) and features (columns), and a vector of classes (character or factor),
-calculate an F-ratio for each feature.</p>
+    <p>Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
+all samples.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calculate_fratio</span>(<span class='kw'>data</span>, <span class='kw'>data_classes</span>)</pre>
+    <pre class="usage"><span class='fu'>visqc_ici_kendallt_ref</span>(
+  <span class='kw'>data_matrix</span>,
+  exclude_na = <span class='fl'>TRUE</span>,
+  exclude_inf = <span class='fl'>TRUE</span>,
+  exclude_0 = <span class='fl'>TRUE</span>,
+  zero_value = <span class='fl'>0</span>,
+  perspective = <span class='st'>"global"</span>,
+  scale_max = <span class='fl'>TRUE</span>,
+  diag_good = <span class='fl'>TRUE</span>,
+  progress = <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>the data matrix, with samples (rows) and features (columns)</p></td>
+      <th>data_matrix</th>
+      <td><p>samples are rows, features are columns</p></td>
     </tr>
     <tr>
-      <th>data_classes</th>
-      <td><p>what are the classes of the rows</p></td>
+      <th>exclude_na</th>
+      <td><p>should NA values be treated as NA?</p></td>
+    </tr>
+    <tr>
+      <th>exclude_inf</th>
+      <td><p>should Inf values be treated as NA?</p></td>
+    </tr>
+    <tr>
+      <th>exclude_0</th>
+      <td><p>should zero values be treated as NA?</p></td>
+    </tr>
+    <tr>
+      <th>zero_value</th>
+      <td><p>what is the actual zero value?</p></td>
+    </tr>
+    <tr>
+      <th>perspective</th>
+      <td><p>how to treat missing data in denominator and ties, see details</p></td>
+    </tr>
+    <tr>
+      <th>scale_max</th>
+      <td><p>should everything be scaled compared to the maximum correlation?</p></td>
+    </tr>
+    <tr>
+      <th>diag_not_na</th>
+      <td><p>should the diagonal entries reflect how many entries in the sample were "good"?</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>vector</p>
+    <p>numeric</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For more details, see the ICI-Kendall-tau vignette:
+  <a href='../doc/ici-kendalltau.html'><code><a href='../articles/ici-kendalltau.html'>vignette("ici-kendalltau", package = "visualizationQualityControl")</a></code></a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

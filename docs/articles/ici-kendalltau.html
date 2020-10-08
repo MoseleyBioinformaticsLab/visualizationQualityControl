@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.92</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.105</span>
       </span>
     </div>
 
@@ -257,13 +257,14 @@
 <code>visqc_ici_kendallt</code>: Handles comparisons for a matrix.
 <ul>
 <li>Rows are samples, columns are features.</li>
+<li>Implicitly parallel, but have to call:
+<ul>
+<li>library(furrr)</li>
+<li>plan(multiprocess)</li>
 </ul>
 </li>
-<li>
-<code>visqc_ici_kendallt_splitup</code>: Allows for multiprocessing using <code>furrr</code>.
-<ul>
-<li>Have to set up a plan first!</li>
-<li>On a 835 feature by 179 sample data set, the <em>splitup</em> version took ~ 30 seconds on an 8 core laptop, while the <em>sequential</em> version took 140 seconds.</li>
+<li>Otherwise will only use a single core.</li>
+<li>On a 835 feature by 179 sample data set, using all cores took ~ 11 seconds on an 8 core laptop, while the <em>sequential</em> version took 90 seconds.</li>
 </ul>
 </li>
 </ul>
@@ -287,12 +288,12 @@
   times = <span class="fl">5</span>
 )
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;                           expr      min       lq     mean   median       uq</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 13.77956 13.86557 14.09193 14.13838 14.20175</span>
-<span class="co">#&gt;   ici_kendallt(x, y, "global") 12.78948 12.85345 13.10906 12.90728 12.92384</span>
-<span class="co">#&gt;       max neval</span>
-<span class="co">#&gt;  14.47441     5</span>
-<span class="co">#&gt;  14.07125     5</span>
+<span class="co">#&gt;                           expr       min        lq      mean    median</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 13.228134 13.315856 13.324542 13.324393</span>
+<span class="co">#&gt;   ici_kendallt(x, y, "global")  7.870682  7.873501  7.963921  7.904064</span>
+<span class="co">#&gt;         uq       max neval</span>
+<span class="co">#&gt;  13.326874 13.427453     5</span>
+<span class="co">#&gt;   7.952865  8.218495     5</span>
 </pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="fu"><a href="../reference/ici_kendallt.html">ici_kendallt</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, <span class="st">"global"</span>), <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, method = <span class="st">"kendall"</span>))

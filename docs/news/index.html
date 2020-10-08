@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.92</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.105</span>
       </span>
     </div>
 
@@ -127,6 +127,21 @@
       
     </div>
 
+    <div id="v-03100" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.100">
+<a href="#v-03100" class="anchor"></a>v 0.3.100</h1>
+<ul>
+<li><p>Making the splitup version of ICI-Kendall-tau the “implementation” (<code>visqc_ici_kendallt</code>), and using a single core if the user doesn’t setup a “plan” first. A reference version still exists so we can run tests against it, but it is no longer exported for general users.</p></li>
+<li><p>Also inlined the C++ sign function, which gave us another 3X speedup on my 8 core machine on a larger test data set.</p></li>
+</ul>
+</div>
+    <div id="v-0396" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.96">
+<a href="#v-0396" class="anchor"></a>v 0.3.96</h1>
+<ul>
+<li>Now throw an error if X and Y are not the same length in <code>ici_kendallt</code>.</li>
+</ul>
+</div>
     <div id="v-0385" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.85">
 <a href="#v-0385" class="anchor"></a>v 0.3.85</h1>
