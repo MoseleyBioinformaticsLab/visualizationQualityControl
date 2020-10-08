@@ -12,8 +12,7 @@ visqc_ici_kendallt(
   zero_value = 0,
   perspective = "global",
   scale_max = TRUE,
-  diag_good = TRUE,
-  progress = FALSE
+  diag_good = TRUE
 )
 }
 \arguments{
@@ -37,7 +36,7 @@ visqc_ici_kendallt(
 numeric
 }
 \description{
-Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
+Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 all samples.
 }
 \details{
