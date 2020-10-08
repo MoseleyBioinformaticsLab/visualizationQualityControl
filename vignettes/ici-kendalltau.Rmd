@@ -109,10 +109,11 @@ The functions that implement this include:
   * When comparing samples, you likely want to use `perspective = "global"`.
 * `visqc_ici_kendallt`: Handles comparisons for a matrix.
   * Rows are samples, columns are features.
-* `visqc_ici_kendallt_splitup`: Allows for multiprocessing using `furrr`.
-  * Have to set up a plan first!
-  * On a 835 feature by 179 sample data set, the *splitup* version took ~ 30 seconds on an 8 core laptop,
-  while the *sequential* version took 140 seconds.
+  * Implicitly parallel, but have to call:
+    * library(furrr)
+    * plan(multiprocess)
+  * Otherwise will only use a single core.
+  * On a 835 feature by 179 sample data set, using all cores took ~ 11 seconds on an 8 core laptop, while the *sequential* version took 90 seconds.
 
 ## Examples
 
