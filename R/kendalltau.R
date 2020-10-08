@@ -510,6 +510,10 @@ visqc_ici_kendallt_splitup = function(data_matrix,
     
     split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc]
     start_loc = stop_loc + 1
+    
+    if (start_loc > n_each) {
+      break()
+    }
   }
   
   null_comparisons = purrr::map_lgl(split_comparisons, is.null)

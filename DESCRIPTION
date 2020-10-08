@@ -1,5 +1,5 @@
 Package: visualizationQualityControl
-Version: 0.3.97
+Version: 0.3.98
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.
@@ -7,7 +7,7 @@ Authors@R: c(person(given = c("Robert", "M"), family = "Flight", email
         = "rflight79@gmail.com", role = c("aut", "cre")), person(given
         = c("Hunter", "NB"), family = "Moseley", email =
         "hunter.moseley@gmail.com", role = c("aut")))
-Date: 2020-10-05
+Date: 2020-10-08
 Depends: R (>= 3.1.1)
 biocViews:
 Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
