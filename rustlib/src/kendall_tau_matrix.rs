@@ -3,8 +3,8 @@ use crate::Numeric;
 use itertools::Itertools;
 use ndarray::{Array2, Axis};
 use rand_distr::num_traits::Zero;
+#[cfg(feature = "rayon")]
 use rayon::prelude::*;
-use statrs::statistics::Statistics;
 use std::collections::HashMap;
 
 /// information-content-informed kendall tau
@@ -34,8 +34,8 @@ pub fn visqc_ici_kendall_tau(
     diag_good: bool,
     _progress: bool,
 ) -> Array2<f64> {
-    // unimplemented!()
     // it is assumed now that the data-matrix is features x observations (atleast accoring to the code)
+    //FIXME: should panic if `data_matrix` doesn't have atleast 2 variables
 
     // these are all initially `false`
     let exclude_nothing = Array2::from_elem(data_matrix.dim(), false);
@@ -71,16 +71,20 @@ pub fn visqc_ici_kendall_tau(
     // and there is no readily available trait/impl to use with rayon/ndarray.
     let ncols = data_matrix.ncols();
     let cor_map = (0..ncols)
-        .into_par_iter()
-        .map(|c| (c..ncols).into_par_iter().map(move |x| (c, x)))
+        // .into_par_iter()
+        .map(|c| {
+            (c..ncols)
+                // .into_par_iter()
+                .map(move |x| (c, x))
+        })
         .flatten()
-        .into_par_iter()
+        // .into_par_iter()
         .map(|(icol, jcol)| {
             (
                 (icol, jcol),
                 ici_kendall_tau(
-                    data_matrix.column(icol).into_owned().into_raw_vec(),
-                    data_matrix.column(jcol).into_owned().into_raw_vec(),
+                    data_matrix.column(icol),
+                    data_matrix.column(jcol),
                     perspective.clone(),
                 ),
             )
@@ -99,7 +103,7 @@ pub fn visqc_ici_kendall_tau(
     let n_na = exclude_loc.mapv(|x| x as u64).sum_axis(Axis(0));
     debug_assert_eq!(n_na.len(), data_matrix.ncols());
     let mut n_na = n_na.into_raw_vec();
-    n_na.sort();
+    n_na.sort_unstable();
     let m_value = (n_na[0] + n_na[1]) / 2;
     let n_m = n_observations - m_value;
     let max_cor_denominator =
@@ -169,6 +173,44 @@ mod tests {
         let mut writer = WriterBuilder::new()
             .has_headers(false)
             .from_writer(kendall_wine_mat_file);
+        writer.serialize_array2(&ici_kendall_tau_mat).unwrap();
+    }
+
+    #[test]
+    fn test_big_matrix2() {
+        let wine_file = File::open(format!(
+            "{}/data/big_matrix2.csv",
+            current_dir().unwrap().display()
+        ))
+        .unwrap();
+        let mut reader = csv::ReaderBuilder::new()
+            .has_headers(true)
+            .delimiter(b',')
+            .flexible(false)
+            .from_reader(wine_file);
+        let big_matrix2_dataset: Array2<Numeric> = reader.deserialize_array2((875, 179)).unwrap();
+        println!("Dims: {:?}", big_matrix2_dataset.dim());
+        // println!("{:#?}", wine_dataset);
+
+        let ici_kendall_tau_mat = visqc_ici_kendall_tau(
+            big_matrix2_dataset,
+            true,
+            true,
+            true,
+            0.,
+            Perspective::Global,
+            true,
+            true,
+            false,
+        );
+        let kendall_big_matrix2_mat_file = File::create(format!(
+            "{}/result/big_matrix2_kendall_tau.csv",
+            current_dir().unwrap().display()
+        ))
+        .unwrap();
+        let mut writer = WriterBuilder::new()
+            .has_headers(false)
+            .from_writer(kendall_big_matrix2_mat_file);
         writer.serialize_array2(&ici_kendall_tau_mat).unwrap();
     }
 }
