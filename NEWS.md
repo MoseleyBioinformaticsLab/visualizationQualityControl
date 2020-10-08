@@ -1,3 +1,10 @@
+# v 0.3.100
+
+* Making the splitup version the "implementation", and using a single core if the user doesn't setup a "plan" first.
+
+* Also inlined the C++ sign function, which gave us another 3X speedup on my 8 core machine on a larger test data set.
+
+
 # v 0.3.96
 
 * Now throw an error if X and Y are not the same length in `ici_kendallt`.
