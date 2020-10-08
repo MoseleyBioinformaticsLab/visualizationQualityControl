@@ -189,7 +189,7 @@ mod tests {
             .flexible(false)
             .from_reader(wine_file);
         let big_matrix2_dataset: Array2<Numeric> = reader.deserialize_array2((875, 179)).unwrap();
-        println!("Dims: {:?}", big_matrix2_dataset.dim());
+        // println!("Dims: {:?}", big_matrix2_dataset.dim());
         // println!("{:#?}", wine_dataset);
 
         let ici_kendall_tau_mat = visqc_ici_kendall_tau(

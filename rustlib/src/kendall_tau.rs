@@ -284,13 +284,13 @@ pub fn ici_kendall_tau(
     let x2 = x
         .iter()
         .zip_eq(&matching_na)
-        .filter(|(x, flag)| **flag)
+        .filter(|(x, flag)| !**flag)
         .map(|x| x.0)
         .map(|x| if x.is_nan() { na_value } else { *x });
     let y2 = y
         .iter()
         .zip_eq(&matching_na)
-        .filter(|(x, flag)| **flag)
+        .filter(|(x, flag)| !**flag)
         .map(|x| x.0)
         .map(|y| if y.is_nan() { na_value } else { *y });
 
@@ -299,34 +299,9 @@ pub fn ici_kendall_tau(
         return 0.;
     }
 
-    // #[derive(derive_more::Add, derive_more::Sum)]
-    // struct Term {
-    //     sum_concordant: u64,
-    //     sum_discordant: u64,
-    //     sum_tied_x: u64,
-    //     sum_tied_y: u64,
-    //     sum_tied_x_na: u64,
-    //     sum_tied_y_na: u64,
-    //     sum_all_na: u64,
-    // }
-
-    // // let terms = (0..n_entry - 1)
-    // (0..n_entry - 1)
-    //     // .into_par_iter()
-    //     // .map(|x| ((x + 1)..n_entry).into_par_iter().map(move |xx| (x, xx)))
-    //     .map(|x| ((x + 1)..n_entry).map(move |xx| (x, xx)))
-    //     .flatten()
-    //     // .map(|(i, j)| {
-    //     .for_each(|(i, j)| {
-    //         let x2i = *unsafe { x2.get_unchecked(i) };
-    //         let x2j = *unsafe { x2.get_unchecked(j) };
-    //         let y2i = *unsafe { y2.get_unchecked(i) };
-    //         let y2j = *unsafe { y2.get_unchecked(j) };
-    let pairs = x2.cartesian_product(y2);
     #[warn(clippy::float_cmp)]
-    pairs
-        .clone()
-        .cartesian_product(pairs)
+    x2.zip(y2)
+        .tuple_combinations()
         .for_each(|((x2i, y2i), (x2j, y2j))| {
             let reject_concordant = ((x2i != na_value) && (x2j == na_value) && (y2i != na_value) && (y2j == na_value)) ||                                             //            ## 7
                 ((x2i == na_value) && (x2j != na_value) && (y2i == na_value) && (y2j != na_value));
