@@ -70,7 +70,7 @@ pub fn visqc_ici_kendall_tau(
     // Only reason this is not done immediately, is that the pbr-crate is made for io-stuff, etc.
     // and there is no readily available trait/impl to use with rayon/ndarray.
     let ncols = data_matrix.ncols();
-    let cor_map = (0..ncols)
+    let cor_map_iter = (0..ncols)
         // .into_par_iter()
         .map(|c| {
             (c..ncols)
@@ -79,6 +79,11 @@ pub fn visqc_ici_kendall_tau(
         })
         .flatten()
         // .into_par_iter()
+    ;
+    #[cfg(feature = "rayon")]
+    let cor_map_iter = cor_map_iter.collect_vec().into_par_iter();
+
+    let cor_map = cor_map_iter
         .map(|(icol, jcol)| {
             (
                 (icol, jcol),

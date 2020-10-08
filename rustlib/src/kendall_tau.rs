@@ -299,32 +299,33 @@ pub fn ici_kendall_tau(
         return 0.;
     }
 
+    let pair_iter = x2.zip(y2).tuple_combinations();
+    // #[cfg(feature = "rayon")]
+    // let pair_iter = pair_iter.collect_vec().into_par_iter();
+
     #[warn(clippy::float_cmp)]
-    x2.zip(y2)
-        .tuple_combinations()
-        .for_each(|((x2i, y2i), (x2j, y2j))| {
-            let reject_concordant = ((x2i != na_value) && (x2j == na_value) && (y2i != na_value) && (y2j == na_value)) ||                                             //            ## 7
+    pair_iter.for_each(|((x2i, y2i), (x2j, y2j))| {
+        let reject_concordant = ((x2i != na_value) && (x2j == na_value) && (y2i != na_value) && (y2j == na_value)) ||                                             //            ## 7
                 ((x2i == na_value) && (x2j != na_value) && (y2i == na_value) && (y2j != na_value));
-            let reject_discordant =
-                ((x2i != na_value) && (x2j == na_value) && (y2i == na_value) && (y2j != na_value))
-                    || ((x2i == na_value)
-                        && (x2j != na_value)
-                        && (y2i != na_value)
-                        && (y2j == na_value));
+        let reject_discordant = ((x2i != na_value)
+            && (x2j == na_value)
+            && (y2i == na_value)
+            && (y2j != na_value))
+            || ((x2i == na_value) && (x2j != na_value) && (y2i != na_value) && (y2j == na_value));
 
-            let sum_concordant_term = if perspective == Perspective::Global || !reject_concordant {
-                ((sign_c(x2i - x2j) * sign_c(y2i - y2j)) > 0) as u64
-            } else {
-                Default::default()
-            };
+        let sum_concordant_term = if perspective == Perspective::Global || !reject_concordant {
+            ((sign_c(x2i - x2j) * sign_c(y2i - y2j)) > 0) as u64
+        } else {
+            Default::default()
+        };
 
-            let sum_discordant_term = if perspective == Perspective::Global || !reject_discordant {
-                ((sign_c(x2i - x2j) * sign_c(y2i - y2j)) < 0) as u64
-            } else {
-                Default::default()
-            };
+        let sum_discordant_term = if perspective == Perspective::Global || !reject_discordant {
+            ((sign_c(x2i - x2j) * sign_c(y2i - y2j)) < 0) as u64
+        } else {
+            Default::default()
+        };
 
-            let sum_tied_x_term = ((x2i != na_value)
+        let sum_tied_x_term = ((x2i != na_value)
                 && (x2j != na_value)
                 // && (x2i == x2j)
                 && float_eq::float_eq!(x2i, x2j, ulps <= 6)
@@ -332,7 +333,7 @@ pub fn ici_kendall_tau(
                 // (y2i != y2j)
                 float_eq::float_ne!(y2i, y2j, ulps<=6)
             )) as u64;
-            let sum_tied_y_term = ((x2i != na_value)
+        let sum_tied_y_term = ((x2i != na_value)
                 && (x2j != na_value)
                 // && (x2i != x2j)
                 && float_eq::float_ne!(x2i, x2j, ulps<=6)
@@ -340,33 +341,33 @@ pub fn ici_kendall_tau(
                 // (y2i == y2j)
                 float_eq::float_eq!(y2i, y2j, ulps<=6)
             )) as u64;
-            let sum_tied_x_na_term =
-                ((x2i == na_value) && (x2j == na_value) && ((y2i != na_value) | (y2j != na_value)))
-                    as u64;
-            let sum_tied_y_na_term = (((x2i != na_value) | (x2j != na_value))
-                && (y2i == na_value)
-                && (y2j == na_value)) as u64;
-            let sum_all_na_term =
-                ((x2i == na_value) && (x2j == na_value) && (y2i == na_value) && (y2j == na_value))
-                    as u64;
-            sum_concordant += sum_concordant_term;
-            sum_discordant += sum_discordant_term;
-            sum_tied_x += sum_tied_x_term;
-            sum_tied_y += sum_tied_y_term;
-            sum_tied_x_na += sum_tied_x_na_term;
-            sum_tied_y_na += sum_tied_y_na_term;
-            sum_all_na += sum_all_na_term;
+        let sum_tied_x_na_term = ((x2i == na_value)
+            && (x2j == na_value)
+            && ((y2i != na_value) | (y2j != na_value))) as u64;
+        let sum_tied_y_na_term = (((x2i != na_value) | (x2j != na_value))
+            && (y2i == na_value)
+            && (y2j == na_value)) as u64;
+        let sum_all_na_term =
+            ((x2i == na_value) && (x2j == na_value) && (y2i == na_value) && (y2j == na_value))
+                as u64;
+        sum_concordant += sum_concordant_term;
+        sum_discordant += sum_discordant_term;
+        sum_tied_x += sum_tied_x_term;
+        sum_tied_y += sum_tied_y_term;
+        sum_tied_x_na += sum_tied_x_na_term;
+        sum_tied_y_na += sum_tied_y_na_term;
+        sum_all_na += sum_all_na_term;
 
-            // Term {
-            //     sum_concordant,
-            //     sum_discordant,
-            //     sum_tied_x,
-            //     sum_tied_y,
-            //     sum_tied_x_na,
-            //     sum_tied_y_na,
-            //     sum_all_na,
-            // }
-        });
+        // Term {
+        //     sum_concordant,
+        //     sum_discordant,
+        //     sum_tied_x,
+        //     sum_tied_y,
+        //     sum_tied_x_na,
+        //     sum_tied_y_na,
+        //     sum_all_na,
+        // }
+    });
     // .sum::<Term>();
     // let Term {
     //     sum_concordant,
@@ -399,90 +400,6 @@ pub fn ici_kendall_tau(
         k_numerator / k_denominator
     }
 }
-
-/*
-double ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String output = "simple") {
-
-  if (perspective == "global") {
-    for (int i = 0; i < (n_entry - 1); i++) {
-      for (int j = (i+1); j < n_entry; j++) {
-        sum_concordant+= (signC(x2i - x2[j]) * signC(y2[i] - y2[j])) > 0;
-        sum_discordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) < 0;
-
-        sum_tied_x+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] == x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] != y2[j])));
-        sum_tied_y+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] != x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] == y2[j])));
-        sum_tied_x_na+= (x2[i] == na_value) && (x2[j] == na_value) && ((y2[i] != na_value) | (y2[j] != na_value));
-        sum_tied_y_na+= ((x2[i] != na_value) | (x2[j] != na_value)) && (y2[i] == na_value) && (y2[j] == na_value);
-        sum_all_na+= (x2[i] == na_value) && (x2[j] == na_value) && (y2[i] == na_value) && (y2[j] == na_value);
-      }
-    }
-  } else {
-    for (int i = 0; i < (n_entry - 1); i++) {
-      for (int j = (i+1); j < n_entry; j++) {
-        reject_concordant = ((x2[i] != na_value) && (x2[j] == na_value) && (y2[i] != na_value) && (y2[j] == na_value)) ||                                             //            ## 7
-          ((x2i == na_value) && (x[j] != na_value) && (y[i] == na_value) && (y[j] != na_value));
-        reject_discordant = ((x2[i] != na_value) && (x2[j] == na_value)  && (y2[i] == na_value) && (y2[j] != na_value)) ||
-          ((x2[i] == na_value)  && (x2[j] != na_value)  && (y2[i] != na_value) && (y2[j] == na_value));
-
-        if (!reject_concordant) {
-          sum_concordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) > 0;
-        }
-
-        if (!reject_discordant) {
-          sum_discordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) < 0;
-        }
-
-
-        sum_tied_x+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] == x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] != y2[j])));
-        sum_tied_y+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] != x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] == y2[j])));
-        sum_tied_x_na+= (x2[i] == na_value) && (x2[j] == na_value) && ((y2[i] != na_value) | (y2[j] != na_value));
-        sum_tied_y_na+= ((x2[i] != na_value) | (x2[j] != na_value)) && (y2[i] == na_value) && (y2[j] == na_value);
-        sum_all_na+= (x2[i] == na_value) && (x2[j] == na_value) && (y2[i] == na_value) && (y2[j] == na_value);
-      }
-    }
-  }
-
-  double half_sum_na_ties = sum_all_na / 2;
-
-  if (perspective == "global") {
-    sum_x_ties = sum_tied_x + sum_tied_x_na + half_sum_na_ties;
-    sum_y_ties = sum_tied_y + sum_tied_y_na + half_sum_na_ties;
-  } else {
-    sum_x_ties = sum_tied_x;
-    sum_y_ties = sum_tied_y;
-  }
-
-  k_numerator = sum_concordant - sum_discordant;
-  k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties;
-
-
-  // debugging
-  if (output != "simple") {
-    Rprintf("min_value: %f \n", min_value);
-    Rprintf("na_value: %f \n", na_value);
-
-    Rprintf("n_entry: %f \n", n_entry);
-    Rprintf("x_ties: %f \n", sum_tied_x);
-    Rprintf("x_na_ties: %f \n", sum_tied_x_na);
-    Rprintf("sum_x_ties: %f \n", sum_x_ties);
-    Rprintf("sum_y_ties: %f \n", sum_y_ties);
-    Rprintf("sum_na_ties: %f \n", sum_all_na);
-    Rprintf("half_sum_na_ties: %f \n", half_sum_na_ties);
-    Rprintf("sum_concordant: %f \n", sum_concordant);
-    Rprintf("sum_discordant: %f \n", sum_discordant);
-    Rprintf("k_numerator: %f \n", k_numerator);
-    Rprintf("k_denominator: %f \n", k_denominator);
-  }
-
-  if (k_denominator == 0) {
-    k_tau = 0;
-  } else {
-    k_tau = k_numerator / k_denominator;
-  }
-
-  return k_tau;
-}
-*/
 
 #[cfg(test)]
 mod tests {
