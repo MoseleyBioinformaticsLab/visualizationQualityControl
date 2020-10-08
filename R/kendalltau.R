@@ -355,9 +355,9 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
 #'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
 #' 
 #' @return numeric
-#' @export
+#' @internal
 #' 
-visqc_ici_kendallt = function(data_matrix, 
+visqc_ici_kendallt_ref = function(data_matrix, 
                              exclude_na = TRUE, 
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
@@ -452,9 +452,11 @@ visqc_ici_kendallt = function(data_matrix,
 #'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
 #' 
 #' @return numeric
+#' @import furrr
+#' @import future
 #' @export
 #' 
-visqc_ici_kendallt_splitup = function(data_matrix, 
+visqc_ici_kendallt = function(data_matrix, 
                              exclude_na = TRUE, 
                              exclude_inf = TRUE, 
                              exclude_0 = TRUE, 
