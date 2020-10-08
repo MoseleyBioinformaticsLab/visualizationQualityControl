@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double signC(double x) {
+inline double signC(double x) {
   if (x > 0) {
     return 1;
   } else if (x == 0) {
