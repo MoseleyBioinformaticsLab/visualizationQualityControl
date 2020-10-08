@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use ndarray::Array1;
 use rand::prelude::*;
 use rand_distr::StandardNormal;
-use rustlib::kendall_tau::{ici_kendall_tau, ici_kendall_tau2, Perspective};
+use rustlib::kendall_tau::{ici_kendall_tau, Perspective};
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("ici-kendall-tau 1000", |b| {

@@ -24,7 +24,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 
         b.iter(|| {
             visqc_ici_kendall_tau(
-                black_box(wine_dataset.t().into_owned().clone()),
+                black_box(wine_dataset.t().into_owned()),
                 true,
                 true,
                 true,

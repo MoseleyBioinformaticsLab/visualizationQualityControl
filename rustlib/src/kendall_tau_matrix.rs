@@ -71,15 +71,9 @@ pub fn visqc_ici_kendall_tau(
     // and there is no readily available trait/impl to use with rayon/ndarray.
     let ncols = data_matrix.ncols();
     let cor_map_iter = (0..ncols)
-        // .into_par_iter()
-        .map(|c| {
-            (c..ncols)
-                // .into_par_iter()
-                .map(move |x| (c, x))
-        })
-        .flatten()
-        // .into_par_iter()
-    ;
+        .map(|c| (c..ncols).map(move |x| (c, x)))
+        .flatten();
+
     #[cfg(feature = "rayon")]
     let cor_map_iter = cor_map_iter.collect_vec().into_par_iter();
 
