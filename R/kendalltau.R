@@ -510,10 +510,10 @@ visqc_ici_kendallt = function(data_matrix,
   for (isplit in seq_along(split_comparisons)) {
     stop_loc = min(start_loc + n_each, n_todo)
     
-    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc]
+    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc, drop = FALSE]
     start_loc = stop_loc + 1
     
-    if (start_loc > n_each) {
+    if (start_loc > n_todo) {
       break()
     }
   }
