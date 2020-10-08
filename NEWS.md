@@ -1,6 +1,7 @@
 # v 0.3.100
 
-* Making the splitup version the "implementation", and using a single core if the user doesn't setup a "plan" first.
+* Making the splitup version of ICI-Kendall-tau the "implementation" (`visqc_ici_kendallt`), and using a single core if the user doesn't setup a "plan" first.
+A reference version still exists so we can run tests against it, but it is no longer exported for general users.
 
 * Also inlined the C++ sign function, which gave us another 3X speedup on my 8 core machine on a larger test data set.
 
