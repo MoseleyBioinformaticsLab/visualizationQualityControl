@@ -4,7 +4,12 @@
 \alias{visqc_test_pca_loadings}
 \title{test loadings}
 \usage{
-visqc_test_pca_loadings(loadings, test_columns, progress = FALSE)
+visqc_test_pca_loadings(
+  loadings,
+  test_columns,
+  progress = FALSE,
+  direction = FALSE
+)
 }
 \arguments{
 \item{loadings}{matrix of loadings from pca decomposition}
@@ -12,6 +17,8 @@ visqc_test_pca_loadings(loadings, test_columns, progress = FALSE)
 \item{test_columns}{names of the columns of the loadings to test}
 
 \item{progress}{should progress be reported}
+
+\item{direction}{should direction of loading be tested?}
 }
 \value{
 named list

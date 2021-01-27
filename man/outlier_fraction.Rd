@@ -40,9 +40,9 @@ that limit. Fraction is reported as the number of features outside the range.
 
 Returns a \code{data.frame} with:
 \describe{
-  \item{sample}{the sample id, \code{rownames} are used if available, otherwise
+  \item{sample_id}{the sample id, \code{rownames} are used if available, otherwise
   this is an index}
-  \item{class}{the class of the sample if \code{sample_classes} were provided,
+  \item{sample_class}{the class of the sample if \code{sample_classes} were provided,
   otherwise given a default of "C1"}
   \item{frac}{the actual outlier fraction calculated for that sample}
 }
