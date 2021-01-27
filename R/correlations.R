@@ -727,7 +727,7 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
   split_classes <- split(seq(1, n_sample), use_classes)
 
   if (is.null(rownames(data))) {
-    sample_names <- seq(1, n_sample)
+    sample_names <- paste0("S", seq(1, n_sample))
   } else {
     sample_names <- rownames(data)
   }
@@ -750,8 +750,22 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
 #' 
 #' @export
 #' @return data.frame
-determine_outliers = function(median_correlations, outlier_fraction){
+determine_outliers = function(median_correlations, outlier_fraction,
+                              cor_weight = 1, frac_weight = 1){
   full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
+  
+  if ((nrow(full_data) != nrow(median_correlations)) || (nrow(full_data) != nrow(outlier_fraction))) {
+    stop("Samples in median_correlations and outlier_fraction don't match up!")
+  }
+  
+  data_score = (cor_weight * log(1 - full_data$med_cor)) + (frac_weight * log1p(full_data$frac))
+  score_out = boxplot.stats(data_score)$out
+  is_out = data_score %in% score_out
+  
+  full_data$score = data_score
+  full_data$outlier = is_out
+  
+  full_data
   
 }
 
