@@ -604,18 +604,26 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
   names(use_classes) <- sample_id
 
   sample_median_cor <- lapply(sample_id, function(in_sample){
+    #message(in_sample)
     sample_loc <- which(colnames(cor_matrix) %in% in_sample)
     
     sample_cor <- cor_matrix[sample_loc, -sample_loc]
     
     cor_by_class <- lapply(split_classes, function(class_ids){
+      #message(class_ids[1])
       class_samples <- setdiff(class_ids, in_sample)
-      data.frame(sample_id = in_sample,
-                 med_cor = median(sample_cor[class_samples]),
-                 sample_class = as.character(use_classes[in_sample]),
-                 compare_class = as.character(unique(use_classes[class_ids])),
-                 stringsAsFactors = FALSE)
-    })
+      if (length(class_samples) > 0) {
+        med_cor = median(sample_cor[class_samples])
+      } else {
+        med_cor = NA
+      }
+        data.frame(sample_id = in_sample,
+                   med_cor = med_cor,
+                   sample_class = as.character(use_classes[in_sample]),
+                   compare_class = as.character(unique(use_classes[class_ids])),
+                   stringsAsFactors = FALSE)
+      })
+      
     cor_by_class <- do.call(rbind, cor_by_class)
   })
   sample_median_cor <- do.call(rbind, sample_median_cor)
@@ -694,9 +702,9 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
 #'
 #' Returns a \code{data.frame} with:
 #' \describe{
-#'   \item{sample}{the sample id, \code{rownames} are used if available, otherwise
+#'   \item{sample_id}{the sample id, \code{rownames} are used if available, otherwise
 #'   this is an index}
-#'   \item{class}{the class of the sample if \code{sample_classes} were provided,
+#'   \item{sample_class}{the class of the sample if \code{sample_classes} were provided,
 #'   otherwise given a default of "C1"}
 #'   \item{frac}{the actual outlier fraction calculated for that sample}
 #' }
@@ -728,11 +736,23 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
     class_index <- split_classes[[class_name]]
     is_outlier <- .calc_outlier(data[class_index, , drop = FALSE], n_trim, n_sd, remove_0)
     frac_outlier <- rowSums(is_outlier) / ncol(data)
-    data.frame(sample = sample_names[class_index], class = class_name, frac = frac_outlier)
+    data.frame(sample_id = sample_names[class_index], sample_class = class_name, frac = frac_outlier)
   })
 
   frac_outlier <- do.call(rbind, frac_outlier_class)
   frac_outlier
+}
+
+#' determine outliers
+#' 
+#' @param median_correlations median correlations
+#' @param outlier_fraction outlier fractions
+#' 
+#' @export
+#' @return data.frame
+determine_outliers = function(median_correlations, outlier_fraction){
+  full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
+  
 }
 
 #' grp_cor_data
