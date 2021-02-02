@@ -759,11 +759,17 @@ determine_outliers = function(median_correlations, outlier_fraction,
   }
   
   data_score = (cor_weight * log(1 - full_data$med_cor)) + (frac_weight * log1p(full_data$frac))
-  score_out = boxplot.stats(data_score)$out
-  is_out = data_score %in% score_out
+  names(data_score) = full_data$sample_id
+  split_score = split(data_score, full_data$sample_class.frac)
+  out_each = purrr::map(split_score, function(in_scores){
+    score_out = boxplot.stats(in_scores)$out
+    names(in_scores)[in_scores %in% score_out]
+  })
+  all_out = unlist(out_each)
   
   full_data$score = data_score
-  full_data$outlier = is_out
+  full_data$outlier = FALSE
+  full_data$outlier[full_data$sample_id %in% all_out] = TRUE
   
   full_data
   

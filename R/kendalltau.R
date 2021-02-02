@@ -447,9 +447,12 @@ visqc_ici_kendallt_ref = function(data_matrix,
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param check_timings should we try to estimate run time for full dataset? (default is FALSE)
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette:
 #'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#'   
+#'   When \code{check_timings = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
 #' 
 #' @return numeric
 #' @import furrr
@@ -463,10 +466,10 @@ visqc_ici_kendallt = function(data_matrix,
                              zero_value = 0, 
                              perspective = "global",
                              scale_max = TRUE,
-                             diag_good = TRUE){
+                             diag_good = TRUE,
+                             check_timing = FALSE){
   
   # assume row-wise (because that is what the description states), so need to transpose
-  # because `cor` actually does things columnwise.
   data_matrix <- t(data_matrix)
   na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   inf_loc <- na_loc
@@ -503,6 +506,14 @@ visqc_ici_kendallt = function(data_matrix,
   
   n_todo = ncol(pairwise_comparisons)
   n_each = ceiling(n_todo / ncore)
+  
+  if (check_timing) {
+    sample_compare = sample(ncol(pairwise_comparisons), 5)
+    tmp_pairwise = pairwise_comparisons[, sample_compare]
+    
+    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
+    return(run_tmp)
+  }
   
   split_comparisons = vector("list", ncore)
   start_loc = 1
@@ -567,4 +578,43 @@ visqc_ici_kendallt = function(data_matrix,
   }
   
   return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
+}
+
+
+check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, ncore){
+  t_start = Sys.time()
+  for (icol in seq_len(ncol(tmp_pairwise))) {
+    iloc = tmp_pairwise[1, icol]
+    jloc = tmp_pairwise[2, icol]
+    tmp_val = ici_kendallt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
+  }
+  t_stop = Sys.time()
+  t_total = as.numeric(difftime(t_stop, t_start, units = "secs"))
+  n_comp = ncol(tmp_pairwise)
+  
+  t_each = t_total / n_comp
+  
+  t_theoretical = t_each * n_todo
+  t_cores = t_theoretical / ncore
+  
+  data.frame(which =
+               c("n_tested",
+                 "n_todo",
+                 "time_tested",
+                 "time_single",
+                 "time_all",
+                 "time_across_cores",
+                 "time_minutes",
+                 "time_hours",
+                 "time_days"),
+             value = c(n_comp,
+                n_todo,
+                t_total,
+                t_each,
+                t_theoretical,
+                t_cores,
+                t_cores / 60,
+                t_cores / (60 * 60),
+                t_cores / (60 * 60 * 60)))
+  
 }
