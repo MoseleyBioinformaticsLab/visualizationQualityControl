@@ -546,11 +546,14 @@ visqc_ici_kendallt = function(data_matrix,
     
     tmp_cor
   }
-  #tictoc::tic()
+  # we record how much time is actually spent doing ICI-Kt
+  # itself, as some of the other operations will add a bit of time
+  # 
+  t1 = Sys.time()
   split_cor = furrr::future_map(split_comparisons, do_split, exclude_data, perspective)
-  #tictoc::toc()
-  
-  
+  t2 = Sys.time()
+  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
+
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
   rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
   for (isplit in split_cor) {
@@ -577,7 +580,8 @@ visqc_ici_kendallt = function(data_matrix,
     diag(out_matrix) = n_good / max(n_good)
   }
   
-  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
+  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc),
+              run_time = t_diff))
 }
 
 
