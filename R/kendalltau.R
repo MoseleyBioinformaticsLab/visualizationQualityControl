@@ -26,7 +26,7 @@
 #' kendallt(x, y)
 #' kendallt(x, y2, "global")
 #' kendallt(x, y2)
-ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
+ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sided", output = "simple"){
   if (length(x) != length(y)) {
     stop("x and y vector lengths are not the same!")
   }
@@ -48,7 +48,8 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
   }
   
   min_value = min(c(x, y), na.rm = TRUE)
-  na_value = min_value - (.1 * abs(min_value))
+  na_value = min_value - 0.1
+  
   x[is.na(x)] = na_value
   y[is.na(y)] = na_value
   
@@ -90,9 +91,15 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
   x_paired_tie = x_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
   y_paired_tie = y_pairs[(x_pair_sign == 0) | (y_pair_sign == 0), ]
   
-  x_ties = (x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] == x_paired_tie[, 2]) & (y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] != y_paired_tie[, 2]) 
+  x_ties = (x_paired_tie[, 1] == x_paired_tie[, 2]) & 
+    ((x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value)) &  
+    ((y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value)) &
+    (y_paired_tie[, 1] != y_paired_tie[, 2])
   
-  y_ties = ((x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value) & (x_paired_tie[, 1] != x_paired_tie[, 2]) & ((y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value) & (y_paired_tie[, 1] == y_paired_tie[, 2]))) 
+  y_ties = (y_paired_tie[, 1] == y_paired_tie[, 2]) &
+    ((y_paired_tie[, 1] != na_value) & (y_paired_tie[, 2] != na_value)) & 
+    ((x_paired_tie[, 1] != na_value) & (x_paired_tie[, 2] != na_value)) &
+    (x_paired_tie[, 1] != x_paired_tie[, 2])
   
   
   x_na_ties = (x_pairs[, 1] == na_value) & (x_pairs[, 2] == na_value) & ((y_pairs[, 1] != na_value) | (y_pairs[, 2] != na_value))
@@ -116,8 +123,42 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
   k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
   k_tau = k_numerator / k_denominator
   
+  # copied from R stats cor.test in R/src/library/stats/all.R
+  # therefore this part of the code is GPL-3
+  # xties / yties is the actual number of tied entries for each value
+  if (perspective != "global") {
+    PVAL = NA
+  } else {
+    xties <- as.vector(table(x[duplicated(x)]) + 1)
+    yties <- as.vector(table(y[duplicated(y)]) + 1)
+    T0 <- n * (n - 1)/2
+    T1 <- sum(xties * (xties - 1))/2
+    T2 <- sum(yties * (yties - 1))/2
+    S <- k_tau * sqrt((T0 - T1) * (T0 - T2))
+    v0 <- n * (n - 1) * (2 * n + 5)
+    vt <- sum(xties * (xties - 1) * (2 * xties + 5))
+    vu <- sum(yties * (yties - 1) * (2 * yties + 5))
+    v1 <- sum(xties * (xties - 1)) * sum(yties * (yties - 1))
+    v2 <- sum(xties * (xties - 1) * (xties - 2)) *
+      sum(yties * (yties - 1) * (yties - 2))
+    
+    var_S <- (v0 - vt - vu) / 18 +
+      v1 / (2 * n * (n - 1)) +
+      v2 / (9 * n * (n - 1) * (n - 2))
+    
+    S <- sign(S) * (abs(S) - 1)
+    STATISTIC <- c(z = S / sqrt(var_S))
+    PVAL <- switch(alternative,
+                   "less" = pnorm(STATISTIC),
+                   "greater" = pnorm(STATISTIC, lower.tail=FALSE),
+                   "two.sided" = 2 * min(pnorm(STATISTIC),
+                                         pnorm(STATISTIC, lower.tail=FALSE)))
+  }
+  
+  
   if (output == "simple") {
-    return(k_tau)
+    return(list(tau = k_tau,
+                pval = PVAL))
   } else {
     out_data = data.frame(variable = c("n_entry",
                                        "x_ties",
@@ -131,7 +172,8 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
                                        "sum_discordant",
                                        "sum_numerator",
                                        "sum_denominator",
-                                       "k_tau"), 
+                                       "k_tau",
+                                       "pval"), 
                           value = c(length(x),
                                     sum(x_ties),
                                     sum_x_na_ties,
@@ -144,7 +186,8 @@ ref_diff_kendallt = function(x, y, perspective = "local", output = "simple"){
                                     sum_discordant,
                                     k_numerator,
                                     k_denominator,
-                                    k_tau))
+                                    k_tau,
+                                    PVAL))
     return(out_data)
   }
   
@@ -302,6 +345,7 @@ ref_kendallt = function(x, y, perspective = "local", output = "simple"){
   k_numerator = sum_concordant - sum_discordant
   k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
   k_tau = k_numerator / k_denominator
+  
 
   if (output == "simple") {
     return(k_tau)
