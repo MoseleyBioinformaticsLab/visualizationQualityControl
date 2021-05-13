@@ -6,16 +6,17 @@
 using namespace Rcpp;
 
 // ici_kendallt
-double ici_kendallt(NumericVector x, NumericVector y, String perspective, String output);
-RcppExport SEXP _visualizationQualityControl_ici_kendallt(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP, SEXP outputSEXP) {
+NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective, String alternative, String output);
+RcppExport SEXP _visualizationQualityControl_ici_kendallt(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP, SEXP alternativeSEXP, SEXP outputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< String >::type perspective(perspectiveSEXP);
+    Rcpp::traits::input_parameter< String >::type alternative(alternativeSEXP);
     Rcpp::traits::input_parameter< String >::type output(outputSEXP);
-    rcpp_result_gen = Rcpp::wrap(ici_kendallt(x, y, perspective, output));
+    rcpp_result_gen = Rcpp::wrap(ici_kendallt(x, y, perspective, alternative, output));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -47,7 +48,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_visualizationQualityControl_ici_kendallt", (DL_FUNC) &_visualizationQualityControl_ici_kendallt, 4},
+    {"_visualizationQualityControl_ici_kendallt", (DL_FUNC) &_visualizationQualityControl_ici_kendallt, 5},
     {"_visualizationQualityControl_ici_ref_kendallt", (DL_FUNC) &_visualizationQualityControl_ici_ref_kendallt, 4},
     {"_visualizationQualityControl_ici_kendall_matrix", (DL_FUNC) &_visualizationQualityControl_ici_kendall_matrix, 2},
     {NULL, NULL, 0}

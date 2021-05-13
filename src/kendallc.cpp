@@ -47,7 +47,7 @@ inline double signC(double x) {
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-double ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String output = "simple") {
+NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", String output = "simple") {
   
   if (x.length() != y.length()) {
     throw std::range_error("X and Y are not the same length!");
@@ -68,6 +68,23 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
   double k_tau;
   bool reject_concordant;
   bool reject_discordant;
+  
+  // for generating the p-value
+  //double xties = 0;
+  //double yties = 0;
+  double T0 = 0;
+  double T1 = 0;
+  double T2 = 0;
+  double S = 0;
+  double v0 = 0;
+  double vt = 0;
+  double vu = 0;
+  double v1 = 0;
+  double v2 = 0;
+  double var_stat = 0;
+  double stat = 0;
+  NumericVector STATISTIC (1);
+  NumericVector PVAL (1);
   
   LogicalVector matching_na;
   //double n_matching_na;
@@ -159,6 +176,54 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
   k_numerator = sum_concordant - sum_discordant;
   k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties;
   
+  if (k_denominator == 0) {
+    k_tau = 0;
+  } else {
+    k_tau = k_numerator / k_denominator;
+  }
+  
+  
+  // p-value calculation
+  if (perspective == "global") {
+    LogicalVector dup_x(x2.size());
+    dup_x = duplicated(x2);
+    NumericVector x3 = x2[dup_x];
+    NumericVector xties;
+    xties = table(x3) + 1;
+    
+    LogicalVector dup_y(y2.size());
+    dup_y = duplicated(y2);
+    NumericVector y3 = y2[dup_y];
+    NumericVector yties;
+    yties = table(y3) + 1;
+    
+    T0 = n_entry * (n_entry - 1) / 2;
+    T1 = sum(xties * (xties - 1)) / 2;
+    T2 = sum(yties * (yties - 1)) / 2;
+    stat = k_tau * sqrt((T0 - T1) * (T0 - T2));
+    v0 = n_entry * (n_entry - 1) * (2 * n_entry + 5);
+    vt = sum(xties * (xties - 1) * (2 * xties + 5));
+    vu = sum(yties * (yties - 1) * (2 * yties + 5));
+    v1 = sum(xties * (xties - 1)) * sum(yties * (yties - 1));
+    v2 = sum(xties * (xties - 1) * (xties - 2)) * sum(yties * (yties - 1) * (yties - 2));
+
+    var_stat = (v0 - vt - vu) / 18 +
+      v1 / (2 * n_entry * (n_entry - 1)) +
+      v2 / (9 * n_entry * (n_entry - 1) * (n_entry - 2));
+
+    double stat2 = signC(stat) * (abs(stat) - 1);
+    STATISTIC[0] = stat2 / sqrt(var_stat);
+    if (alternative == "less") {
+      PVAL[0] = pnorm(STATISTIC, 0.0, 1.0)[0];
+    } else if (alternative == "greater") {
+      PVAL[0] = Rcpp::pnorm(STATISTIC, 0.0, 1.0, false, false)[0];
+    } else if (alternative == "two.sided") {
+      NumericVector p_res (2);
+      p_res[0] = Rcpp::pnorm(STATISTIC, 0.0, 1.0)[0];
+      p_res[1] = Rcpp::pnorm(STATISTIC, 0.0, 1.0, false)[0];
+      PVAL[0] = 2 * min(p_res);
+    }
+  }
   
   // debugging
   if (output != "simple") {
@@ -176,15 +241,15 @@ double ici_kendallt(NumericVector x, NumericVector y, String perspective = "loca
     Rprintf("sum_discordant: %f \n", sum_discordant);
     Rprintf("k_numerator: %f \n", k_numerator);
     Rprintf("k_denominator: %f \n", k_denominator);
+    Rprintf("stat: %f \n", stat);
+    Rprintf("k_tau: %f \n", k_tau);
+    Rprintf("pvalue: %f \n", PVAL[0]);
   }
   
-  if (k_denominator == 0) {
-    k_tau = 0;
-  } else {
-    k_tau = k_numerator / k_denominator;
-  }
+  NumericVector out_values = {k_tau, PVAL[0]};
+  out_values.names() = CharacterVector({"tau", "pvalue"});
   
-  return k_tau;
+  return out_values;
 }
 
 
@@ -359,9 +424,9 @@ NumericMatrix ici_kendall_matrix(NumericMatrix &x, String perspective = "local")
     NumericVector x_i = x(_ , i);
     for (int j = i; j < x_col; j++) {
       NumericVector x_j = x(_ , j);
-      double kendall_cor = ici_kendallt(x_i, x_j, perspective);
-      cor_matrix(i, j) = kendall_cor;
-      cor_matrix(j, i) = kendall_cor;
+      NumericVector kendall_cor = ici_kendallt(x_i, x_j, perspective);
+      cor_matrix(i, j) = kendall_cor[0];
+      cor_matrix(j, i) = kendall_cor[0];
     }
   } 
   

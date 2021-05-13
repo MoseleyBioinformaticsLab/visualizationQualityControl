@@ -35,8 +35,8 @@
 #' @export
 #' @useDynLib visualizationQualityControl
 #' @return kendall tau correlation
-ici_kendallt <- function(x, y, perspective = "local", output = "simple") {
-    .Call('_visualizationQualityControl_ici_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective, output)
+ici_kendallt <- function(x, y, perspective = "local", alternative = "two.sided", output = "simple") {
+    .Call('_visualizationQualityControl_ici_kendallt', PACKAGE = 'visualizationQualityControl', x, y, perspective, alternative, output)
 }
 
 #' Calculates ici-kendall-tau

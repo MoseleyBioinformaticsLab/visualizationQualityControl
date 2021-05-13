@@ -128,6 +128,7 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
   # xties / yties is the actual number of tied entries for each value
   if (perspective != "global") {
     PVAL = NA
+    S = NA
   } else {
     xties <- as.vector(table(x[duplicated(x)]) + 1)
     yties <- as.vector(table(y[duplicated(y)]) + 1)
@@ -157,8 +158,8 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
   
   
   if (output == "simple") {
-    return(list(tau = k_tau,
-                pval = PVAL))
+    return(c(tau = k_tau,
+                pvalue = PVAL))
   } else {
     out_data = data.frame(variable = c("n_entry",
                                        "x_ties",
@@ -172,8 +173,9 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
                                        "sum_discordant",
                                        "sum_numerator",
                                        "sum_denominator",
+                                       "S",
                                        "k_tau",
-                                       "pval"), 
+                                       "pvalue"), 
                           value = c(length(x),
                                     sum(x_ties),
                                     sum_x_na_ties,
@@ -186,6 +188,7 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
                                     sum_discordant,
                                     k_numerator,
                                     k_denominator,
+                                    S,
                                     k_tau,
                                     PVAL))
     return(out_data)
