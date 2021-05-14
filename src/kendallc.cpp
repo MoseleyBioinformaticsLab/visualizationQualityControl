@@ -109,7 +109,7 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   y2 = y[!is_na(y)];
   
   double min_value = min(NumericVector::create(min(x2), min(y2)));
-  double na_value = min_value - (0.1 * abs(min_value));
+  double na_value = min_value - 0.1;
   
   x2 = clone(x);
   y2 = clone(y);
