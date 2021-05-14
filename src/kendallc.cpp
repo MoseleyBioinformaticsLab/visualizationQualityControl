@@ -4,11 +4,11 @@ using namespace Rcpp;
 
 inline double signC(double x) {
   if (x > 0) {
-    return 1;
+    return 1.0;
   } else if (x == 0) {
-    return 0;
+    return 0.0;
   } else {
-    return -1;
+    return -1.0;
   }
 }
 
@@ -210,16 +210,16 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
     v_t1_sum / (2 * n_entry * (n_entry - 1)) +
     v_t2_sum / (9 * n_entry * (n_entry - 1) * (n_entry - 2));
 
-  double s_adjusted2 = signC(s_adjusted) * (abs(s_adjusted) - 1);
+  double s_adjusted2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
   z_b[0] = s_adjusted2 / sqrt(s_adjusted_variance);
   if (alternative == "less") {
     p_value[0] = pnorm(z_b, 0.0, 1.0)[0];
   } else if (alternative == "greater") {
-    p_value[0] = Rcpp::pnorm(z_b, 0.0, 1.0, false, false)[0];
+    p_value[0] = pnorm(z_b, 0.0, 1.0, false, false)[0];
   } else if (alternative == "two.sided") {
     NumericVector p_res (2);
-    p_res[0] = Rcpp::pnorm(z_b, 0.0, 1.0)[0];
-    p_res[1] = Rcpp::pnorm(z_b, 0.0, 1.0, false)[0];
+    p_res[0] = pnorm(z_b, 0.0, 1.0)[0];
+    p_res[1] = pnorm(z_b, 0.0, 1.0, false)[0];
     p_value[0] = 2 * min(p_res);
   }
 
@@ -240,7 +240,11 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
     Rprintf("sum_discordant: %f \n", sum_discordant);
     Rprintf("k_numerator: %f \n", k_numerator);
     Rprintf("k_denominator: %f \n", k_denominator);
+    Rprintf("t_0: %f \n", t_0);
+    Rprintf("x_tied_sum_t1: %f \n", x_tied_sum_t1);
+    Rprintf("y_tied_sum_t2: %f \n", y_tied_sum_t2);
     Rprintf("s_adjusted: %f \n", s_adjusted2);
+    Rprintf("s_adjusted_variance: %f \n", s_adjusted_variance);
     Rprintf("k_tau: %f \n", k_tau);
     Rprintf("pvalue: %f \n", p_value[0]);
   }
