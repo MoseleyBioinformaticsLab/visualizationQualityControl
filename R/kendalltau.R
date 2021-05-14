@@ -123,43 +123,35 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
   k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties
   k_tau = k_numerator / k_denominator
   
-  # copied from R stats cor.test in R/src/library/stats/all.R
-  # therefore this part of the code is GPL-3
-  # xties / yties is the actual number of tied entries for each value
-  if (perspective != "global") {
-    PVAL = NA
-    S = NA
-  } else {
-    xties <- as.vector(table(x[duplicated(x)]) + 1)
-    yties <- as.vector(table(y[duplicated(y)]) + 1)
-    T0 <- n * (n - 1)/2
-    T1 <- sum(xties * (xties - 1))/2
-    T2 <- sum(yties * (yties - 1))/2
-    S <- k_tau * sqrt((T0 - T1) * (T0 - T2))
-    v0 <- n * (n - 1) * (2 * n + 5)
-    vt <- sum(xties * (xties - 1) * (2 * xties + 5))
-    vu <- sum(yties * (yties - 1) * (2 * yties + 5))
-    v1 <- sum(xties * (xties - 1)) * sum(yties * (yties - 1))
-    v2 <- sum(xties * (xties - 1) * (xties - 2)) *
-      sum(yties * (yties - 1) * (yties - 2))
-    
-    var_S <- (v0 - vt - vu) / 18 +
-      v1 / (2 * n * (n - 1)) +
-      v2 / (9 * n * (n - 1) * (n - 2))
-    
-    S <- sign(S) * (abs(S) - 1)
-    STATISTIC <- c(z = S / sqrt(var_S))
-    PVAL <- switch(alternative,
-                   "less" = pnorm(STATISTIC),
-                   "greater" = pnorm(STATISTIC, lower.tail=FALSE),
-                   "two.sided" = 2 * min(pnorm(STATISTIC),
-                                         pnorm(STATISTIC, lower.tail=FALSE)))
-  }
+  x_tied_values_t1 <- as.vector(table(x[duplicated(x)]) + 1)
+  y_tied_values_t2 <- as.vector(table(y[duplicated(y)]) + 1)
+  t_0 <- n * (n - 1)/2
+  x_tied_sum_t1 <- sum(x_tied_values_t1 * (x_tied_values_t1 - 1))/2
+  y_tied_sum_t2 <- sum(y_tied_values_t2 * (y_tied_values_t2 - 1))/2
+  s_adjusted <- k_tau * sqrt((t_0 - x_tied_sum_t1) * (t_0 - y_tied_sum_t2))
+  v_0_sum <- n * (n - 1) * sum(2 * n + 5)
+  v_t_sum <- sum(x_tied_values_t1 * (x_tied_values_t1 - 1) * (2 * x_tied_values_t1 + 5))
+  v_u_sum <- sum(y_tied_values_t2 * (y_tied_values_t2 - 1) * (2 * y_tied_values_t2 + 5))
+  v_t1_sum <- sum(x_tied_values_t1 * (x_tied_values_t1 - 1)) * sum(y_tied_values_t2 * (y_tied_values_t2 - 1))
+  v_t2_sum <- sum(x_tied_values_t1 * (x_tied_values_t1 - 1) * (x_tied_values_t1 - 2)) *
+    sum(y_tied_values_t2 * (y_tied_values_t2 - 1) * (y_tied_values_t2 - 2))
   
+  s_adjusted_variance <- (v_0_sum - v_t_sum - v_u_sum) / 18 +
+    v_t1_sum / (2 * n * (n - 1)) +
+    v_t2_sum / (9 * n * (n - 1) * (n - 2))
+    s_adjusted <- sign(s_adjusted) * (abs(s_adjusted) - 1)
+  z_b <- s_adjusted / sqrt(s_adjusted_variance)
+  p_value <- switch(alternative,
+                 "less" = pnorm(z_b),
+                 "greater" = pnorm(z_b, lower.tail = FALSE),
+                 "two.sided" = 2 * min(pnorm(z_b),
+                                       pnorm(z_b, lower.tail = FALSE)))
+
+
   
   if (output == "simple") {
     return(c(tau = k_tau,
-                pvalue = PVAL))
+                pvalue = p_value))
   } else {
     out_data = data.frame(variable = c("n_entry",
                                        "x_ties",
@@ -188,9 +180,9 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
                                     sum_discordant,
                                     k_numerator,
                                     k_denominator,
-                                    S,
+                                    s_adjusted,
                                     k_tau,
-                                    PVAL))
+                                    p_value))
     return(out_data)
   }
   
@@ -584,14 +576,16 @@ visqc_ici_kendallt = function(data_matrix,
     #print(seq_range)
     tmp_cor = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(tmp_cor) = colnames(tmp_cor) = colnames(exclude_data)
+    tmp_pval = tmp_cor
     
     for (icol in seq(1, ncol(do_comparisons))) {
       iloc = do_comparisons[1, icol]
       jloc = do_comparisons[2, icol]
-      tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_kendallt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
+      ici_res = ici_kendallt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
+      tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_res["tau"]
+      tmp_pval[iloc, jloc] = tmp_pval[jloc, iloc] = ici_res["pvalue"]
     }
-    
-    tmp_cor
+    list(cor = tmp_cor, pval = tmp_pval)
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
@@ -603,9 +597,12 @@ visqc_ici_kendallt = function(data_matrix,
 
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
   rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
+  pvalue_matrix = cor_matrix
   for (isplit in split_cor) {
-    cor_matrix = cor_matrix + isplit
+    cor_matrix = cor_matrix + isplit$cor
+    pvalue_matrix = pvalue_matrix + isplit$pval
   }
+  
   
   # calculate the max-cor value for use in scaling across multiple comparisons
   n_observations = nrow(exclude_data)
@@ -627,7 +624,7 @@ visqc_ici_kendallt = function(data_matrix,
     diag(out_matrix) = n_good / max(n_good)
   }
   
-  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc),
+  return(list(cor = out_matrix, raw = cor_matrix, pval = pvalue_matrix, keep = t(!exclude_loc),
               run_time = t_diff))
 }
 
