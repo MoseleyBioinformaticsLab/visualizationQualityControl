@@ -139,7 +139,7 @@ ref_diff_kendallt = function(x, y, perspective = "local", alternative = "two.sid
   s_adjusted_variance <- (v_0_sum - v_t_sum - v_u_sum) / 18 +
     v_t1_sum / (2 * n * (n - 1)) +
     v_t2_sum / (9 * n * (n - 1) * (n - 2))
-    s_adjusted <- sign(s_adjusted) * (abs(s_adjusted) - 1)
+  s_adjusted <- sign(s_adjusted) * (abs(s_adjusted) - 1)
   z_b <- s_adjusted / sqrt(s_adjusted_variance)
   p_value <- switch(alternative,
                  "less" = pnorm(z_b),

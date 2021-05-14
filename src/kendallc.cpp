@@ -72,19 +72,18 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   // for generating the p-value
   //double xties = 0;
   //double yties = 0;
-  double T0 = 0;
-  double T1 = 0;
-  double T2 = 0;
-  double S = 0;
-  double v0 = 0;
-  double vt = 0;
-  double vu = 0;
-  double v1 = 0;
-  double v2 = 0;
-  double var_stat = 0;
-  double stat = 0;
-  NumericVector STATISTIC (1);
-  NumericVector PVAL (1);
+  double t_0 = 0;
+  double s_adjusted = 0;
+  double x_tied_sum_t1;
+  double y_tied_sum_t2;
+  double v_0_sum = 0;
+  double v_t_sum = 0;
+  double v_u_sum = 0;
+  double v_t1_sum = 0;
+  double v_t2_sum = 0;
+  double s_adjusted_variance = 0;
+  NumericVector z_b (1);
+  NumericVector p_value (1);
   
   LogicalVector matching_na;
   //double n_matching_na;
@@ -184,46 +183,46 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   
   
   // p-value calculation
-  if (perspective == "global") {
-    LogicalVector dup_x(x2.size());
-    dup_x = duplicated(x2);
-    NumericVector x3 = x2[dup_x];
-    NumericVector xties;
-    xties = table(x3) + 1;
-    
-    LogicalVector dup_y(y2.size());
-    dup_y = duplicated(y2);
-    NumericVector y3 = y2[dup_y];
-    NumericVector yties;
-    yties = table(y3) + 1;
-    
-    T0 = n_entry * (n_entry - 1) / 2;
-    T1 = sum(xties * (xties - 1)) / 2;
-    T2 = sum(yties * (yties - 1)) / 2;
-    stat = k_tau * sqrt((T0 - T1) * (T0 - T2));
-    v0 = n_entry * (n_entry - 1) * (2 * n_entry + 5);
-    vt = sum(xties * (xties - 1) * (2 * xties + 5));
-    vu = sum(yties * (yties - 1) * (2 * yties + 5));
-    v1 = sum(xties * (xties - 1)) * sum(yties * (yties - 1));
-    v2 = sum(xties * (xties - 1) * (xties - 2)) * sum(yties * (yties - 1) * (yties - 2));
+  
+  LogicalVector dup_x(x2.size());
+  dup_x = duplicated(x2);
+  NumericVector x3 = x2[dup_x];
+  NumericVector x_tied_values_t1;
+  x_tied_values_t1 = table(x3) + 1;
+  
+  LogicalVector dup_y(y2.size());
+  dup_y = duplicated(y2);
+  NumericVector y3 = y2[dup_y];
+  NumericVector y_tied_values_t2;
+  y_tied_values_t2 = table(y3) + 1;
+  
+  t_0 = n_entry * (n_entry - 1) / 2;
+  x_tied_sum_t1 = sum(x_tied_values_t1 * (x_tied_values_t1 - 1)) / 2;
+  y_tied_sum_t2 = sum(y_tied_values_t2 * (y_tied_values_t2 - 1)) / 2;
+  s_adjusted = k_tau * sqrt((t_0 - x_tied_sum_t1) * (t_0 - y_tied_sum_t2));
+  v_0_sum = n_entry * (n_entry - 1) * (2 * n_entry + 5);
+  v_t_sum = sum(x_tied_values_t1 * (x_tied_values_t1 - 1) * (2 * x_tied_values_t1 + 5));
+  v_u_sum = sum(y_tied_values_t2 * (y_tied_values_t2 - 1) * (2 * y_tied_values_t2 + 5));
+  v_t1_sum = sum(x_tied_values_t1 * (x_tied_values_t1 - 1)) * sum(y_tied_values_t2 * (y_tied_values_t2 - 1));
+  v_t2_sum = sum(x_tied_values_t1 * (x_tied_values_t1 - 1) * (x_tied_values_t1 - 2)) * sum(y_tied_values_t2 * (y_tied_values_t2 - 1) * (y_tied_values_t2 - 2));
 
-    var_stat = (v0 - vt - vu) / 18 +
-      v1 / (2 * n_entry * (n_entry - 1)) +
-      v2 / (9 * n_entry * (n_entry - 1) * (n_entry - 2));
+  s_adjusted_variance = (v_0_sum - v_t_sum - v_u_sum) / 18 +
+    v_t1_sum / (2 * n_entry * (n_entry - 1)) +
+    v_t2_sum / (9 * n_entry * (n_entry - 1) * (n_entry - 2));
 
-    double stat2 = signC(stat) * (abs(stat) - 1);
-    STATISTIC[0] = stat2 / sqrt(var_stat);
-    if (alternative == "less") {
-      PVAL[0] = pnorm(STATISTIC, 0.0, 1.0)[0];
-    } else if (alternative == "greater") {
-      PVAL[0] = Rcpp::pnorm(STATISTIC, 0.0, 1.0, false, false)[0];
-    } else if (alternative == "two.sided") {
-      NumericVector p_res (2);
-      p_res[0] = Rcpp::pnorm(STATISTIC, 0.0, 1.0)[0];
-      p_res[1] = Rcpp::pnorm(STATISTIC, 0.0, 1.0, false)[0];
-      PVAL[0] = 2 * min(p_res);
-    }
+  double s_adjusted2 = signC(s_adjusted) * (abs(s_adjusted) - 1);
+  z_b[0] = s_adjusted2 / sqrt(s_adjusted_variance);
+  if (alternative == "less") {
+    p_value[0] = pnorm(z_b, 0.0, 1.0)[0];
+  } else if (alternative == "greater") {
+    p_value[0] = Rcpp::pnorm(z_b, 0.0, 1.0, false, false)[0];
+  } else if (alternative == "two.sided") {
+    NumericVector p_res (2);
+    p_res[0] = Rcpp::pnorm(z_b, 0.0, 1.0)[0];
+    p_res[1] = Rcpp::pnorm(z_b, 0.0, 1.0, false)[0];
+    p_value[0] = 2 * min(p_res);
   }
+
   
   // debugging
   if (output != "simple") {
@@ -241,12 +240,12 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
     Rprintf("sum_discordant: %f \n", sum_discordant);
     Rprintf("k_numerator: %f \n", k_numerator);
     Rprintf("k_denominator: %f \n", k_denominator);
-    Rprintf("stat: %f \n", stat);
+    Rprintf("s_adjusted: %f \n", s_adjusted2);
     Rprintf("k_tau: %f \n", k_tau);
-    Rprintf("pvalue: %f \n", PVAL[0]);
+    Rprintf("pvalue: %f \n", p_value[0]);
   }
   
-  NumericVector out_values = {k_tau, PVAL[0]};
+  NumericVector out_values = {k_tau, p_value[0]};
   out_values.names() = CharacterVector({"tau", "pvalue"});
   
   return out_values;
