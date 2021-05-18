@@ -117,72 +117,29 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   y2[is_na(y)] = na_value;
   
   
-  double n_entry = x.size();
+  double n_entry = x2.size();
   
   if (n_entry < 2) {
     return 0.0;
   }
   
-  if (perspective == "global") {
-    for (int i = 0; i < (n_entry - 1); i++) {
-      for (int j = (i+1); j < n_entry; j++) {
-        sum_concordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) > 0;
-        sum_discordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) < 0;
-        
-        sum_tied_x+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] == x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] != y2[j])));
-        sum_tied_y+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] != x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] == y2[j])));
-        sum_tied_x_na+= (x2[i] == na_value) && (x2[j] == na_value) && ((y2[i] != na_value) | (y2[j] != na_value));
-        sum_tied_y_na+= ((x2[i] != na_value) | (x2[j] != na_value)) && (y2[i] == na_value) && (y2[j] == na_value);
-        sum_all_na+= (x2[i] == na_value) && (x2[j] == na_value) && (y2[i] == na_value) && (y2[j] == na_value);
-      }
-    }
-  } else {
-    for (int i = 0; i < (n_entry - 1); i++) {
-      for (int j = (i+1); j < n_entry; j++) {
-        reject_concordant = ((x2[i] != na_value) && (x2[j] == na_value) && (y2[i] != na_value) && (y2[j] == na_value)) ||                                             //            ## 7
-          ((x2[i] == na_value) && (x2[j] != na_value) && (y2[i] == na_value) && (y2[j] != na_value));
-        reject_discordant = ((x2[i] != na_value) && (x2[j] == na_value)  && (y2[i] == na_value) && (y2[j] != na_value)) ||
-          ((x2[i] == na_value)  && (x2[j] != na_value)  && (y2[i] != na_value) && (y2[j] == na_value));
-        
-        if (!reject_concordant) {
-          sum_concordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) > 0;
-        }
-        
-        if (!reject_discordant) {
-          sum_discordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) < 0;
-        }
-        
-        
-        sum_tied_x+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] == x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] != y2[j])));
-        sum_tied_y+= ((x2[i] != na_value) && (x2[j] != na_value) && (x2[i] != x2[j]) && ((y2[i] != na_value) && (y2[j] != na_value) && (y2[i] == y2[j])));
-        sum_tied_x_na+= (x2[i] == na_value) && (x2[j] == na_value) && ((y2[i] != na_value) | (y2[j] != na_value));
-        sum_tied_y_na+= ((x2[i] != na_value) | (x2[j] != na_value)) && (y2[i] == na_value) && (y2[j] == na_value);
-        sum_all_na+= (x2[i] == na_value) && (x2[j] == na_value) && (y2[i] == na_value) && (y2[j] == na_value);
-      }
+  
+  for (int i = 0; i < (n_entry - 1); i++) {
+    for (int j = (i+1); j < n_entry; j++) {
+      sum_concordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) > 0;
+      sum_discordant+= (signC(x2[i] - x2[j]) * signC(y2[i] - y2[j])) < 0;
     }
   }
-  
-  double half_sum_na_ties = sum_all_na / 2;
-  
-  if (perspective == "global") {
-    sum_x_ties = sum_tied_x + sum_tied_x_na + half_sum_na_ties;
-    sum_y_ties = sum_tied_y + sum_tied_y_na + half_sum_na_ties;
-  } else {
-    sum_x_ties = sum_tied_x;
-    sum_y_ties = sum_tied_y;
-  }
-  
+
+  // if (perspective == "global") {
+  //   sum_x_ties = sum_tied_x + sum_tied_x_na + half_sum_na_ties;
+  //   sum_y_ties = sum_tied_y + sum_tied_y_na + half_sum_na_ties;
+  // } else {
+  //   sum_x_ties = sum_tied_x;
+  //   sum_y_ties = sum_tied_y;
+  // }
+  // 
   k_numerator = sum_concordant - sum_discordant;
-  k_denominator = sum_discordant + sum_concordant + sum_x_ties + sum_y_ties;
-  
-  if (k_denominator == 0) {
-    k_tau = 0;
-  } else {
-    k_tau = k_numerator / k_denominator;
-  }
-  
-  
-  // p-value calculation
   
   LogicalVector dup_x(x2.size());
   dup_x = duplicated(x2);
@@ -199,6 +156,19 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   t_0 = n_entry * (n_entry - 1) / 2;
   x_tied_sum_t1 = sum(x_tied_values_t1 * (x_tied_values_t1 - 1)) / 2;
   y_tied_sum_t2 = sum(y_tied_values_t2 * (y_tied_values_t2 - 1)) / 2;
+  
+  k_denominator = sqrt((t_0 - x_tied_sum_t1) * (t_0 - y_tied_sum_t2));
+  
+  if (k_denominator == 0) {
+    k_tau = 0;
+  } else {
+    k_tau = k_numerator / k_denominator;
+  }
+  
+  
+  // p-value calculation
+  
+  
   s_adjusted = k_tau * sqrt((t_0 - x_tied_sum_t1) * (t_0 - y_tied_sum_t2));
   v_0_sum = n_entry * (n_entry - 1) * (2 * n_entry + 5);
   v_t_sum = sum(x_tied_values_t1 * (x_tied_values_t1 - 1) * (2 * x_tied_values_t1 + 5));
@@ -235,7 +205,7 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
     Rprintf("sum_x_ties: %f \n", sum_x_ties);
     Rprintf("sum_y_ties: %f \n", sum_y_ties);
     Rprintf("sum_na_ties: %f \n", sum_all_na);
-    Rprintf("half_sum_na_ties: %f \n", half_sum_na_ties);
+    //Rprintf("half_sum_na_ties: %f \n", half_sum_na_ties);
     Rprintf("sum_concordant: %f \n", sum_concordant);
     Rprintf("sum_discordant: %f \n", sum_discordant);
     Rprintf("k_numerator: %f \n", k_numerator);
