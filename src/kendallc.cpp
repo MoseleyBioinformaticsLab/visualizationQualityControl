@@ -1,6 +1,77 @@
 #include <numeric>
 #include <Rcpp.h>
+#include "sort.h"
 using namespace Rcpp;
+
+
+//' Tests sorting template
+//' 
+//' @importFrom Rcpp sourceCpp
+//' @export
+//' @useDynLib visualizationQualityControl
+//' @return 0
+// [[Rcpp::export]]
+int testSort(){
+  // sort a into b
+  std::vector<double> a;
+  a.resize(5);
+  a[0] = 1; a[1] = 4; a[2] = 2; a[3] = 5; a[4] = 3;
+  std::vector<size_t> i;
+  std::vector<double> b;
+  sort(a,b,i);
+  for(int j = 0;j<a.size();j++)
+  {
+    Rprintf("b[%d] = %g = a[i[%d]] = a[%d] = %g\n",j,b[j],j,i[j],a[i[j]]);
+  }
+  Rprintf("\n");
+  
+  // sort c "in place"
+  std::vector<char> c;
+  c.resize(5);
+  c[0] = 'b'; c[1] = 'd'; c[2] = 'a'; c[3] = 'e'; c[4] = 'c';
+  std::vector<char> old_c = c;
+  sort(c,c,i);
+  for(int j = 0;j<c.size();j++)
+  {
+    Rprintf("c[%d] = %c = old_c[i[%d]] = old_c[%d] = %c\n",
+           j,c[j],j,i[j],old_c[i[j]]);
+  }
+  Rprintf("\n");
+  
+  // sort d into e and use i to sort d into f afterwards
+  std::vector<int> d;
+  d.resize(5);
+  d[0] = 5; d[1] = -1; d[2] = -10; d[3] = -2; d[4] = -6;
+  std::vector<int> e;
+  sort(d,e,i);
+  std::vector<int> f;
+  reorder(d,i,f);
+  for(int j = 0;j<d.size();j++)
+  {
+    Rprintf("f[%d] = %d = e[%d] = %d = d[i[%d]] = d[%d] = %d\n",
+           j,f[j],j,e[j],j,i[j],d[i[j]]);
+  }
+  Rprintf("\n");
+  return(0);
+}
+
+//' Returns sorted index in Rcpp
+//' 
+//' @param x the vector to be sorted
+//' 
+//' @importFrom Rcpp sourceCpp
+//' @export
+//' @useDynLib visualizationQualityControl
+//' @return ordered indices
+// [[Rcpp::export]]
+IntegerVector sortedIndex(NumericVector x){
+  IntegerVector idx = seq_along(x) - 1;
+  
+  std::sort(idx.begin(), idx.end(), [&](int i, int j){return x[i] < x[j];});
+  
+  return idx;
+}
+
 
 inline double signC(double x) {
   if (x > 0) {
