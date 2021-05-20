@@ -14,7 +14,7 @@ using namespace Rcpp;
 IntegerVector sortedIndex(NumericVector x){
   IntegerVector idx = seq_along(x) - 1;
   
-  std::sort(idx.begin(), idx.end(), [&](int i, int j){return x[i] < x[j];});
+  std::stable_sort(idx.begin(), idx.end(), [&](int i, int j){return x[i] < x[j];});
   
   return idx;
 }
@@ -47,7 +47,7 @@ IntegerVector compare_both(IntegerVector x, IntegerVector y){
   int idx = 1;
   
   for (int i = 1; i < (n_entry); i++) {
-    if ((x[i] != x[(i - 1)]) | (y[i] != y[(i - 1)])) {
+    if ((x[i] != x[(i - 1)]) || (y[i] != y[(i - 1)])) {
       match_self[idx] = 1;
     } else {
       match_self[idx] = 0;
@@ -141,6 +141,9 @@ inline double signC(double x) {
 //' @param x numeric vector
 //' @param y numeric vector
 //' @param perspective should we consider the "local" or "global" perspective?
+//' @param alternative what is the alternative for the p-value test?
+//' @param continuity logical: if true, a continuity correction is used
+//' @param output used to control reporting of values for debugging.
 //' 
 //' @details Calculates the information-content-informed Kendall-tau correlation measure.
 //'   This correlation is based on concordant and discordant ranked pairs, like Kendall-tau,
@@ -162,16 +165,16 @@ inline double signC(double x) {
 //' y = x + 1
 //' y2 = y
 //' y2[1:10] = NA
-//' kendallt(x, y)
-//' kendallt(x, y2, "global")
-//' kendallt(x, y2)
+//' ici_kendallt(x, y)
+//' ici_kendallt(x, y2, "global")
+//' ici_kendallt(x, y2)
 //' 
 //' @importFrom Rcpp sourceCpp
 //' @export
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", String output = "simple") {
+NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", bool continuity = false, String output = "simple") {
   
   if (x.length() != y.length()) {
     throw std::range_error("X and Y are not the same length!");
@@ -205,13 +208,13 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   x2 = x[!is_na(x)];
   y2 = y[!is_na(y)];
   
-  double min_value = min(NumericVector::create(min(x2), min(y2)));
-  double na_value = min_value - 0.1;
+  double min_x = min(x2) - 0.1;
+  double min_y = min(y2) - 0.1;
   
   x2 = clone(x);
   y2 = clone(y);
-  x2[is_na(x)] = na_value;
-  y2[is_na(y)] = na_value;
+  x2[is_na(x)] = min_x;
+  y2[is_na(y)] = min_y;
   
   
   int n_entry = x2.size();
@@ -220,11 +223,6 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   if (n_entry < 2) {
     return 0.0;
   }
-  
-  IntegerVector low_subset = seq(1, (n_entry - 1));
-  //Rprintf("n_low: %i\n", low_subset.size());
-  IntegerVector hi_subset = seq(0, (n_entry - 2));
-  //Rprintf("n_hi: %i\n", hi_subset.size());
   
   IntegerVector perm_y = sortedIndex(y2);
   x2 = x2[perm_y];
@@ -241,10 +239,12 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   
   //return x4;
   IntegerVector obs = compare_both(x4, y4);
+  //return obs;
+  int sum_obs = sum(obs);
   IntegerVector cnt = diff(which_notzero(obs));
   int dis = kendall_discordant(x4, y4);
   
-  double ntie = sum(cnt * (cnt - 1)) / 2;
+  double ntie = sum((cnt * (cnt - 1)) / 2);
   // three values should be read as:
   // xtie, x0, and x1, and then same for y
   NumericVector x_counts = count_rank_tie(x4);
@@ -261,6 +261,8 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   
   //Note that tot = con + dis + (xtie - ntie) + (ytie - ntie) + ntie
   //              = con + dis + xtie + ytie - ntie
+  //Therefore con - dis = tot - xtie - ytie + ntie - 2 * dis
+  //And concordant - discordant is the numerator for kendall-tau.
   
   NumericVector k_res(2);
   k_res.names() = CharacterVector({"tau", "pvalue"});
@@ -269,7 +271,8 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   }
   
   double con_minus_dis = tot - xtie - ytie + ntie - 2 * dis;
-  double tau = con_minus_dis / sqrt(tot - xtie) / sqrt(tot - ytie);
+  double tau = con_minus_dis / sqrt((tot - xtie) * (tot - ytie));
+  double con_plus_dis = tot - xtie - ytie + ntie;
   if (tau > 1) {
     tau = 1;
   } else if (tau < -1) {
@@ -282,10 +285,11 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
                 (2 * xtie * ytie) / m + x0 * y0 / (9 * m * (n_entry - 2)));
   //Rprintf("var: %f\n", var);
   double s_adjusted = tau * sqrt(((m / 2) - xtie) * ((m / 2) - ytie));
-  //Rprintf("s_adjusted: %f\n", s_adjusted);
-  double s_adjusted2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
-  //Rprintf("s_adjusted2: %f\n", s_adjusted2);
-  z_b[0] = s_adjusted2 / sqrt(var);
+  if (continuity) {
+    double adj_s2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
+    s_adjusted = adj_s2;
+  }
+  z_b[0] = s_adjusted / sqrt(var);
   
   if (alternative == "less") {
     k_res[1] = pnorm(z_b, 0.0, 1.0)[0];
@@ -299,6 +303,27 @@ NumericVector ici_kendallt(NumericVector x, NumericVector y, String perspective 
   }
   k_res[0] = tau;
   
+  //Rprintf("n_entry: %f\n", n_entry);
+  
+  if (output != "simple") {
+    Rprintf("min_x: %f \n", min_x);
+    Rprintf("min_y: %f \n", min_y);
+    
+    Rprintf("n_entry: %d \n", n_entry);
+    Rprintf("tot: %d \n", tot);
+    Rprintf("sum_obs: %d\n", sum_obs);
+    Rprintf("dis: %d \n", dis);
+    Rprintf("con_minus_dis (k_numerator): %f\n", con_minus_dis);
+    Rprintf("con_plus_dis (for checking): %f\n", con_plus_dis);
+    Rprintf("n_tie: %f\n", ntie);
+    Rprintf("m_2: %f \n", m / 2);
+    Rprintf("x_tie: %f \n", xtie);
+    Rprintf("y_tie: %f \n", ytie);
+    Rprintf("s_adjusted: %f \n", s_adjusted);
+    Rprintf("s_adjusted_variance: %f \n", var);
+    Rprintf("k_tau: %f \n", tau);
+    Rprintf("pvalue: %f \n", k_res[1]);
+  }
   
   return k_res;
 }
@@ -488,6 +513,7 @@ NumericVector ici_kendallt_pairs(NumericVector x, NumericVector y, String perspe
 
   
   // debugging
+  double con_plus_dis = sum_concordant + sum_discordant;
   if (output != "simple") {
     Rprintf("min_value: %f \n", min_value);
     Rprintf("na_value: %f \n", na_value);
@@ -502,6 +528,7 @@ NumericVector ici_kendallt_pairs(NumericVector x, NumericVector y, String perspe
     Rprintf("sum_concordant: %f \n", sum_concordant);
     Rprintf("sum_discordant: %f \n", sum_discordant);
     Rprintf("k_numerator: %f \n", k_numerator);
+    Rprintf("con_plus_dis: %f\n", con_plus_dis);
     Rprintf("k_denominator: %f \n", k_denominator);
     Rprintf("t_0: %f \n", t_0);
     Rprintf("x_tied_sum_t1: %f \n", x_tied_sum_t1);
