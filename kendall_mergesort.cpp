@@ -107,6 +107,24 @@ int kendall_discordant(IntegerVector x, IntegerVector y){
   return dis;
 }
 
+// [[Rcpp::export]]
+NumericVector count_rank_tie(IntegerVector ranks){
+  
+  LogicalVector dup_ranks(ranks.size());
+  dup_ranks = duplicated(ranks);
+  IntegerVector ranks2 = ranks[dup_ranks];
+  IntegerVector number_tied;
+  number_tied = table(ranks2) + 1;
+  
+  NumericVector counts(3);
+  counts(0) = sum(number_tied * (number_tied - 1)) / 2;
+  counts(1) = sum(number_tied * (number_tied - 1) * (number_tied - 2)) / 2;
+  counts(2) = sum(number_tied * (number_tied - 1) * (2 * number_tied + 5));
+  counts.names() = CharacterVector({"ntie", "t0", "t1"});
+  
+  return counts;
+}
+
 inline double signC(double x) {
   if (x > 0) {
     return 1.0;
@@ -152,41 +170,14 @@ inline double signC(double x) {
 //' @useDynLib visualizationQualityControl
 //' @return kendall tau correlation
 // [[Rcpp::export]]
-int ici_kendallt_mergesort(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", String output = "simple") {
+NumericVector ici_kendallt_mergesort(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", String output = "simple") {
   
   if (x.length() != y.length()) {
     throw std::range_error("X and Y are not the same length!");
     exit(-1);
   }
   
-  double sum_concordant = 0;
-  double sum_discordant = 0;
-  double sum_x_ties = 0;
-  double sum_y_ties = 0;
-  double sum_tied_x = 0;
-  double sum_tied_y = 0;
-  double sum_tied_x_na = 0;
-  double sum_tied_y_na = 0;
-  double sum_all_na = 0;
-  double k_numerator;
-  double k_denominator;
-  double k_tau;
-  bool reject_concordant;
-  bool reject_discordant;
   
-  // for generating the p-value
-  //double xties = 0;
-  //double yties = 0;
-  double t_0 = 0;
-  double s_adjusted = 0;
-  double x_tied_sum_t1;
-  double y_tied_sum_t2;
-  double v_0_sum = 0;
-  double v_t_sum = 0;
-  double v_u_sum = 0;
-  double v_t1_sum = 0;
-  double v_t2_sum = 0;
-  double s_adjusted_variance = 0;
   NumericVector z_b (1);
   NumericVector p_value (1);
   
@@ -223,7 +214,7 @@ int ici_kendallt_mergesort(NumericVector x, NumericVector y, String perspective 
   
   
   int n_entry = x2.size();
-  Rprintf("n_entry: %i\n", n_entry);
+  //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
     return 0.0;
@@ -252,7 +243,63 @@ int ici_kendallt_mergesort(NumericVector x, NumericVector y, String perspective 
   IntegerVector cnt = diff(which_notzero(obs));
   int dis = kendall_discordant(x4, y4);
   
-  return dis;
+  double ntie = sum(cnt * (cnt - 1)) / 2;
+  // three values should be read as:
+  // xtie, x0, and x1, and then same for y
+  NumericVector x_counts = count_rank_tie(x4);
+  double xtie = x_counts[0];
+  double x0 = x_counts[1];
+  double x1 = x_counts[2];
+  
+  NumericVector y_counts = count_rank_tie(y4);
+  double ytie = y_counts[0];
+  double y0 = y_counts[1];
+  double y1 = y_counts[2];
+  
+  int tot = (n_entry * (n_entry - 1)) / 2;
+  
+  //Note that tot = con + dis + (xtie - ntie) + (ytie - ntie) + ntie
+  //              = con + dis + xtie + ytie - ntie
+  
+  NumericVector k_res(2);
+  k_res.names() = CharacterVector({"tau", "pvalue"});
+  if ((xtie == tot) || (ytie == tot)) {
+    return k_res;
+  }
+  
+  double con_minus_dis = tot - xtie - ytie + ntie - 2 * dis;
+  double tau = con_minus_dis / sqrt(tot - xtie) / sqrt(tot - ytie);
+  if (tau > 1) {
+    tau = 1;
+  } else if (tau < -1) {
+    tau = -1;
+  }
+  
+  double m = n_entry * (n_entry - 1);
+  //Rprintf("m: %f\n", m);
+  double var = ((m * (2 * n_entry + 5) - x1 - y1) / 18 +
+                (2 * xtie * ytie) / m + x0 * y0 / (9 * m * (n_entry - 2)));
+  //Rprintf("var: %f\n", var);
+  double s_adjusted = tau * sqrt(((m / 2) - xtie) * ((m / 2) - ytie));
+  //Rprintf("s_adjusted: %f\n", s_adjusted);
+  double s_adjusted2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
+  //Rprintf("s_adjusted2: %f\n", s_adjusted2);
+  z_b[0] = s_adjusted2 / sqrt(var);
+
+  if (alternative == "less") {
+    k_res[1] = pnorm(z_b, 0.0, 1.0)[0];
+  } else if (alternative == "greater") {
+    k_res[1] = pnorm(z_b, 0.0, 1.0, false, false)[0];
+  } else if (alternative == "two.sided") {
+    NumericVector p_res (2);
+    p_res[0] = pnorm(z_b, 0.0, 1.0)[0];
+    p_res[1] = pnorm(z_b, 0.0, 1.0, false)[0];
+    k_res[1] = 2 * min(p_res);
+  }
+  k_res[0] = tau;
+  
+  
+  return k_res;
 }
 
 
@@ -262,5 +309,6 @@ y = c(1, 4, 7, 1, 0)
 
 t1 = ici_kendallt_mergesort(x, y)
 t1
-#compare_self(c(0, 1, 1, 4, 7))
+
+t2 = visualizationQualityControl::ici_kendallt(x, y, output = "crap")
 */
