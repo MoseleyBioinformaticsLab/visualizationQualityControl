@@ -1,5 +1,4 @@
-Visualization Quality Control
-=============================
+# Visualization Quality Control
 
 Set of useful functions for calculating various measures from data and
 visualizing them.
@@ -8,13 +7,13 @@ Takes a lot of inspiration from [Gierlinski et al.,
 2015](https://dx.doi.org/10.1093/bioinformatics/btv425), especially the
 `median_correlation` and `outlier_fraction` functions.
 
-Installation
-------------
+## Installation
 
 ### Dependencies
 
--   `ComplexHeatmap`, for generating the heatmaps
--   `dendsort`, for reordering samples in heatmaps
+-   `ComplexHeatmap`, for generating the heatmaps.
+-   `dendsort`, for reordering samples in heatmaps.
+-   `ICIKendallTau`, for calculating Kendall-tau with missing values.
 
 These should get installed automatically.
 
@@ -24,8 +23,7 @@ This package can be installed using the `remotes` package:
 
     remotes::install_github("moseleybioinformaticslab/visualizationQualityControl")
 
-Examples
---------
+## Examples
 
 These examples show the primary functionality. We will apply the
 visualizations to a two group dataset. However, all of the functions are
@@ -62,8 +60,17 @@ To see how much explained variance each PC has, you can calculate them:
     knitr::kable(visqc_score_contributions(pca_data$x))
 
 <table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 13%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr class="header">
+<th style="text-align: left;"></th>
 <th style="text-align: left;">pc</th>
 <th style="text-align: right;">variance</th>
 <th style="text-align: right;">percent</th>
@@ -74,12 +81,14 @@ To see how much explained variance each PC has, you can calculate them:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">PC1</td>
+<td style="text-align: left;">PC1</td>
 <td style="text-align: right;">2.0852320</td>
 <td style="text-align: right;">0.6853218</td>
 <td style="text-align: right;">0.6853218</td>
 <td style="text-align: left;">PC1 (69%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC2</td>
 <td style="text-align: left;">PC2</td>
 <td style="text-align: right;">0.0944324</td>
 <td style="text-align: right;">0.0310357</td>
@@ -88,12 +97,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC3</td>
+<td style="text-align: left;">PC3</td>
 <td style="text-align: right;">0.0827594</td>
 <td style="text-align: right;">0.0271993</td>
 <td style="text-align: right;">0.7435567</td>
 <td style="text-align: left;">PC3 (2.7%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC4</td>
 <td style="text-align: left;">PC4</td>
 <td style="text-align: right;">0.0802501</td>
 <td style="text-align: right;">0.0263746</td>
@@ -102,12 +113,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC5</td>
+<td style="text-align: left;">PC5</td>
 <td style="text-align: right;">0.0758842</td>
 <td style="text-align: right;">0.0249397</td>
 <td style="text-align: right;">0.7948710</td>
 <td style="text-align: left;">PC5 (2.5%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC6</td>
 <td style="text-align: left;">PC6</td>
 <td style="text-align: right;">0.0750434</td>
 <td style="text-align: right;">0.0246634</td>
@@ -116,12 +129,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC7</td>
+<td style="text-align: left;">PC7</td>
 <td style="text-align: right;">0.0668954</td>
 <td style="text-align: right;">0.0219855</td>
 <td style="text-align: right;">0.8415199</td>
 <td style="text-align: left;">PC7 (2.2%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC8</td>
 <td style="text-align: left;">PC8</td>
 <td style="text-align: right;">0.0600538</td>
 <td style="text-align: right;">0.0197370</td>
@@ -130,12 +145,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC9</td>
+<td style="text-align: left;">PC9</td>
 <td style="text-align: right;">0.0590223</td>
 <td style="text-align: right;">0.0193980</td>
 <td style="text-align: right;">0.8806548</td>
 <td style="text-align: left;">PC9 (1.9%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC10</td>
 <td style="text-align: left;">PC10</td>
 <td style="text-align: right;">0.0520022</td>
 <td style="text-align: right;">0.0170908</td>
@@ -144,12 +161,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC11</td>
+<td style="text-align: left;">PC11</td>
 <td style="text-align: right;">0.0507126</td>
 <td style="text-align: right;">0.0166670</td>
 <td style="text-align: right;">0.9144126</td>
 <td style="text-align: left;">PC11 (1.7%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC12</td>
 <td style="text-align: left;">PC12</td>
 <td style="text-align: right;">0.0450374</td>
 <td style="text-align: right;">0.0148018</td>
@@ -158,12 +177,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC13</td>
+<td style="text-align: left;">PC13</td>
 <td style="text-align: right;">0.0398570</td>
 <td style="text-align: right;">0.0130992</td>
 <td style="text-align: right;">0.9423135</td>
 <td style="text-align: left;">PC13 (1.3%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC14</td>
 <td style="text-align: left;">PC14</td>
 <td style="text-align: right;">0.0380927</td>
 <td style="text-align: right;">0.0125194</td>
@@ -172,12 +193,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC15</td>
+<td style="text-align: left;">PC15</td>
 <td style="text-align: right;">0.0337662</td>
 <td style="text-align: right;">0.0110974</td>
 <td style="text-align: right;">0.9659303</td>
 <td style="text-align: left;">PC15 (1.1%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC16</td>
 <td style="text-align: left;">PC16</td>
 <td style="text-align: right;">0.0304897</td>
 <td style="text-align: right;">0.0100206</td>
@@ -186,12 +209,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC17</td>
+<td style="text-align: left;">PC17</td>
 <td style="text-align: right;">0.0271052</td>
 <td style="text-align: right;">0.0089083</td>
 <td style="text-align: right;">0.9848592</td>
 <td style="text-align: left;">PC17 (0.89%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC18</td>
 <td style="text-align: left;">PC18</td>
 <td style="text-align: right;">0.0252369</td>
 <td style="text-align: right;">0.0082942</td>
@@ -200,12 +225,14 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PC19</td>
+<td style="text-align: left;">PC19</td>
 <td style="text-align: right;">0.0208322</td>
 <td style="text-align: right;">0.0068466</td>
 <td style="text-align: right;">1.0000000</td>
 <td style="text-align: left;">PC19 (0.68%)</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">PC20</td>
 <td style="text-align: left;">PC20</td>
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: right;">0.0000000</td>
@@ -254,8 +281,8 @@ correlation heatmap.
 ### outlier\_fraction
 
     data_outlier = outlier_fraction(t(exp_data), sample_info$class)
-    ggplot(data_outlier, aes(x = sample, y = frac)) + geom_point() + 
-      facet_grid(. ~ class, scales = "free") + ggtitle("Outlier Fraction")
+    ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
+      facet_grid(. ~ sample_class, scales = "free") + ggtitle("Outlier Fraction")
 
 ![](README_files/figure-markdown_strict/outlier_fraction-1.png)
 
@@ -289,10 +316,10 @@ Lets add some missingness to our data.
     cor_random_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.6000000 0.3182274 0.3274932 0.3245317
-    ## s2 0.3182274 1.0000000 0.8897728 0.8942302
-    ## s3 0.3274932 0.8897728 1.0000000 0.8866482
-    ## s4 0.3245317 0.8942302 0.8866482 1.0000000
+    ## s1 0.6000000 0.3100687 0.3186598 0.3257055
+    ## s2 0.3100687 1.0000000 0.8897728 0.8942302
+    ## s3 0.3186598 0.8897728 1.0000000 0.8866482
+    ## s4 0.3257055 0.8942302 0.8866482 1.0000000
 
     cor_random_missing_nw = globally_it_weighted_pairwise_correlation(t(exp_data))$cor
     cor_random_missing_nw[1:4, 1:4]
@@ -316,16 +343,15 @@ samples, that is worth something?
     cor_same_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.8000000 0.8697149 0.5755509 0.5734221
-    ## s2 0.8697149 0.8000000 0.5638509 0.5672459
-    ## s3 0.5755509 0.5638509 1.0000000 0.8866482
-    ## s4 0.5734221 0.5672459 0.8866482 1.0000000
+    ## s1 0.8000000 0.8617948 0.5697536 0.5723917
+    ## s2 0.8617948 0.8000000 0.5720490 0.5773131
+    ## s3 0.5697536 0.5720490 1.0000000 0.8866482
+    ## s4 0.5723917 0.5773131 0.8866482 1.0000000
 
 Here we can see that the correlations get dropped, but not as much as
 when it was random.
 
-Fake Data Generation
---------------------
+## Fake Data Generation
 
 Some fake data is stored in `grp_cor_data` that is useful for testing
 the `median_correlation` function. It was generated by:

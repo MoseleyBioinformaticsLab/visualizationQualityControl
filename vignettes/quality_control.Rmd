@@ -5,10 +5,12 @@ date: "`r Sys.time()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quality Control Example}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteDepends{visualizationQualityControl, ggplot2, ComplexHeatmap,
-  viridis}
+  viridis, ICIKendallTau}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Introduction
