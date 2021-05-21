@@ -3,6 +3,8 @@ title: "Visualization Quality Control"
 author: "Robert M Flight"
 date: "`r Sys.time()`"
 output: md_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Visualization Quality Control
@@ -16,8 +18,9 @@ Takes a lot of inspiration from [Gierlinski et al., 2015](https://dx.doi.org/10.
 
 ### Dependencies
 
-* `ComplexHeatmap`, for generating the heatmaps
-* `dendsort`, for reordering samples in heatmaps
+* `ComplexHeatmap`, for generating the heatmaps.
+* `dendsort`, for reordering samples in heatmaps.
+* `ICIKendallTau`, for calculating Kendall-tau with missing values.
 
 These should get installed automatically.
 
@@ -112,8 +115,8 @@ ggplot(data_medcor, aes(x = sample_id, y = med_cor)) + geom_point() +
 
 ```{r outlier_fraction}
 data_outlier = outlier_fraction(t(exp_data), sample_info$class)
-ggplot(data_outlier, aes(x = sample, y = frac)) + geom_point() + 
-  facet_grid(. ~ class, scales = "free") + ggtitle("Outlier Fraction")
+ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
+  facet_grid(. ~ sample_class, scales = "free") + ggtitle("Outlier Fraction")
 ```
 
 ### weighted correlations with missing values

@@ -1,3 +1,7 @@
+# v 0.4.0
+
+* Moving all of the ICI-Kendall-tau code into it's own package. This reduces the dependencies necessary if all you want is to run a fast Kendall-tau.
+
 # v 0.3.100
 
 * Making the splitup version of ICI-Kendall-tau the "implementation" (`visqc_ici_kendallt`), and using a single core if the user doesn't setup a "plan" first.
