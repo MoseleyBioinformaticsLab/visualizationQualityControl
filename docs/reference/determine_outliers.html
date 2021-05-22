@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>keep features with percentage of non-zeros — keep_non_zero_percentage • visualizationQualityControl</title>
+<title>determine outliers — determine_outliers • visualizationQualityControl</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,8 @@
 
 
 
-<meta property="og:title" content="keep features with percentage of non-zeros — keep_non_zero_percentage" />
-<meta property="og:description" content="Given a value matrix (features are columns, samples are rows), and sample classes, 
-find those things that are not zero in at least a certain 
-number of samples in one of the classes, and keep those features for further
-processing." />
+<meta property="og:title" content="determine outliers — determine_outliers" />
+<meta property="og:description" content="determine outliers" />
 
 
 
@@ -124,59 +121,38 @@ processing." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>keep features with percentage of non-zeros</h1>
+    <h1>determine outliers</h1>
     
-    <div class="hidden name"><code>keep_non_zero_percentage.Rd</code></div>
+    <div class="hidden name"><code>determine_outliers.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given a value matrix (features are columns, samples are rows), and sample classes, 
-find those things that are <em>not zero</em> in at least a certain 
-number of samples in one of the classes, and keep those features for further
-processing.</p>
+    <p>determine outliers</p>
     </div>
 
-    <pre class="usage"><span class='fu'>keep_non_zero_percentage</span><span class='op'>(</span>
-  <span class='va'>data_matrix</span>,
-  sample_classes <span class='op'>=</span> <span class='cn'>NULL</span>,
-  keep_num <span class='op'>=</span> <span class='fl'>0.75</span>,
-  zero_value <span class='op'>=</span> <span class='fl'>0</span>,
-  all <span class='op'>=</span> <span class='cn'>FALSE</span>
+    <pre class="usage"><span class='fu'>determine_outliers</span><span class='op'>(</span>
+  <span class='va'>median_correlations</span>,
+  <span class='va'>outlier_fraction</span>,
+  cor_weight <span class='op'>=</span> <span class='fl'>1</span>,
+  frac_weight <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data_matrix</th>
-      <td><p>the matrix of values to work with</p></td>
+      <th>median_correlations</th>
+      <td><p>median correlations</p></td>
     </tr>
     <tr>
-      <th>sample_classes</th>
-      <td><p>the classes of each sample</p></td>
-    </tr>
-    <tr>
-      <th>keep_num</th>
-      <td><p>what number of samples in each class need a non-zero value (see Details)</p></td>
-    </tr>
-    <tr>
-      <th>zero_value</th>
-      <td><p>what number represents zero values</p></td>
-    </tr>
-    <tr>
-      <th>all</th>
-      <td><p>is this an either / or OR does it need to be present in all?</p></td>
+      <th>outlier_fraction</th>
+      <td><p>outlier fractions</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The number of samples that must be non-zero can be expressed either as a whole
-  number (that is greater than one), or as a fraction that will be be multiplied 
-  by the number of samples in each class to get the lower limits for each of the classes.</p>
+    <p>data.frame</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

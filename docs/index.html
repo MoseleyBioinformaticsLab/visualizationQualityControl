@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.105</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -40,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -55,9 +55,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
-    </li>
-    <li>
       <a href="articles/pca_testing.html">PCA Testing</a>
     </li>
     <li>
@@ -94,9 +91,11 @@
 <a href="#dependencies" class="anchor"></a>Dependencies</h3>
 <ul>
 <li>
-<code>ComplexHeatmap</code>, for generating the heatmaps</li>
+<code>ComplexHeatmap</code>, for generating the heatmaps.</li>
 <li>
-<code>dendsort</code>, for reordering samples in heatmaps</li>
+<code>dendsort</code>, for reordering samples in heatmaps.</li>
+<li>
+<code>ICIKendallTau</code>, for calculating Kendall-tau with missing values.</li>
 </ul>
 <p>These should get installed automatically.</p>
 </div>
@@ -104,37 +103,47 @@
 <h3 class="hasAnchor">
 <a href="#this-package" class="anchor"></a>This Package</h3>
 <p>This package can be installed using the <code>remotes</code> package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"moseleybioinformaticslab/visualizationQualityControl"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"moseleybioinformaticslab/visualizationQualityControl"</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
 <p>These examples show the primary functionality. We will apply the visualizations to a two group dataset. However, all of the functions are still applicable to datasets with more than two groups. The examples below are for a dataset where there has been a sample swapped between the two groups (i.e. there is a problem!). If you want to see how the visualizations compare between a <strong>good</strong> dataset and a <strong>bad</strong> dataset, see the <strong>quality_control</strong> vignette.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(visualizationQualityControl)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">data</span>(<span class="st">"grp_cor_data"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>exp_data =<span class="st"> </span>grp_cor_data<span class="op">$</span>data</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">rownames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"f"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(exp_data)))</span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">colnames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"s"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(exp_data)))</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a>sample_info =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">colnames</span>(exp_data), <span class="dt">class =</span> grp_cor_data<span class="op">$</span>class)</span>
-<span id="cb2-9"><a href="#cb2-9"></a></span>
-<span id="cb2-10"><a href="#cb2-10"></a>exp_data[, <span class="dv">5</span>] =<span class="st"> </span>grp_cor_data<span class="op">$</span>data[, <span class="dv">19</span>]</span>
-<span id="cb2-11"><a href="#cb2-11"></a>exp_data[, <span class="dv">19</span>] =<span class="st"> </span>grp_cor_data<span class="op">$</span>data[, <span class="dv">5</span>]</span>
-<span id="cb2-12"><a href="#cb2-12"></a>sample_classes =<span class="st"> </span>sample_info<span class="op">$</span>class</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(visualizationQualityControl)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"grp_cor_data"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>sample_info <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">colnames</span>(exp_data), <span class="at">class =</span> grp_cor_data<span class="sc">$</span>class)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">5</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">19</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">19</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">5</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>sample_classes <span class="ot">=</span> sample_info<span class="sc">$</span>class</span></code></pre></div>
 <div id="visualize-pca-component-scores" class="section level3">
 <h3 class="hasAnchor">
 <a href="#visualize-pca-component-scores" class="anchor"></a>Visualize PCA Component Scores</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>pca_data =<span class="st"> </span><span class="kw">prcomp</span>(<span class="kw">t</span>(exp_data), <span class="dt">center =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>pca_scores =<span class="st"> </span><span class="kw">as.data.frame</span>(pca_data<span class="op">$</span>x)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>pca_scores =<span class="st"> </span><span class="kw">cbind</span>(pca_scores, sample_info)</span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">ggplot</span>(pca_scores, <span class="kw">aes</span>(<span class="dt">x =</span> PC1, <span class="dt">y =</span> PC2, <span class="dt">color =</span> class)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">=</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(exp_data), <span class="at">center =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">as.data.frame</span>(pca_data<span class="sc">$</span>x)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">cbind</span>(pca_scores, sample_info)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_scores, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> class)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
 <p><img src="README_files/figure-markdown_strict/do_pca-1.png"></p>
 <p>To see how much explained variance each PC has, you can calculate them:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">visqc_score_contributions</span>(pca_data<span class="op">$</span>x))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">visqc_score_contributions</span>(pca_data<span class="sc">$</span>x))</span></code></pre></div>
 <table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
 <thead><tr class="header">
+<th style="text-align: left;">
+</th>
 <th style="text-align: left;">
 pc
 </th>
@@ -156,6 +165,9 @@ labels
 <td style="text-align: left;">
 PC1
 </td>
+<td style="text-align: left;">
+PC1
+</td>
 <td style="text-align: right;">
 2.0852320
 </td>
@@ -170,6 +182,9 @@ PC1 (69%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC2
+</td>
 <td style="text-align: left;">
 PC2
 </td>
@@ -190,6 +205,9 @@ PC2 (3.1%)
 <td style="text-align: left;">
 PC3
 </td>
+<td style="text-align: left;">
+PC3
+</td>
 <td style="text-align: right;">
 0.0827594
 </td>
@@ -204,6 +222,9 @@ PC3 (2.7%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC4
+</td>
 <td style="text-align: left;">
 PC4
 </td>
@@ -224,6 +245,9 @@ PC4 (2.6%)
 <td style="text-align: left;">
 PC5
 </td>
+<td style="text-align: left;">
+PC5
+</td>
 <td style="text-align: right;">
 0.0758842
 </td>
@@ -238,6 +262,9 @@ PC5 (2.5%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC6
+</td>
 <td style="text-align: left;">
 PC6
 </td>
@@ -258,6 +285,9 @@ PC6 (2.5%)
 <td style="text-align: left;">
 PC7
 </td>
+<td style="text-align: left;">
+PC7
+</td>
 <td style="text-align: right;">
 0.0668954
 </td>
@@ -272,6 +302,9 @@ PC7 (2.2%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC8
+</td>
 <td style="text-align: left;">
 PC8
 </td>
@@ -292,6 +325,9 @@ PC8 (2%)
 <td style="text-align: left;">
 PC9
 </td>
+<td style="text-align: left;">
+PC9
+</td>
 <td style="text-align: right;">
 0.0590223
 </td>
@@ -306,6 +342,9 @@ PC9 (1.9%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC10
+</td>
 <td style="text-align: left;">
 PC10
 </td>
@@ -326,6 +365,9 @@ PC10 (1.7%)
 <td style="text-align: left;">
 PC11
 </td>
+<td style="text-align: left;">
+PC11
+</td>
 <td style="text-align: right;">
 0.0507126
 </td>
@@ -340,6 +382,9 @@ PC11 (1.7%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC12
+</td>
 <td style="text-align: left;">
 PC12
 </td>
@@ -360,6 +405,9 @@ PC12 (1.5%)
 <td style="text-align: left;">
 PC13
 </td>
+<td style="text-align: left;">
+PC13
+</td>
 <td style="text-align: right;">
 0.0398570
 </td>
@@ -374,6 +422,9 @@ PC13 (1.3%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC14
+</td>
 <td style="text-align: left;">
 PC14
 </td>
@@ -394,6 +445,9 @@ PC14 (1.3%)
 <td style="text-align: left;">
 PC15
 </td>
+<td style="text-align: left;">
+PC15
+</td>
 <td style="text-align: right;">
 0.0337662
 </td>
@@ -408,6 +462,9 @@ PC15 (1.1%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC16
+</td>
 <td style="text-align: left;">
 PC16
 </td>
@@ -428,6 +485,9 @@ PC16 (1%)
 <td style="text-align: left;">
 PC17
 </td>
+<td style="text-align: left;">
+PC17
+</td>
 <td style="text-align: right;">
 0.0271052
 </td>
@@ -442,6 +502,9 @@ PC17 (0.89%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC18
+</td>
 <td style="text-align: left;">
 PC18
 </td>
@@ -462,6 +525,9 @@ PC18 (0.83%)
 <td style="text-align: left;">
 PC19
 </td>
+<td style="text-align: left;">
+PC19
+</td>
 <td style="text-align: right;">
 0.0208322
 </td>
@@ -476,6 +542,9 @@ PC19 (0.68%)
 </td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">
+PC20
+</td>
 <td style="text-align: left;">
 PC20
 </td>
@@ -499,39 +568,39 @@ PC20 (0.0000000000000000000000000000029%)
 <h3 class="hasAnchor">
 <a href="#visqc_heatmap" class="anchor"></a>visqc_heatmap</h3>
 <p>Calculate sample-sample correlations and reorder based on within class correlations</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">rownames</span>(sample_info) =<span class="st"> </span>sample_info<span class="op">$</span>sample</span>
-<span id="cb5-2"><a href="#cb5-2"></a>data_cor =<span class="st"> </span><span class="kw">globally_it_weighted_pairwise_correlation</span>(<span class="kw">t</span>(exp_data))</span>
-<span id="cb5-3"><a href="#cb5-3"></a>data_order =<span class="st"> </span><span class="kw">similarity_reorderbyclass</span>(data_cor<span class="op">$</span>cor, sample_info[, <span class="st">"class"</span>, <span class="dt">drop =</span> <span class="ot">FALSE</span>], <span class="dt">transform =</span> <span class="st">"sub_1"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sample_info) <span class="ot">=</span> sample_info<span class="sc">$</span>sample</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_cor <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data_order <span class="ot">=</span> <span class="fu">similarity_reorderbyclass</span>(data_cor<span class="sc">$</span>cor, sample_info[, <span class="st">"class"</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>], <span class="at">transform =</span> <span class="st">"sub_1"</span>)</span></code></pre></div>
 <p>And then generate a colormapping for the sample classes and plot the correlation heatmap.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>data_legend =<span class="st"> </span><span class="kw">generate_group_colors</span>(<span class="dv">2</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">names</span>(data_legend) =<span class="st"> </span><span class="kw">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>row_data =<span class="st"> </span>sample_info[, <span class="st">"class"</span>, drop =<span class="st"> </span><span class="ot">FALSE</span>]</span>
-<span id="cb6-4"><a href="#cb6-4"></a>row_annotation =<span class="st"> </span><span class="kw">list</span>(<span class="dt">class =</span> data_legend)</span>
-<span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">library</span>(viridis)</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">library</span>(circlize)</span>
-<span id="cb6-8"><a href="#cb6-8"></a>colormap =<span class="st"> </span><span class="kw">colorRamp2</span>(<span class="kw">seq</span>(<span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">50</span>), viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">50</span>))</span>
-<span id="cb6-9"><a href="#cb6-9"></a></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="kw">visqc_heatmap</span>(data_cor<span class="op">$</span>cor, colormap, <span class="st">"Correlation"</span>, <span class="dt">row_color_data =</span> row_data,</span>
-<span id="cb6-11"><a href="#cb6-11"></a>              <span class="dt">row_color_list =</span> row_annotation, <span class="dt">col_color_data =</span> row_data,</span>
-<span id="cb6-12"><a href="#cb6-12"></a>              <span class="dt">col_color_list =</span> row_annotation, <span class="dt">row_order =</span> data_order<span class="op">$</span>indices,</span>
-<span id="cb6-13"><a href="#cb6-13"></a>              <span class="dt">column_order =</span> data_order<span class="op">$</span>indices)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_legend <span class="ot">=</span> <span class="fu">generate_group_colors</span>(<span class="dv">2</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data_legend) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>row_data <span class="ot">=</span> sample_info[, <span class="st">"class"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>row_annotation <span class="ot">=</span> <span class="fu">list</span>(<span class="at">class =</span> data_legend)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>colormap <span class="ot">=</span> <span class="fu">colorRamp2</span>(<span class="fu">seq</span>(<span class="fl">0.2</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">50</span>), viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">50</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">visqc_heatmap</span>(data_cor<span class="sc">$</span>cor, colormap, <span class="st">"Correlation"</span>, <span class="at">row_color_data =</span> row_data,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">row_color_list =</span> row_annotation, <span class="at">col_color_data =</span> row_data,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">col_color_list =</span> row_annotation, <span class="at">row_order =</span> data_order<span class="sc">$</span>indices,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">column_order =</span> data_order<span class="sc">$</span>indices)</span></code></pre></div>
 <p><img src="README_files/figure-markdown_strict/colormapandheatmap-1.png"></p>
 </div>
 <div id="median_correlations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#median_correlations" class="anchor"></a>median_correlations</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data_medcor =<span class="st"> </span><span class="kw">median_correlations</span>(data_cor<span class="op">$</span>cor, sample_info<span class="op">$</span>class)</span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">ggplot</span>(data_medcor, <span class="kw">aes</span>(<span class="dt">x =</span> sample_id, <span class="dt">y =</span> med_cor)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>sample_class, <span class="dt">scales =</span> <span class="st">"free"</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">"Median Correlation"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_medcor <span class="ot">=</span> <span class="fu">median_correlations</span>(data_cor<span class="sc">$</span>cor, sample_info<span class="sc">$</span>class)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_medcor, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> med_cor)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Median Correlation"</span>)</span></code></pre></div>
 <p><img src="README_files/figure-markdown_strict/median_correlations-1.png"></p>
 </div>
 <div id="outlier_fraction" class="section level3">
 <h3 class="hasAnchor">
 <a href="#outlier_fraction" class="anchor"></a>outlier_fraction</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>data_outlier =<span class="st"> </span><span class="kw">outlier_fraction</span>(<span class="kw">t</span>(exp_data), sample_info<span class="op">$</span>class)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">ggplot</span>(data_outlier, <span class="kw">aes</span>(<span class="dt">x =</span> sample, <span class="dt">y =</span> frac)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>class, <span class="dt">scales =</span> <span class="st">"free"</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_outlier <span class="ot">=</span> <span class="fu">outlier_fraction</span>(<span class="fu">t</span>(exp_data), sample_info<span class="sc">$</span>class)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_outlier, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> frac)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
 <p><img src="README_files/figure-markdown_strict/outlier_fraction-1.png"></p>
 </div>
 <div id="weighted-correlations-with-missing-values" class="section level3">
@@ -539,51 +608,51 @@ PC20 (0.0000000000000000000000000000029%)
 <a href="#weighted-correlations-with-missing-values" class="anchor"></a>weighted correlations with missing values</h3>
 <p>When there are missing values (either NA, or 0 depending on the case), the default is to only include values that are not missing in both things being compared, which makes sense for NA especially, because otherwise you can’t actually calculate a correlation. However, the correlations that are calculated then don’t include the fact that data is missing. Therefore, we should be weighting the correlations to account for missing data.</p>
 <p>Lets add some missingness to our data.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>exp_data =<span class="st"> </span>grp_cor_data<span class="op">$</span>data</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">rownames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"f"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(exp_data)))</span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="kw">colnames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"s"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(exp_data)))</span>
-<span id="cb9-4"><a href="#cb9-4"></a></span>
-<span id="cb9-5"><a href="#cb9-5"></a>make_na =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">FALSE</span>, <span class="kw">nrow</span>(exp_data))</span>
-<span id="cb9-6"><a href="#cb9-6"></a>s1_missing =<span class="st"> </span>make_na</span>
-<span id="cb9-7"><a href="#cb9-7"></a>s1_missing[<span class="kw">sample</span>(<span class="kw">length</span>(make_na), <span class="dv">20</span>)] =<span class="st"> </span><span class="ot">TRUE</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>s2_missing =<span class="st"> </span>make_na</span>
-<span id="cb9-9"><a href="#cb9-9"></a>s2_missing[<span class="kw">sample</span>(<span class="kw">which</span>(<span class="op">!</span>s1_missing), <span class="dv">20</span>)] =<span class="st"> </span><span class="ot">TRUE</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a></span>
-<span id="cb9-11"><a href="#cb9-11"></a>exp_data2 =<span class="st"> </span>exp_data</span>
-<span id="cb9-12"><a href="#cb9-12"></a>exp_data2[s1_missing, <span class="dv">1</span>] =<span class="st"> </span><span class="ot">NA</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a>exp_data2[s2_missing, <span class="dv">1</span>] =<span class="st"> </span><span class="ot">NA</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a></span>
-<span id="cb9-15"><a href="#cb9-15"></a>cor_random_missing =<span class="st"> </span><span class="kw">globally_it_weighted_pairwise_correlation</span>(<span class="kw">t</span>(exp_data2))<span class="op">$</span>cor</span>
-<span id="cb9-16"><a href="#cb9-16"></a>cor_random_missing[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</span>
-<span id="cb9-17"><a href="#cb9-17"></a></span>
-<span id="cb9-18"><a href="#cb9-18"></a><span class="co">##           s1        s2        s3        s4</span></span>
-<span id="cb9-19"><a href="#cb9-19"></a><span class="co">## s1 0.6000000 0.3182274 0.3274932 0.3245317</span></span>
-<span id="cb9-20"><a href="#cb9-20"></a><span class="co">## s2 0.3182274 1.0000000 0.8897728 0.8942302</span></span>
-<span id="cb9-21"><a href="#cb9-21"></a><span class="co">## s3 0.3274932 0.8897728 1.0000000 0.8866482</span></span>
-<span id="cb9-22"><a href="#cb9-22"></a><span class="co">## s4 0.3245317 0.8942302 0.8866482 1.0000000</span></span>
-<span id="cb9-23"><a href="#cb9-23"></a></span>
-<span id="cb9-24"><a href="#cb9-24"></a>cor_random_missing_nw =<span class="st"> </span><span class="kw">globally_it_weighted_pairwise_correlation</span>(<span class="kw">t</span>(exp_data))<span class="op">$</span>cor</span>
-<span id="cb9-25"><a href="#cb9-25"></a>cor_random_missing_nw[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</span>
-<span id="cb9-26"><a href="#cb9-26"></a></span>
-<span id="cb9-27"><a href="#cb9-27"></a><span class="co">##           s1        s2        s3        s4</span></span>
-<span id="cb9-28"><a href="#cb9-28"></a><span class="co">## s1 1.0000000 0.8766158 0.8951214 0.8986443</span></span>
-<span id="cb9-29"><a href="#cb9-29"></a><span class="co">## s2 0.8766158 1.0000000 0.8897728 0.8942302</span></span>
-<span id="cb9-30"><a href="#cb9-30"></a><span class="co">## s3 0.8951214 0.8897728 1.0000000 0.8866482</span></span>
-<span id="cb9-31"><a href="#cb9-31"></a><span class="co">## s4 0.8986443 0.8942302 0.8866482 1.0000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>make_na <span class="ot">=</span> <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="fu">nrow</span>(exp_data))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>s1_missing <span class="ot">=</span> make_na</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>s1_missing[<span class="fu">sample</span>(<span class="fu">length</span>(make_na), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>s2_missing <span class="ot">=</span> make_na</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>s2_missing[<span class="fu">sample</span>(<span class="fu">which</span>(<span class="sc">!</span>s1_missing), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>exp_data2 <span class="ot">=</span> exp_data</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>exp_data2[s1_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>exp_data2[s2_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>cor_random_missing <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data2))<span class="sc">$</span>cor</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>cor_random_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.6000000 0.3100687 0.3186598 0.3257055</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.3100687 1.0000000 0.8897728 0.8942302</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.3186598 0.8897728 1.0000000 0.8866482</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.3257055 0.8942302 0.8866482 1.0000000</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 1.0000000 0.8766158 0.8951214 0.8986443</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.8766158 1.0000000 0.8897728 0.8942302</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.8951214 0.8897728 1.0000000 0.8866482</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.8986443 0.8942302 0.8866482 1.0000000</span></span></code></pre></div>
 <p>What happens if we make the missingness match between them? That should count as information, right? If the feature is missing in the same samples, that is worth something?</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>exp_data =<span class="st"> </span>grp_cor_data<span class="op">$</span>data</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">rownames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"f"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(exp_data)))</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">colnames</span>(exp_data) =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"s"</span>, <span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(exp_data)))</span>
-<span id="cb10-4"><a href="#cb10-4"></a>exp_data[s1_missing, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] =<span class="st"> </span><span class="ot">NA</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a></span>
-<span id="cb10-6"><a href="#cb10-6"></a>cor_same_missing =<span class="st"> </span><span class="kw">globally_it_weighted_pairwise_correlation</span>(<span class="kw">t</span>(exp_data))<span class="op">$</span>cor</span>
-<span id="cb10-7"><a href="#cb10-7"></a>cor_same_missing[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</span>
-<span id="cb10-8"><a href="#cb10-8"></a></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">##           s1        s2        s3        s4</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">## s1 0.8000000 0.8697149 0.5755509 0.5734221</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">## s2 0.8697149 0.8000000 0.5638509 0.5672459</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="co">## s3 0.5755509 0.5638509 1.0000000 0.8866482</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="co">## s4 0.5734221 0.5672459 0.8866482 1.0000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>exp_data[s1_missing, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>cor_same_missing <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>cor_same_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8617948 0.5697536 0.5723917</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.8617948 0.8000000 0.5720490 0.5773131</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.5697536 0.5720490 1.0000000 0.8866482</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.5723917 0.5773131 0.8866482 1.0000000</span></span></code></pre></div>
 <p>Here we can see that the correlations get dropped, but not as much as when it was random.</p>
 </div>
 </div>
@@ -591,75 +660,75 @@ PC20 (0.0000000000000000000000000000029%)
 <h2 class="hasAnchor">
 <a href="#fake-data-generation" class="anchor"></a>Fake Data Generation</h2>
 <p>Some fake data is stored in <code>grp_cor_data</code> that is useful for testing the <code>median_correlation</code> function. It was generated by:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">library</span>(fakeDataWithError)</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a>s1 =<span class="st"> </span><span class="kw">runif</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb11-5"><a href="#cb11-5"></a>grp1 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">10</span>, s1, <span class="fl">0.1</span>)</span>
-<span id="cb11-6"><a href="#cb11-6"></a></span>
-<span id="cb11-7"><a href="#cb11-7"></a>model_data =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">s1 =</span> s1, <span class="dt">s2 =</span> grp1[, <span class="dv">1</span>])</span>
-<span id="cb11-8"><a href="#cb11-8"></a></span>
-<span id="cb11-9"><a href="#cb11-9"></a>lm_<span class="dv">1</span> =<span class="st"> </span><span class="kw">lm</span>(s1 <span class="op">~</span><span class="st"> </span>s2, <span class="dt">data =</span> model_data)</span>
-<span id="cb11-10"><a href="#cb11-10"></a></span>
-<span id="cb11-11"><a href="#cb11-11"></a>lm_<span class="dv">1</span><span class="op">$</span>coefficients[<span class="dv">2</span>] =<span class="st"> </span><span class="fl">0.5</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a></span>
-<span id="cb11-13"><a href="#cb11-13"></a>s3 =<span class="st"> </span><span class="kw">predict</span>(lm_<span class="dv">1</span>)</span>
-<span id="cb11-14"><a href="#cb11-14"></a>s4 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">1</span>, s3, <span class="fl">0.2</span>)</span>
-<span id="cb11-15"><a href="#cb11-15"></a></span>
-<span id="cb11-16"><a href="#cb11-16"></a>grp2 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">10</span>, s4, <span class="fl">0.1</span>)</span>
-<span id="cb11-17"><a href="#cb11-17"></a></span>
-<span id="cb11-18"><a href="#cb11-18"></a>grp_class =<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="dt">each =</span> <span class="dv">10</span>)</span>
-<span id="cb11-19"><a href="#cb11-19"></a></span>
-<span id="cb11-20"><a href="#cb11-20"></a>grp_cor_data =<span class="st"> </span><span class="kw">list</span>(<span class="dt">data =</span> <span class="kw">cbind</span>(grp1, grp2), <span class="dt">class =</span> grp_class)</span>
-<span id="cb11-21"><a href="#cb11-21"></a></span>
-<span id="cb11-22"><a href="#cb11-22"></a><span class="kw">library</span>(fakeDataWithError)</span>
-<span id="cb11-23"><a href="#cb11-23"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb11-24"><a href="#cb11-24"></a></span>
-<span id="cb11-25"><a href="#cb11-25"></a>n_point =<span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb11-26"><a href="#cb11-26"></a>n_rep =<span class="st"> </span><span class="dv">10</span></span>
-<span id="cb11-27"><a href="#cb11-27"></a></span>
-<span id="cb11-28"><a href="#cb11-28"></a><span class="co"># a nice log-normal distribution of points with points along the entire range</span></span>
-<span id="cb11-29"><a href="#cb11-29"></a>simulated_data =<span class="st"> </span><span class="kw">c</span>(<span class="kw">rlnorm</span>(n_point <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">meanlog =</span> <span class="dv">1</span>, <span class="dt">sdlog =</span> <span class="dv">1</span>),</span>
-<span id="cb11-30"><a href="#cb11-30"></a>                    <span class="kw">runif</span>(n_point <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>))</span>
-<span id="cb11-31"><a href="#cb11-31"></a></span>
-<span id="cb11-32"><a href="#cb11-32"></a><span class="co"># go to log to have decent correlations on the "transformed" data</span></span>
-<span id="cb11-33"><a href="#cb11-33"></a>lsim1 =<span class="st"> </span><span class="kw">log</span>(simulated_data)</span>
-<span id="cb11-34"><a href="#cb11-34"></a></span>
-<span id="cb11-35"><a href="#cb11-35"></a><span class="co"># add some uniform noise to get lower than 1 correlations</span></span>
-<span id="cb11-36"><a href="#cb11-36"></a>lgrp1 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(n_rep, lsim1, <span class="fl">.5</span>)</span>
-<span id="cb11-37"><a href="#cb11-37"></a></span>
-<span id="cb11-38"><a href="#cb11-38"></a><span class="co"># add some uniform noise to everything in normal space</span></span>
-<span id="cb11-39"><a href="#cb11-39"></a>sim1_error =<span class="st"> </span><span class="kw">add_uniform_noise</span>(n_rep, simulated_data, <span class="dv">1</span>, <span class="dt">use_zero =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb11-40"><a href="#cb11-40"></a><span class="co"># and generate the grp1 data in normal space</span></span>
-<span id="cb11-41"><a href="#cb11-41"></a>ngrp1 =<span class="st"> </span><span class="kw">exp</span>(lgrp1) <span class="op">+</span><span class="st"> </span>sim1_error</span>
-<span id="cb11-42"><a href="#cb11-42"></a></span>
-<span id="cb11-43"><a href="#cb11-43"></a></span>
-<span id="cb11-44"><a href="#cb11-44"></a><span class="co"># do regression to generate some other data</span></span>
-<span id="cb11-45"><a href="#cb11-45"></a>model_data =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">lsim1 =</span> lsim1, <span class="dt">lsim2 =</span> lgrp1[, <span class="dv">1</span>])</span>
-<span id="cb11-46"><a href="#cb11-46"></a>lm_<span class="dv">1</span> =<span class="st"> </span><span class="kw">lm</span>(lsim1 <span class="op">~</span><span class="st"> </span>lsim2, <span class="dt">data =</span> model_data)</span>
-<span id="cb11-47"><a href="#cb11-47"></a></span>
-<span id="cb11-48"><a href="#cb11-48"></a><span class="co"># reduce the correlation between them</span></span>
-<span id="cb11-49"><a href="#cb11-49"></a>lm_<span class="dv">1</span><span class="op">$</span>coefficients[<span class="dv">2</span>] =<span class="st"> </span><span class="fl">0.5</span></span>
-<span id="cb11-50"><a href="#cb11-50"></a>lsim3 =<span class="st"> </span><span class="kw">predict</span>(lm_<span class="dv">1</span>)</span>
-<span id="cb11-51"><a href="#cb11-51"></a></span>
-<span id="cb11-52"><a href="#cb11-52"></a><span class="co"># and a bunch of error</span></span>
-<span id="cb11-53"><a href="#cb11-53"></a>lsim4 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">1</span>, lsim3, <span class="fl">1.5</span>)</span>
-<span id="cb11-54"><a href="#cb11-54"></a></span>
-<span id="cb11-55"><a href="#cb11-55"></a><span class="co"># create group with added error to reduce correlation from 1</span></span>
-<span id="cb11-56"><a href="#cb11-56"></a>lgrp2 =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">10</span>, lsim4, <span class="fl">.5</span>)</span>
-<span id="cb11-57"><a href="#cb11-57"></a></span>
-<span id="cb11-58"><a href="#cb11-58"></a><span class="co"># add error in original space</span></span>
-<span id="cb11-59"><a href="#cb11-59"></a>nsim4 =<span class="st"> </span><span class="kw">exp</span>(lsim4)</span>
-<span id="cb11-60"><a href="#cb11-60"></a>sim4_error =<span class="st"> </span><span class="kw">add_uniform_noise</span>(<span class="dv">10</span>, nsim4, <span class="dv">1</span>, <span class="dt">use_zero =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb11-61"><a href="#cb11-61"></a>ngrp2 =<span class="st"> </span><span class="kw">exp</span>(lgrp2) <span class="op">+</span><span class="st"> </span>sim4_error</span>
-<span id="cb11-62"><a href="#cb11-62"></a></span>
-<span id="cb11-63"><a href="#cb11-63"></a><span class="co"># put all data together, and make negatives zero</span></span>
-<span id="cb11-64"><a href="#cb11-64"></a>all_data =<span class="st"> </span><span class="kw">cbind</span>(ngrp1, ngrp2)</span>
-<span id="cb11-65"><a href="#cb11-65"></a>all_data[(all_data <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>)] =<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb11-66"><a href="#cb11-66"></a></span>
-<span id="cb11-67"><a href="#cb11-67"></a>grp_class =<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="dt">each =</span> <span class="dv">10</span>)</span>
-<span id="cb11-68"><a href="#cb11-68"></a></span>
-<span id="cb11-69"><a href="#cb11-69"></a>grp_exp_data =<span class="st"> </span><span class="kw">list</span>(<span class="dt">data =</span> all_data, <span class="dt">class =</span> grp_class)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">=</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>grp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s1, <span class="fl">0.1</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> s1, <span class="at">s2 =</span> grp1[, <span class="dv">1</span>])</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(s1 <span class="sc">~</span> s2, <span class="at">data =</span> model_data)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>s4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, s3, <span class="fl">0.2</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>grp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s4, <span class="fl">0.1</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>grp_cor_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> <span class="fu">cbind</span>(grp1, grp2), <span class="at">class =</span> grp_class)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>n_point <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># a nice log-normal distribution of points with points along the entire range</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rlnorm</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="at">meanlog =</span> <span class="dv">1</span>, <span class="at">sdlog =</span> <span class="dv">1</span>),</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">runif</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>))</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co"># go to log to have decent correlations on the "transformed" data</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>lsim1 <span class="ot">=</span> <span class="fu">log</span>(simulated_data)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to get lower than 1 correlations</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>lgrp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, lsim1, .<span class="dv">5</span>)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to everything in normal space</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>sim1_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, simulated_data, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co"># and generate the grp1 data in normal space</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>ngrp1 <span class="ot">=</span> <span class="fu">exp</span>(lgrp1) <span class="sc">+</span> sim1_error</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="co"># do regression to generate some other data</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">lsim1 =</span> lsim1, <span class="at">lsim2 =</span> lgrp1[, <span class="dv">1</span>])</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(lsim1 <span class="sc">~</span> lsim2, <span class="at">data =</span> model_data)</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co"># reduce the correlation between them</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>lsim3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="co"># and a bunch of error</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>lsim4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, lsim3, <span class="fl">1.5</span>)</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="co"># create group with added error to reduce correlation from 1</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>lgrp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, lsim4, .<span class="dv">5</span>)</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="co"># add error in original space</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>nsim4 <span class="ot">=</span> <span class="fu">exp</span>(lsim4)</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>sim4_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, nsim4, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>ngrp2 <span class="ot">=</span> <span class="fu">exp</span>(lgrp2) <span class="sc">+</span> sim4_error</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="co"># put all data together, and make negatives zero</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">=</span> <span class="fu">cbind</span>(ngrp1, ngrp2)</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>all_data[(all_data <span class="sc">&lt;</span> <span class="dv">0</span>)] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>grp_exp_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> all_data, <span class="at">class =</span> grp_class)</span></code></pre></div>
 </div>
 </div>
   </div>

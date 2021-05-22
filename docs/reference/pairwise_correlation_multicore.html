@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.105</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,9 +94,6 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
-    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -133,14 +130,14 @@
     <p>given a data matrix, calculate inter-row correlation values</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pairwise_correlation_multicore</span>(
-  <span class='kw'>data_matrix</span>,
-  use = <span class='st'>"pairwise"</span>,
-  exclude_na = <span class='fl'>TRUE</span>,
-  exclude_inf = <span class='fl'>TRUE</span>,
-  exclude_0 = <span class='fl'>FALSE</span>,
-  method = <span class='st'>"pearson"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>pairwise_correlation_multicore</span><span class='op'>(</span>
+  <span class='va'>data_matrix</span>,
+  use <span class='op'>=</span> <span class='st'>"pairwise"</span>,
+  exclude_na <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  exclude_inf <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  exclude_0 <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  method <span class='op'>=</span> <span class='st'>"pearson"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

@@ -73,7 +73,7 @@ standard deviations from the trimmed mean. See Details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.105</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ standard deviations from the trimmed mean. See Details." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,9 +95,6 @@ standard deviations from the trimmed mean. See Details." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
-    </li>
     <li>
       <a href="../articles/pca_testing.html">PCA Testing</a>
     </li>
@@ -135,13 +132,13 @@ standard deviations from the trimmed mean. See Details." />
 standard deviations from the trimmed mean. See Details.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>outlier_fraction</span>(
-  <span class='kw'>data</span>,
-  sample_classes = <span class='kw'>NULL</span>,
-  n_trim = <span class='fl'>3</span>,
-  n_sd = <span class='fl'>5</span>,
-  remove_0 = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>outlier_fraction</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  sample_classes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_trim <span class='op'>=</span> <span class='fl'>3</span>,
+  n_sd <span class='op'>=</span> <span class='fl'>5</span>,
+  remove_0 <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,9 +177,9 @@ and <code>sd</code>, and the actual upper and lower ranges of <code>n_sd</code> 
 <code>mean</code>. For each sample and feature, determine if <em>within</em> or <em>outside</em>
 that limit. Fraction is reported as the number of features outside the range.</p>
 <p>Returns a <code>data.frame</code> with:</p><dl>
-  <dt>sample</dt><dd><p>the sample id, <code>rownames</code> are used if available, otherwise
+  <dt>sample_id</dt><dd><p>the sample id, <code>rownames</code> are used if available, otherwise
   this is an index</p></dd>
-  <dt>class</dt><dd><p>the class of the sample if <code>sample_classes</code> were provided,
+  <dt>sample_class</dt><dd><p>the class of the sample if <code>sample_classes</code> were provided,
   otherwise given a default of "C1"</p></dd>
   <dt>frac</dt><dd><p>the actual outlier fraction calculated for that sample</p></dd>
 
