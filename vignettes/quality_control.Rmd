@@ -321,8 +321,8 @@ data_outlier <- outlier_fraction(t(log_data), sample_info$class, remove_0 = TRUE
 Plot them!
 
 ```{r plot_good_outliers, fig.width=5}
-ggplot(data_outlier, aes(x = sample, y = frac)) + geom_point() + 
-  facet_grid(. ~ class, scales = "free") + ggtitle("Good Data")
+ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
+  facet_grid(. ~ sample_class, scales = "free") + ggtitle("Good Data")
 ```
 
 ### Bad
@@ -334,8 +334,8 @@ mix_outlier <- outlier_fraction(t(mix_data), sample_info$class, remove_0 = TRUE)
 Plot them.
 
 ```{r plot_mixoutliers, fig.width = 5}
-ggplot(mix_outlier, aes(x = sample, y = frac)) + geom_point() + 
-  facet_grid(. ~ class, scales = "free") + ggtitle("Mix Data")
+ggplot(mix_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
+  facet_grid(. ~ sample_class, scales = "free") + ggtitle("Mix Data")
 ```
 
 ## Conclusion
