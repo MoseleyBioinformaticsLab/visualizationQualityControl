@@ -758,6 +758,10 @@ determine_outliers = function(median_correlations, outlier_fraction,
     stop("Samples in median_correlations and outlier_fraction don't match up!")
   }
   
+  if (!all(full_data$sample_class.cor == full_data$sample_class.frac)) {
+    stop("The sample classes (sample_class) from median_correlations and outlier_fraction are NOT all the same!")
+  }
+  
   data_score = (cor_weight * log(1 - full_data$med_cor)) + (frac_weight * log1p(full_data$frac))
   names(data_score) = full_data$sample_id
   split_score = split(data_score, full_data$sample_class.frac)
