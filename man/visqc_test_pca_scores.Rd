@@ -4,19 +4,17 @@
 \alias{visqc_test_pca_scores}
 \title{test scores and outcome}
 \usage{
-visqc_test_pca_scores(pca_scores, sample_info, variables)
+visqc_test_pca_scores(pca_scores, sample_info)
 }
 \arguments{
 \item{pca_scores}{matrix of scores from a PCA decomposition}
 
-\item{sample_info}{data.frame of sample attributes}
-
-\item{variables}{which columns to test against the scores}
+\item{sample_info}{data.frame of sample attributes to test}
 }
 \value{
 data.frame
 }
 \description{
-Given a matrix of PCA scores, set of sample attributes, and particular variables to test,
+Given a matrix of PCA scores, set of sample attributes to test,
 goes through and performs an ANOVA of the scores versus the attribute.
 }

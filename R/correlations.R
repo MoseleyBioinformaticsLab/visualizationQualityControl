@@ -640,6 +640,73 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
   sample_median_cor
 }
 
+#' calculate median class correlations
+#'
+#' Given a correlation matrix the sample class information,
+#' calculates the median correlations of the samples within
+#' the class and between classes.
+#'
+#' @param cor_matrix the sample - sample correlations
+#' @param sample_classes the sample classes as a character or factor
+#'
+#' @return matrix
+#' @export
+#'
+#'
+median_class_correlations <- function(cor_matrix, sample_classes = NULL){
+  stopifnot(nrow(cor_matrix) == ncol(cor_matrix))
+  n_sample <- nrow(cor_matrix)
+  
+  if (is.null(sample_classes)) {
+    stop("You didn't provide sample classes to work with.")
+  } else if (is.factor(sample_classes)) {
+    use_classes <- sample_classes
+  } else {
+    sample_classes <- factor(sample_classes)
+    use_classes <- sample_classes
+  }
+  
+  if (is.null(rownames(cor_matrix))) {
+    stopifnot(rownames(cor_matrix) == colnames(cor_matrix))
+    sample_id <- paste0("S", seq(1, n_sample))
+    rownames(cor_matrix) <- colnames(cor_matrix) <- sample_id
+  } else {
+    sample_id <- rownames(cor_matrix)
+  }
+  
+  names(sample_classes) = rownames(cor_matrix)
+  
+  all_comp = combn(rownames(cor_matrix), 2)
+  comp_df = data.frame(s1 = all_comp[1, ],
+                       s2 = all_comp[2, ],
+                       class1 = sample_classes[all_comp[1, ]],
+                       class2 = sample_classes[all_comp[2, ]],
+                       cor = NA)
+  
+  for (irow in seq_len(nrow(comp_df))) {
+    comp_df[irow, "cor"] = cor_matrix[comp_df[irow, "s1"],
+                                      comp_df[irow, "s2"]]
+  }
+  
+  med_df = comp_df %>%
+    dplyr::group_by(class1, class2) %>%
+    dplyr::summarise(median = median(cor), .groups = "keep") %>%
+    dplyr::ungroup() %>%
+    data.frame()
+  
+  out_classes = unique(sample_classes)
+  out_median = matrix(NA, nrow = length(out_classes),
+                      ncol = length(out_classes))
+  rownames(out_median) = colnames(out_median) = out_classes
+  
+  for (irow in seq_len(nrow(med_df))) {
+    class1 = med_df[irow, "class1"]
+    class2 = med_df[irow, "class2"]
+    out_median[class1, class2] = med_df[irow, "median"]
+  }
+  
+  out_median
+}
 
 # calculates if something is an outlier
 .calc_outlier <- function(data, n_trim, n_sd, remove_0){

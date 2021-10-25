@@ -1,25 +1,67 @@
 #' test scores and outcome
 #' 
-#' Given a matrix of PCA scores, set of sample attributes, and particular variables to test,
+#' Given a matrix of PCA scores, set of sample attributes to test,
 #' goes through and performs an ANOVA of the scores versus the attribute.
 #' 
 #' @param pca_scores matrix of scores from a PCA decomposition
-#' @param sample_info data.frame of sample attributes
-#' @param variables which columns to test against the scores
+#' @param sample_info data.frame of sample attributes to test
 #'
 #' @export
 #' @return data.frame
-visqc_test_pca_scores = function(pca_scores, sample_info, variables){
+visqc_test_pca_scores = function(pca_scores, sample_info){
   pc_test = colnames(pca_scores)
-  pc_2_variable = purrr::map_df(variables, function(in_var){
+  pc_2_variable = purrr::imap_dfr(sample_info, function(var_col, var_name){
     pc_test = purrr::map_df(pc_test, function(in_pc){
-      #message(paste0(in_var, " : ", in_pc))
+      #message(paste0(var_name, " : ", in_pc))
       tmp_frame = data.frame(y = pca_scores[, in_pc],
-                             x = sample_info[[in_var]])
+                             x = var_col)
       aov_res = stats::aov(y ~ x, data = tmp_frame)
       tidy_res = broom::tidy(aov_res)[1, ]
       tidy_res$PC = in_pc
-      tidy_res$variable = in_var
+      tidy_res$variable = var_name
+      tidy_res
+    })
+    
+  })
+  pc_2_variable
+}
+
+#' correlate scores and outcome
+#' 
+#' Given a matrix of PCA scores, set of sample attributes to test,
+#' goes through and performs an ICI-Kt of the scores versus the attribute.
+#' 
+#' 
+#' @param pca_scores the scores matrix to test
+#' @param sample_info data.frame of sample attributes to test
+#' 
+#' Important: All of the attributes must be numeric, or character.
+#'   If character, they will be transformed to a factor, and the numeric
+#'   factor levels will be used instead.
+#'   If missing values are present, that is OK, as long as they are
+#'   missing-not-at-random (i.e. missing at the low end of the values).
+#'   
+#' @export
+#' @return data.frame
+#' 
+visqc_cor_pca_scores = function(pca_scores, sample_info){
+  requireNamespace("ICIKendallTau", quietly = TRUE)
+  
+  pc_test = colnames(pca_scores)
+  pc_2_variable = purrr::imap_dfr(sample_info, function(var_col, var_name){
+    pc_test = purrr::map_df(pc_test, function(in_pc){
+      #message(paste0(var_name, " : ", in_pc))
+      if (is.character(var_col)) {
+        var_col2 = factor(var_col)
+        num_col = as.numeric(unclass(var_col2))
+      } else {
+        num_col = var_col
+      }
+      ici_res = ICIKendallTau::ici_kt(pca_scores[, in_pc], num_col, "global")
+      tidy_res = data.frame(cor = ici_res["tau"], 
+                            pvalue = ici_res["pvalue"],
+                            PC = in_pc,
+                            variable = var_name)
       tidy_res
     })
     
