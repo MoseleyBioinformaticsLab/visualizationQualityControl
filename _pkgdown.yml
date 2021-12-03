@@ -1,0 +1,5 @@
+URL: https://moseleybioinformaticslab.github.io/visualizationQualityControl https://github.com/moseleybioinformaticslab/visualizationQualityControl
+template:
+  bootstrap: 5
+  bootswatch: cyborg
+  theme: breeze-dark
