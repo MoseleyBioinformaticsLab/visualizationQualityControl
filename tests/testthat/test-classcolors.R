@@ -1,6 +1,3 @@
-context("classcolors")
-
-
 test_that("defaults work", {
   col_1 <- generate_group_colors(3)
   col_2 <- generate_group_colors(3)

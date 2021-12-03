@@ -1,5 +1,3 @@
-context("data filtering")
-
 # set up the data
 test_data <- matrix(rnorm(80, mean = 20), nrow = 10, ncol = 8)
 rownames(test_data) <- as.character(seq(1, nrow(test_data)))

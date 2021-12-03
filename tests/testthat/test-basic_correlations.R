@@ -1,5 +1,3 @@
-context("basic_correlations")
-
 data("grp_cor_data")
 exp_data <- grp_cor_data$data
 rownames(exp_data) <- paste0("f", seq(1, nrow(exp_data)))
@@ -11,7 +9,7 @@ sample_classes <- sample_info$class
 
 test_that("correlations don't change", {
   data_cor <- pairwise_correlation(t(exp_data))
-  expect_equal_to_reference(data_cor, "data_cor1")
+  expect_snapshot_value(data_cor, style = "serialize")
 })
 
 test_that("adding missing data works", {
@@ -32,7 +30,7 @@ test_that("adding missing data works", {
   # because we added missing values in samples 1 & 2, we expect that their correlations
   # should be less than they were before.
   expect_lt(data_cor2$cor[1,2], data_cor$cor[1,2])
-  expect_equal_to_reference(data_cor2, "data_cor2")
+  expect_snapshot_value(data_cor2, style = "serialize")
   expect_equal(data_cor2$cor[1,1], 1)
   expect_equal(data_cor2$keep[1,4], FALSE)
   # we didn't add any missing data to the other samples, so their correlation

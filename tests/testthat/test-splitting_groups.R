@@ -1,5 +1,3 @@
-context("test-splitting_groups")
-
 data("grp_cor_data")
 
 matrix_data = grp_cor_data$data

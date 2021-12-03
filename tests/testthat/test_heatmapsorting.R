@@ -1,5 +1,3 @@
-context("matrix reordering")
-
 test_that("reordering works without rownames", {
   data(grp_cor)
   data(grp_info)

@@ -1,5 +1,3 @@
-context("outlier_fractions")
-
 data("grp_cor_data")
 in_data <- t(grp_cor_data$data)
 sample_classes <- grp_cor_data$class
@@ -25,13 +23,13 @@ test_that("zero argument works", {
   test_data[1:7,1] <- c(0, 0, 0, 9, 10, 11, 12)
   
   test_data[sample(seq(8, 200), 5), 1] <- 0
-  out_frac <- outlier_fraction(test_data)
-  expect_equal_to_reference(out_frac, "zero_1.rds")
+  zero_1 = outlier_fraction(test_data)
+  expect_snapshot_value(zero_1, style = "serialize")
   
-  out_frac2 <- outlier_fraction(test_data, remove_0 = TRUE)
-  expect_equal_to_reference(out_frac2, "zero_2.rds")
+  zero_2 <- outlier_fraction(test_data, remove_0 = TRUE)
+  expect_snapshot_value(zero_2, style = "serialize")
   
-  out_1_2 <- identical(out_frac, out_frac2)
+  out_1_2 <- identical(zero_1, zero_2)
   expect_false(out_1_2)
 })
 
@@ -57,10 +55,10 @@ test_that("double classes work", {
   sample_classes <- grp_cor_data$class
   
   out_frac <- outlier_fraction(in_data)
-  expect_equal_to_reference(out_frac, "in_data_single_class.rds")
+  expect_snapshot_value(out_frac, style = "serialize")
   
   out_frac2 <- outlier_fraction(in_data, sample_classes)
-  expect_equal_to_reference(out_frac2, "in_data_dbl_class.rds")
+  expect_snapshot_value(out_frac2, style = "serialize")
   
   out_frac3 <- outlier_fraction(in_data, as.factor(sample_classes))
   expect_equal(out_frac3, out_frac2)
@@ -69,7 +67,7 @@ test_that("double classes work", {
   in_data2[3, ] <- in_data[12, ]
   in_data2[12, ] <- in_data[3, ]
   out_frac4 <- outlier_fraction(in_data2, sample_classes)
-  expect_equal_to_reference(out_frac4, "in_data_switch.rds")
+  expect_snapshot_value(out_frac4, style = "serialize")
 })
 
 test_that("too few entries handled properly", {
