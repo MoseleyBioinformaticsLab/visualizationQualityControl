@@ -659,11 +659,6 @@ median_class_correlations <- function(cor_matrix, sample_classes = NULL){
   
   if (is.null(sample_classes)) {
     stop("You didn't provide sample classes to work with.")
-  } else if (is.factor(sample_classes)) {
-    use_classes <- sample_classes
-  } else {
-    sample_classes <- factor(sample_classes)
-    use_classes <- sample_classes
   }
   
   if (is.null(rownames(cor_matrix))) {
@@ -675,8 +670,9 @@ median_class_correlations <- function(cor_matrix, sample_classes = NULL){
   }
   
   names(sample_classes) = rownames(cor_matrix)
+  sample_classes = sort(sample_classes)
   
-  all_comp = combn(rownames(cor_matrix), 2)
+  all_comp = combn(names(sample_classes), 2)
   comp_df = data.frame(s1 = all_comp[1, ],
                        s2 = all_comp[2, ],
                        class1 = sample_classes[all_comp[1, ]],
@@ -814,24 +810,52 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
 #' 
 #' @param median_correlations median correlations
 #' @param outlier_fraction outlier fractions
+#' @param cor_weight how much weight for the correlation score?
+#' @param frac_weight how much weight for the outlier fraction?
+#' 
+#' @details For outlier sample detection, one should 
+#'   first generate median correlations using
+#'   `median_correlations`, and outlier fractions using
+#'   `outlier_fraction`. If you only have one or the other,
+#'   than you should use named arguments to only pass the one
+#'   or the other. 
+#'   
+#'   Alternatively, you can change the weighting used for median correlations
+#'   or outlier fraction, including setting them to 0.
 #' 
 #' @export
 #' @return data.frame
-determine_outliers = function(median_correlations, outlier_fraction,
+determine_outliers = function(median_correlations = NULL, outlier_fraction = NULL,
                               cor_weight = 1, frac_weight = 1){
-  full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
   
-  if ((nrow(full_data) != nrow(median_correlations)) || (nrow(full_data) != nrow(outlier_fraction))) {
-    stop("Samples in median_correlations and outlier_fraction don't match up!")
+  if (!is.null(median_correlations) && !is.null(outlier_fraction)) {
+    full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
+    
+    if ((nrow(full_data) != nrow(median_correlations)) || (nrow(full_data) != nrow(outlier_fraction))) {
+      stop("Samples in median_correlations and outlier_fraction don't match up!")
+    }
+    
+    if (!all(full_data$sample_class.cor == full_data$sample_class.frac)) {
+      stop("The sample classes (sample_class) from median_correlations and outlier_fraction are NOT all the same!")
+    }
+    full_data$sample_class = full_data$sample_class.cor
+    full_data$sample_class.cor = NULL
+    full_data$sample_class.frac = NULL
   }
   
-  if (!all(full_data$sample_class.cor == full_data$sample_class.frac)) {
-    stop("The sample classes (sample_class) from median_correlations and outlier_fraction are NOT all the same!")
+  if (is.null(outlier_fraction) && !is.null(median_correlations)) {
+    full_data = median_correlations
+    full_data$frac = 0
+  }
+  
+  if (!is.null(outlier_fraction) && is.null(median_correlations)) {
+    full_data = outlier_fraction
+    full_data$med_cor = 0
   }
   
   data_score = (cor_weight * log(1 - full_data$med_cor)) + (frac_weight * log1p(full_data$frac))
   names(data_score) = full_data$sample_id
-  split_score = split(data_score, full_data$sample_class.frac)
+  split_score = split(data_score, full_data$sample_class)
   out_each = purrr::map(split_score, function(in_scores){
     score_out = boxplot.stats(in_scores)$out
     names(in_scores)[in_scores %in% score_out]
