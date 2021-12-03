@@ -17,5 +17,6 @@ VignetteBuilder: knitr
 Suggests: testthat, knitr, rmarkdown, circlize, viridis, ICIKendallTau
 RoxygenNote: 7.1.2
 LinkingTo: Rcpp
+URL: https://moseleybioinformaticslab.github.io/visualizationQualityControl https://github.com/moseleybioinformaticslab/visualizationQualityControl
 Remotes: github::MoseleyBioinformaticsLab/ICIKendallTau
 Config/testthat/edition: 3

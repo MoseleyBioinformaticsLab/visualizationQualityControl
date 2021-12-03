@@ -1,10 +1,17 @@
 # Visualization Quality Control
 
-Set of useful functions for calculating various measures from data and
-visualizing them.
+A set of useful functions for calculating various measures from
+high-feature datasets and visualizing them.
 
-Takes a lot of inspiration from [Gierlinski et al.,
-2015](https://dx.doi.org/10.1093/bioinformatics/btv425), especially the
+In addition to internal documentation, the package is also documented
+heavily
+[here](https://moseleybioinformaticslab.github.io/visualizationQualityControl/).
+
+This package combines my needs for visualizing sample-sample
+correlations using heatmaps, and novel quality control measures that
+apply to different types of -omics or high-feature datasets proposed by
+[Gierlinski et al.,
+2015](https://dx.doi.org/10.1093/bioinformatics/btv425), namely the
 `median_correlation` and `outlier_fraction` functions.
 
 ## Installation
@@ -35,6 +42,7 @@ see the **quality\_control** vignette.
 
     library(visualizationQualityControl)
     library(ggplot2)
+    library(ggforce)
     data("grp_cor_data")
     exp_data = grp_cor_data$data
     rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
@@ -53,7 +61,7 @@ see the **quality\_control** vignette.
     pca_scores = cbind(pca_scores, sample_info)
     ggplot(pca_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
 
-![](README_files/figure-markdown_strict/do_pca-1.png)
+![](man/figures/do_pca-1.png)
 
 To see how much explained variance each PC has, you can calculate them:
 
@@ -245,10 +253,14 @@ To see how much explained variance each PC has, you can calculate them:
 ### visqc\_heatmap
 
 Calculate sample-sample correlations and reorder based on within class
-correlations
+correlations. We recommend a transform agnostic correlation like
+Kendall-tau that can also handle missing data when necessary. Here we
+use the {ici\_kendalltau} function from our
+[ICIKendallTau](https://moseleybioinformaticslab.github.io/ICIKendallTau/)
+package.
 
     rownames(sample_info) = sample_info$sample
-    data_cor = globally_it_weighted_pairwise_correlation(t(exp_data))
+    data_cor = ICIKendallTau::ici_kendalltau(t(exp_data))
     data_order = similarity_reorderbyclass(data_cor$cor, sample_info[, "class", drop = FALSE], transform = "sub_1")
 
 And then generate a colormapping for the sample classes and plot the
@@ -261,40 +273,81 @@ correlation heatmap.
 
     library(viridis)
     library(circlize)
-    colormap = colorRamp2(seq(0.2, 1, length.out = 50), viridis::viridis(50))
+    colormap = colorRamp2(seq(0.3, 1, length.out = 50), viridis::viridis(50))
 
     visqc_heatmap(data_cor$cor, colormap, "Correlation", row_color_data = row_data,
                   row_color_list = row_annotation, col_color_data = row_data,
                   col_color_list = row_annotation, row_order = data_order$indices,
                   column_order = data_order$indices)
 
-![](README_files/figure-markdown_strict/colormapandheatmap-1.png)
+![](man/figures/colormapandheatmap-1.png)
 
 ### median\_correlations
 
     data_medcor = median_correlations(data_cor$cor, sample_info$class)
     ggplot(data_medcor, aes(x = sample_id, y = med_cor)) + geom_point() + 
-      facet_grid(. ~ sample_class, scales = "free") + ggtitle("Median Correlation")
+      facet_grid(. ~ sample_class, scales = "free_x") + ggtitle("Median Correlation")
 
-![](README_files/figure-markdown_strict/median_correlations-1.png)
+![](man/figures/median_correlations-1.png)
+
+    ggplot(data_medcor, aes(x = sample_class, y = med_cor)) +
+      geom_sina() +
+      ggtitle("Median Correlation")
+
+![](man/figures/median_correlations-2.png)
 
 ### outlier\_fraction
 
     data_outlier = outlier_fraction(t(exp_data), sample_info$class)
     ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
-      facet_grid(. ~ sample_class, scales = "free") + ggtitle("Outlier Fraction")
+      facet_grid(. ~ sample_class, scales = "free_x") + ggtitle("Outlier Fraction")
 
-![](README_files/figure-markdown_strict/outlier_fraction-1.png)
+![](man/figures/outlier_fraction-1.png)
 
-### weighted correlations with missing values
+    ggplot(data_outlier, aes(x = sample_class, y = frac)) +
+      geom_sina() +
+      ggtitle("Outlier Fraction")
+
+![](man/figures/outlier_fraction-2.png)
+
+### determine\_outliers
+
+We can combine the median correlations and outlier fractions into a
+single score and then examine the distribution of scores to look for
+outliers.
+
+    out_samples = determine_outliers(data_medcor, data_outlier)
+
+    ggplot(out_samples, aes(x = sample_id, y = score, color = outlier)) +
+      geom_point() +
+      facet_wrap(~ sample_class, scales = "free_x") +
+      ggtitle("Outliers Score")
+
+![](man/figures/determine_outliers-1.png)
+
+    ggplot(out_samples, aes(x = sample_class, y = score, color = outlier, group = sample_class)) +
+      geom_sina() +
+      ggtitle("Outliers Score")
+
+![](man/figures/determine_outliers-2.png)
+
+Here we can see the outliers by their combined score. **However**, in
+this case we don’t actually want to remove the samples. In this example,
+what actually happened was that two samples got their `sample_class`
+wrong. And we can see that by going back to the **correlation heatmap**,
+that this is the case by the high correlation values observed with the
+other class of samples.
+
+### Correlation that Includes Missing Values
 
 When there are missing values (either NA, or 0 depending on the case),
-the default is to only include values that are not missing in both
-things being compared, which makes sense for NA especially, because
-otherwise you can’t actually calculate a correlation. However, the
-correlations that are calculated then don’t include the fact that data
-is missing. Therefore, we should be weighting the correlations to
-account for missing data.
+we can use the information-content-informed Kendall-tau. This works
+under the assumption that **most** missing data in -omics is because
+samples have values that fall below the detection limit. Because of
+this, missingness actually contributes **some** information that can be
+incorporated in the correlation. The package
+[ICIKendallTau](https://moseleybioinformaticslab.github.io/ICIKendallTau/)
+provides this correlation measure.
 
 Lets add some missingness to our data.
 
@@ -312,44 +365,44 @@ Lets add some missingness to our data.
     exp_data2[s1_missing, 1] = NA
     exp_data2[s2_missing, 1] = NA
 
-    cor_random_missing = globally_it_weighted_pairwise_correlation(t(exp_data2))$cor
+    cor_random_missing = ICIKendallTau::ici_kendalltau(t(exp_data2))$cor
     cor_random_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.6000000 0.3100687 0.3186598 0.3257055
-    ## s2 0.3100687 1.0000000 0.8897728 0.8942302
-    ## s3 0.3186598 0.8897728 1.0000000 0.8866482
-    ## s4 0.3257055 0.8942302 0.8866482 1.0000000
+    ## s1 0.6000000 0.2447565 0.2733701 0.3015435
+    ## s2 0.2447565 1.0000000 0.7058586 0.7200000
+    ## s3 0.2733701 0.7058586 1.0000000 0.6925253
+    ## s4 0.3015435 0.7200000 0.6925253 1.0000000
 
-    cor_random_missing_nw = globally_it_weighted_pairwise_correlation(t(exp_data))$cor
+    cor_random_missing_nw = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
     cor_random_missing_nw[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 1.0000000 0.8766158 0.8951214 0.8986443
-    ## s2 0.8766158 1.0000000 0.8897728 0.8942302
-    ## s3 0.8951214 0.8897728 1.0000000 0.8866482
-    ## s4 0.8986443 0.8942302 0.8866482 1.0000000
+    ## s1 1.0000000 0.6953535 0.7074747 0.7224242
+    ## s2 0.6953535 1.0000000 0.7058586 0.7200000
+    ## s3 0.7074747 0.7058586 1.0000000 0.6925253
+    ## s4 0.7224242 0.7200000 0.6925253 1.0000000
 
-What happens if we make the missingness match between them? That should
-count as information, right? If the feature is missing in the same
-samples, that is worth something?
+What happens if we make the missingness match between them? That counts
+as information? If the feature is missing in the same samples, that is
+worth something?
 
     exp_data = grp_cor_data$data
     rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
     colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
     exp_data[s1_missing, 1:2] = NA
 
-    cor_same_missing = globally_it_weighted_pairwise_correlation(t(exp_data))$cor
+    cor_same_missing = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
     cor_same_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.8000000 0.8617948 0.5697536 0.5723917
-    ## s2 0.8617948 0.8000000 0.5720490 0.5773131
-    ## s3 0.5697536 0.5720490 1.0000000 0.8866482
-    ## s4 0.5723917 0.5773131 0.8866482 1.0000000
+    ## s1 0.8000000 0.7794118 0.4643526 0.4717690
+    ## s2 0.7794118 0.8000000 0.4631165 0.4771253
+    ## s3 0.4643526 0.4631165 1.0000000 0.6925253
+    ## s4 0.4717690 0.4771253 0.6925253 1.0000000
 
-Here we can see that the correlations get dropped, but not as much as
-when it was random.
+Here we can see that the correlation between sapmles S1 and S2 has
+actually increased over the random missing case.
 
 ## Fake Data Generation
 

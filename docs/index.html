@@ -4,14 +4,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Provides utilities useful quality control of
+        high-throughput -omics datasets.">
 <title>Development of visualization methods for quality control • visualizationQualityControl</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Development of visualization methods for quality control">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Development of visualization methods for quality control">
 <meta property="og:description" content="Provides utilities useful quality control of
         high-throughput -omics datasets.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -19,76 +20,67 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">visualizationQualityControl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">visualizationQualityControl</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-2">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/pca_testing.html">PCA Testing</a>
+    <a class="dropdown-item" href="articles/quality_control.html">Quality Control Example</a>
+  </div>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/pca_testing.html">PCA Testing</a>
-    </li>
-    <li>
-      <a href="articles/quality_control.html">Quality Control Example</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/moseleybioinformaticslab/visualizationQualityControl/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div id="visualization-quality-control" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#visualization-quality-control" class="anchor"></a>Visualization Quality Control</h1></div>
-<p>Set of useful functions for calculating various measures from data and visualizing them.</p>
-<p>Takes a lot of inspiration from <a href="https://dx.doi.org/10.1093/bioinformatics/btv425">Gierlinski et al., 2015</a>, especially the <code>median_correlation</code> and <code>outlier_fraction</code> functions.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div id="dependencies" class="section level3">
-<h3 class="hasAnchor">
-<a href="#dependencies" class="anchor"></a>Dependencies</h3>
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="visualization-quality-control">Visualization Quality Control<a class="anchor" aria-label="anchor" href="#visualization-quality-control"></a>
+</h1></div>
+<p>A set of useful functions for calculating various measures from high-feature datasets and visualizing them.</p>
+<p>In addition to internal documentation, the package is also documented heavily <a href="https://moseleybioinformaticslab.github.io/visualizationQualityControl/" class="external-link">here</a>.</p>
+<p>This package combines my needs for visualizing sample-sample correlations using heatmaps, and novel quality control measures that apply to different types of -omics or high-feature datasets proposed by <a href="https://dx.doi.org/10.1093/bioinformatics/btv425" class="external-link">Gierlinski et al., 2015</a>, namely the <code>median_correlation</code> and <code>outlier_fraction</code> functions.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="section level3">
+<h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
+</h3>
 <ul>
 <li>
 <code>ComplexHeatmap</code>, for generating the heatmaps.</li>
@@ -99,37 +91,38 @@
 </ul>
 <p>These should get installed automatically.</p>
 </div>
-<div id="this-package" class="section level3">
-<h3 class="hasAnchor">
-<a href="#this-package" class="anchor"></a>This Package</h3>
+<div class="section level3">
+<h3 id="this-package">This Package<a class="anchor" aria-label="anchor" href="#this-package"></a>
+</h3>
 <p>This package can be installed using the <code>remotes</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"moseleybioinformaticslab/visualizationQualityControl"</span>)</span></code></pre></div>
 </div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <p>These examples show the primary functionality. We will apply the visualizations to a two group dataset. However, all of the functions are still applicable to datasets with more than two groups. The examples below are for a dataset where there has been a sample swapped between the two groups (i.e. there is a problem!). If you want to see how the visualizations compare between a <strong>good</strong> dataset and a <strong>bad</strong> dataset, see the <strong>quality_control</strong> vignette.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(visualizationQualityControl)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"grp_cor_data"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>sample_info <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">colnames</span>(exp_data), <span class="at">class =</span> grp_cor_data<span class="sc">$</span>class)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">5</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">19</span>]</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">19</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">5</span>]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>sample_classes <span class="ot">=</span> sample_info<span class="sc">$</span>class</span></code></pre></div>
-<div id="visualize-pca-component-scores" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visualize-pca-component-scores" class="anchor"></a>Visualize PCA Component Scores</h3>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"grp_cor_data"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>sample_info <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">colnames</span>(exp_data), <span class="at">class =</span> grp_cor_data<span class="sc">$</span>class)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">5</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">19</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>exp_data[, <span class="dv">19</span>] <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data[, <span class="dv">5</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>sample_classes <span class="ot">=</span> sample_info<span class="sc">$</span>class</span></code></pre></div>
+<div class="section level3">
+<h3 id="visualize-pca-component-scores">Visualize PCA Component Scores<a class="anchor" aria-label="anchor" href="#visualize-pca-component-scores"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">=</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(exp_data), <span class="at">center =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">as.data.frame</span>(pca_data<span class="sc">$</span>x)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">cbind</span>(pca_scores, sample_info)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_scores, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> class)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
-<p><img src="README_files/figure-markdown_strict/do_pca-1.png"></p>
+<p><img src="reference/figures/do_pca-1.png"></p>
 <p>To see how much explained variance each PC has, you can calculate them:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">visqc_score_contributions</span>(pca_data<span class="sc">$</span>x))</span></code></pre></div>
 <table class="table">
@@ -564,12 +557,12 @@ PC20 (0.0000000000000000000000000000029%)
 </tbody>
 </table>
 </div>
-<div id="visqc_heatmap" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visqc_heatmap" class="anchor"></a>visqc_heatmap</h3>
-<p>Calculate sample-sample correlations and reorder based on within class correlations</p>
+<div class="section level3">
+<h3 id="visqc_heatmap">visqc_heatmap<a class="anchor" aria-label="anchor" href="#visqc_heatmap"></a>
+</h3>
+<p>Calculate sample-sample correlations and reorder based on within class correlations. We recommend a transform agnostic correlation like Kendall-tau that can also handle missing data when necessary. Here we use the {ici_kendalltau} function from our <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a> package.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sample_info) <span class="ot">=</span> sample_info<span class="sc">$</span>sample</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_cor <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_cor <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data_order <span class="ot">=</span> <span class="fu">similarity_reorderbyclass</span>(data_cor<span class="sc">$</span>cor, sample_info[, <span class="st">"class"</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>], <span class="at">transform =</span> <span class="st">"sub_1"</span>)</span></code></pre></div>
 <p>And then generate a colormapping for the sample classes and plot the correlation heatmap.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_legend <span class="ot">=</span> <span class="fu">generate_group_colors</span>(<span class="dv">2</span>)</span>
@@ -579,193 +572,236 @@ PC20 (0.0000000000000000000000000000029%)
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>colormap <span class="ot">=</span> <span class="fu">colorRamp2</span>(<span class="fu">seq</span>(<span class="fl">0.2</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">50</span>), viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">50</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>colormap <span class="ot">=</span> <span class="fu">colorRamp2</span>(<span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">50</span>), viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">50</span>))</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">visqc_heatmap</span>(data_cor<span class="sc">$</span>cor, colormap, <span class="st">"Correlation"</span>, <span class="at">row_color_data =</span> row_data,</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">row_color_list =</span> row_annotation, <span class="at">col_color_data =</span> row_data,</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">col_color_list =</span> row_annotation, <span class="at">row_order =</span> data_order<span class="sc">$</span>indices,</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">column_order =</span> data_order<span class="sc">$</span>indices)</span></code></pre></div>
-<p><img src="README_files/figure-markdown_strict/colormapandheatmap-1.png"></p>
+<p><img src="reference/figures/colormapandheatmap-1.png"></p>
 </div>
-<div id="median_correlations" class="section level3">
-<h3 class="hasAnchor">
-<a href="#median_correlations" class="anchor"></a>median_correlations</h3>
+<div class="section level3">
+<h3 id="median_correlations">median_correlations<a class="anchor" aria-label="anchor" href="#median_correlations"></a>
+</h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_medcor <span class="ot">=</span> <span class="fu">median_correlations</span>(data_cor<span class="sc">$</span>cor, sample_info<span class="sc">$</span>class)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_medcor, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> med_cor)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Median Correlation"</span>)</span></code></pre></div>
-<p><img src="README_files/figure-markdown_strict/median_correlations-1.png"></p>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Median Correlation"</span>)</span></code></pre></div>
+<p><img src="reference/figures/median_correlations-1.png"></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_medcor, <span class="fu">aes</span>(<span class="at">x =</span> sample_class, <span class="at">y =</span> med_cor)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Median Correlation"</span>)</span></code></pre></div>
+<p><img src="reference/figures/median_correlations-2.png"></p>
 </div>
-<div id="outlier_fraction" class="section level3">
-<h3 class="hasAnchor">
-<a href="#outlier_fraction" class="anchor"></a>outlier_fraction</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_outlier <span class="ot">=</span> <span class="fu">outlier_fraction</span>(<span class="fu">t</span>(exp_data), sample_info<span class="sc">$</span>class)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_outlier, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> frac)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
-<p><img src="README_files/figure-markdown_strict/outlier_fraction-1.png"></p>
+<div class="section level3">
+<h3 id="outlier_fraction">outlier_fraction<a class="anchor" aria-label="anchor" href="#outlier_fraction"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data_outlier <span class="ot">=</span> <span class="fu">outlier_fraction</span>(<span class="fu">t</span>(exp_data), sample_info<span class="sc">$</span>class)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_outlier, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> frac)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
+<p><img src="reference/figures/outlier_fraction-1.png"></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_outlier, <span class="fu">aes</span>(<span class="at">x =</span> sample_class, <span class="at">y =</span> frac)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
+<p><img src="reference/figures/outlier_fraction-2.png"></p>
 </div>
-<div id="weighted-correlations-with-missing-values" class="section level3">
-<h3 class="hasAnchor">
-<a href="#weighted-correlations-with-missing-values" class="anchor"></a>weighted correlations with missing values</h3>
-<p>When there are missing values (either NA, or 0 depending on the case), the default is to only include values that are not missing in both things being compared, which makes sense for NA especially, because otherwise you can’t actually calculate a correlation. However, the correlations that are calculated then don’t include the fact that data is missing. Therefore, we should be weighting the correlations to account for missing data.</p>
+<div class="section level3">
+<h3 id="determine_outliers">determine_outliers<a class="anchor" aria-label="anchor" href="#determine_outliers"></a>
+</h3>
+<p>We can combine the median correlations and outlier fractions into a single score and then examine the distribution of scores to look for outliers.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>out_samples <span class="ot">=</span> <span class="fu">determine_outliers</span>(data_medcor, data_outlier)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(out_samples, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> score, <span class="at">color =</span> outlier)) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Outliers Score"</span>)</span></code></pre></div>
+<p><img src="reference/figures/determine_outliers-1.png"></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(out_samples, <span class="fu">aes</span>(<span class="at">x =</span> sample_class, <span class="at">y =</span> score, <span class="at">color =</span> outlier, <span class="at">group =</span> sample_class)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>() <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Outliers Score"</span>)</span></code></pre></div>
+<p><img src="reference/figures/determine_outliers-2.png"></p>
+<p>Here we can see the outliers by their combined score. <strong>However</strong>, in this case we don’t actually want to remove the samples. In this example, what actually happened was that two samples got their <code>sample_class</code> wrong. And we can see that by going back to the <strong>correlation heatmap</strong>, that this is the case by the high correlation values observed with the other class of samples.</p>
+</div>
+<div class="section level3">
+<h3 id="correlation-that-includes-missing-values">Correlation that Includes Missing Values<a class="anchor" aria-label="anchor" href="#correlation-that-includes-missing-values"></a>
+</h3>
+<p>When there are missing values (either NA, or 0 depending on the case), we can use the information-content-informed Kendall-tau. This works under the assumption that <strong>most</strong> missing data in -omics is because samples have values that fall below the detection limit. Because of this, missingness actually contributes <strong>some</strong> information that can be incorporated in the correlation. The package <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a> provides this correlation measure.</p>
 <p>Lets add some missingness to our data.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>make_na <span class="ot">=</span> <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="fu">nrow</span>(exp_data))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>s1_missing <span class="ot">=</span> make_na</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>s1_missing[<span class="fu">sample</span>(<span class="fu">length</span>(make_na), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>s2_missing <span class="ot">=</span> make_na</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>s2_missing[<span class="fu">sample</span>(<span class="fu">which</span>(<span class="sc">!</span>s1_missing), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>exp_data2 <span class="ot">=</span> exp_data</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>exp_data2[s1_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>exp_data2[s2_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>cor_random_missing <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data2))<span class="sc">$</span>cor</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>cor_random_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.6000000 0.3100687 0.3186598 0.3257055</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.3100687 1.0000000 0.8897728 0.8942302</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.3186598 0.8897728 1.0000000 0.8866482</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.3257055 0.8942302 0.8866482 1.0000000</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 1.0000000 0.8766158 0.8951214 0.8986443</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.8766158 1.0000000 0.8897728 0.8942302</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.8951214 0.8897728 1.0000000 0.8866482</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.8986443 0.8942302 0.8866482 1.0000000</span></span></code></pre></div>
-<p>What happens if we make the missingness match between them? That should count as information, right? If the feature is missing in the same samples, that is worth something?</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>exp_data[s1_missing, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>cor_same_missing <span class="ot">=</span> <span class="fu">globally_it_weighted_pairwise_correlation</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>cor_same_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8617948 0.5697536 0.5723917</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.8617948 0.8000000 0.5720490 0.5773131</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.5697536 0.5720490 1.0000000 0.8866482</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.5723917 0.5773131 0.8866482 1.0000000</span></span></code></pre></div>
-<p>Here we can see that the correlations get dropped, but not as much as when it was random.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>make_na <span class="ot">=</span> <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="fu">nrow</span>(exp_data))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>s1_missing <span class="ot">=</span> make_na</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>s1_missing[<span class="fu">sample</span>(<span class="fu">length</span>(make_na), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>s2_missing <span class="ot">=</span> make_na</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>s2_missing[<span class="fu">sample</span>(<span class="fu">which</span>(<span class="sc">!</span>s1_missing), <span class="dv">20</span>)] <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>exp_data2 <span class="ot">=</span> exp_data</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>exp_data2[s1_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>exp_data2[s2_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>cor_random_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data2))<span class="sc">$</span>cor</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>cor_random_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.6000000 0.2447565 0.2733701 0.3015435</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.2447565 1.0000000 0.7058586 0.7200000</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.2733701 0.7058586 1.0000000 0.6925253</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.3015435 0.7200000 0.6925253 1.0000000</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>cor_random_missing_nw[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 1.0000000 0.6953535 0.7074747 0.7224242</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.6953535 1.0000000 0.7058586 0.7200000</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.7074747 0.7058586 1.0000000 0.6925253</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.7224242 0.7200000 0.6925253 1.0000000</span></span></code></pre></div>
+<p>What happens if we make the missingness match between them? That counts as information? If the feature is missing in the same samples, that is worth something?</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>exp_data <span class="ot">=</span> grp_cor_data<span class="sc">$</span>data</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"f"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(exp_data)))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>exp_data[s1_missing, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>cor_same_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>cor_same_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">## s1 0.8000000 0.7794118 0.4643526 0.4717690</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## s2 0.7794118 0.8000000 0.4631165 0.4771253</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">## s3 0.4643526 0.4631165 1.0000000 0.6925253</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## s4 0.4717690 0.4771253 0.6925253 1.0000000</span></span></code></pre></div>
+<p>Here we can see that the correlation between sapmles S1 and S2 has actually increased over the random missing case.</p>
 </div>
 </div>
-<div id="fake-data-generation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#fake-data-generation" class="anchor"></a>Fake Data Generation</h2>
+<div class="section level2">
+<h2 id="fake-data-generation">Fake Data Generation<a class="anchor" aria-label="anchor" href="#fake-data-generation"></a>
+</h2>
 <p>Some fake data is stored in <code>grp_cor_data</code> that is useful for testing the <code>median_correlation</code> function. It was generated by:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">=</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>grp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s1, <span class="fl">0.1</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> s1, <span class="at">s2 =</span> grp1[, <span class="dv">1</span>])</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(s1 <span class="sc">~</span> s2, <span class="at">data =</span> model_data)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>s4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, s3, <span class="fl">0.2</span>)</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>grp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s4, <span class="fl">0.1</span>)</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>grp_cor_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> <span class="fu">cbind</span>(grp1, grp2), <span class="at">class =</span> grp_class)</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>n_point <span class="ot">=</span> <span class="dv">1000</span></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">=</span> <span class="dv">10</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># a nice log-normal distribution of points with points along the entire range</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rlnorm</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="at">meanlog =</span> <span class="dv">1</span>, <span class="at">sdlog =</span> <span class="dv">1</span>),</span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">runif</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>))</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co"># go to log to have decent correlations on the "transformed" data</span></span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>lsim1 <span class="ot">=</span> <span class="fu">log</span>(simulated_data)</span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to get lower than 1 correlations</span></span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>lgrp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, lsim1, .<span class="dv">5</span>)</span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to everything in normal space</span></span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>sim1_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, simulated_data, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co"># and generate the grp1 data in normal space</span></span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>ngrp1 <span class="ot">=</span> <span class="fu">exp</span>(lgrp1) <span class="sc">+</span> sim1_error</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="co"># do regression to generate some other data</span></span>
-<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">lsim1 =</span> lsim1, <span class="at">lsim2 =</span> lgrp1[, <span class="dv">1</span>])</span>
-<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(lsim1 <span class="sc">~</span> lsim2, <span class="at">data =</span> model_data)</span>
-<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co"># reduce the correlation between them</span></span>
-<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
-<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>lsim3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
-<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="co"># and a bunch of error</span></span>
-<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>lsim4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, lsim3, <span class="fl">1.5</span>)</span>
-<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="co"># create group with added error to reduce correlation from 1</span></span>
-<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>lgrp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, lsim4, .<span class="dv">5</span>)</span>
-<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a><span class="co"># add error in original space</span></span>
-<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>nsim4 <span class="ot">=</span> <span class="fu">exp</span>(lsim4)</span>
-<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>sim4_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, nsim4, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>ngrp2 <span class="ot">=</span> <span class="fu">exp</span>(lgrp2) <span class="sc">+</span> sim4_error</span>
-<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="co"># put all data together, and make negatives zero</span></span>
-<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">=</span> <span class="fu">cbind</span>(ngrp1, ngrp2)</span>
-<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>all_data[(all_data <span class="sc">&lt;</span> <span class="dv">0</span>)] <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
-<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>grp_exp_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> all_data, <span class="at">class =</span> grp_class)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">=</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>grp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s1, <span class="fl">0.1</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">s1 =</span> s1, <span class="at">s2 =</span> grp1[, <span class="dv">1</span>])</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(s1 <span class="sc">~</span> s2, <span class="at">data =</span> model_data)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>s4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, s3, <span class="fl">0.2</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>grp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, s4, <span class="fl">0.1</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>grp_cor_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> <span class="fu">cbind</span>(grp1, grp2), <span class="at">class =</span> grp_class)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fakeDataWithError)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>n_point <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># a nice log-normal distribution of points with points along the entire range</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>simulated_data <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rlnorm</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="at">meanlog =</span> <span class="dv">1</span>, <span class="at">sdlog =</span> <span class="dv">1</span>),</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">runif</span>(n_point <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>))</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co"># go to log to have decent correlations on the "transformed" data</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>lsim1 <span class="ot">=</span> <span class="fu">log</span>(simulated_data)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to get lower than 1 correlations</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>lgrp1 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, lsim1, .<span class="dv">5</span>)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co"># add some uniform noise to everything in normal space</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>sim1_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(n_rep, simulated_data, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="co"># and generate the grp1 data in normal space</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>ngrp1 <span class="ot">=</span> <span class="fu">exp</span>(lgrp1) <span class="sc">+</span> sim1_error</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="co"># do regression to generate some other data</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">lsim1 =</span> lsim1, <span class="at">lsim2 =</span> lgrp1[, <span class="dv">1</span>])</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(lsim1 <span class="sc">~</span> lsim2, <span class="at">data =</span> model_data)</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="co"># reduce the correlation between them</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>lm_1<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>lsim3 <span class="ot">=</span> <span class="fu">predict</span>(lm_1)</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="co"># and a bunch of error</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>lsim4 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">1</span>, lsim3, <span class="fl">1.5</span>)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co"># create group with added error to reduce correlation from 1</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>lgrp2 <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, lsim4, .<span class="dv">5</span>)</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="co"># add error in original space</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>nsim4 <span class="ot">=</span> <span class="fu">exp</span>(lsim4)</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>sim4_error <span class="ot">=</span> <span class="fu">add_uniform_noise</span>(<span class="dv">10</span>, nsim4, <span class="dv">1</span>, <span class="at">use_zero =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>ngrp2 <span class="ot">=</span> <span class="fu">exp</span>(lgrp2) <span class="sc">+</span> sim4_error</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="co"># put all data together, and make negatives zero</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">=</span> <span class="fu">cbind</span>(ngrp1, ngrp2)</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>all_data[(all_data <span class="sc">&lt;</span> <span class="dv">0</span>)] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>grp_class <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"grp1"</span>, <span class="st">"grp2"</span>), <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>grp_exp_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">data =</span> all_data, <span class="at">class =</span> grp_class)</span></code></pre></div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
-<h2>License</h2>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><a href="https://github.com/moseleybioinformaticslab/visualizationQualityControl/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
+
+<div class="license">
+<h2 data-toc-skip>License</h2>
+<ul class="list-unstyled">
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+</ul>
+</div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing visualizationQualityControl</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Robert M Flight <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Hunter NB Moseley <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  </div>
+
+
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p>Developed by Robert M Flight, Hunter NB Moseley.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by Robert M Flight, Hunter NB Moseley.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
 
+  
 
   </body>
 </html>

@@ -90,7 +90,7 @@ What if there was some variable we were interested in knowing if there was a PC 
 The only one here should be PC1, but lets go through and test them anyway.
 
 ```{r test_pcs}
-pc_stats = visqc_test_pca_scores(log_pca$x, sample_info, "class")
+pc_stats = visqc_test_pca_scores(log_pca$x, sample_info[, c("class"), drop = FALSE])
 
 knitr::kable(pc_stats)
 ```
