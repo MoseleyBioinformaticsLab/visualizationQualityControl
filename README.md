@@ -24,11 +24,20 @@ apply to different types of -omics or high-feature datasets proposed by
 
 These should get installed automatically.
 
+It is recommended to install `BiocManager` first so Bioconductor
+dependencies are installed automatically.
+
+    install.packages("BiocManager")
+
 ### This Package
 
-This package can be installed using the `remotes` package:
+This package can be installed from the MoseleyBioinformaticsLab
+r-universe as it is not yet on CRAN.
 
-    remotes::install_github("moseleybioinformaticslab/visualizationQualityControl")
+    options(repos = c(
+        moseleybioinformaticslab = 'https://moseleybioinformaticslab.r-universe.dev',
+        BiocManager::repositories()))
+    install.packages(c("ICIKendallTau", "visualizationQualityControl"))
 
 ## Examples
 
@@ -369,10 +378,10 @@ Lets add some missingness to our data.
     cor_random_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.6000000 0.2447565 0.2733701 0.3015435
-    ## s2 0.2447565 1.0000000 0.7058586 0.7200000
-    ## s3 0.2733701 0.7058586 1.0000000 0.6925253
-    ## s4 0.3015435 0.7200000 0.6925253 1.0000000
+    ## s1 0.6000000 0.2368327 0.2315502 0.2500390
+    ## s2 0.2368327 1.0000000 0.7058586 0.7200000
+    ## s3 0.2315502 0.7058586 1.0000000 0.6925253
+    ## s4 0.2500390 0.7200000 0.6925253 1.0000000
 
     cor_random_missing_nw = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
     cor_random_missing_nw[1:4, 1:4]
@@ -396,10 +405,10 @@ worth something?
     cor_same_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.8000000 0.7794118 0.4643526 0.4717690
-    ## s2 0.7794118 0.8000000 0.4631165 0.4771253
-    ## s3 0.4643526 0.4631165 1.0000000 0.6925253
-    ## s4 0.4717690 0.4771253 0.6925253 1.0000000
+    ## s1 0.8000000 0.8050420 0.3704108 0.3778272
+    ## s2 0.8050420 0.8000000 0.3794753 0.3844196
+    ## s3 0.3704108 0.3794753 1.0000000 0.6925253
+    ## s4 0.3778272 0.3844196 0.6925253 1.0000000
 
 Here we can see that the correlation between sapmles S1 and S2 has
 actually increased over the random missing case.

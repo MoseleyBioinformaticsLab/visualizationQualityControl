@@ -25,12 +25,21 @@ This package combines my needs for visualizing sample-sample correlations using 
 
 These should get installed automatically.
 
+It is recommended to install `BiocManager` first so Bioconductor dependencies are installed automatically.
+
+```
+install.packages("BiocManager")
+```
+
 ### This Package
 
-This package can be installed using the `remotes` package:
+This package can be installed from the MoseleyBioinformaticsLab r-universe as it is not yet on CRAN.
 
 ```r
-remotes::install_github("moseleybioinformaticslab/visualizationQualityControl")
+options(repos = c(
+    moseleybioinformaticslab = 'https://moseleybioinformaticslab.r-universe.dev',
+    BiocManager::repositories()))
+install.packages(c("ICIKendallTau", "visualizationQualityControl"))
 ```
 
 ## Examples
