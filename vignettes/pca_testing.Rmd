@@ -5,7 +5,7 @@ vignette: >
   %\VignetteIndexEntry{PCA Testing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{visualizationQualityControl, ggplot2, patchwork}
+  %\VignetteDepends{visualizationQualityControl, ggplot2}
 ---
 
 ```{r, include = FALSE}
@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(visualizationQualityControl)
 library(ggplot2)
-library(patchwork)
 ```
 
 ## Purpose
@@ -52,12 +51,17 @@ This data has a proportional variance structure, where the variance increases wi
 We can see this by examining a plot of two columns in raw and log-transformed values.
 
 ```{r check_proportional}
-data_df = as.data.frame(data_matrix)
-log_df = log1p(data_df)
+data_df = as.data.frame(data_matrix[, c(1, 2)])
+data_df$type = "raw"
+log_df = as.data.frame(log1p(data_matrix[, c(1, 2)]))
+log_df$type = "log"
 
-raw_plot = ggplot(data_df, aes(x = s1, y = s2)) + geom_point()
-log_plot = ggplot(log_df, aes(x = s1, y = s2)) + geom_point()
-raw_plot + log_plot
+all_df = rbind(data_df, log_df)
+all_df$type = factor(all_df$type, levels = c("raw", "log"), ordered = TRUE)
+
+ggplot(all_df, aes(x = s1, y = s2)) +
+  geom_point() +
+  facet_wrap(~ type, scales = "free")
 ```
 
 ## PCA
@@ -65,7 +69,7 @@ raw_plot + log_plot
 We will use the log-transformed values, because PCA doesn't do well with proportional variance data.
 
 ```{r do_pca}
-log_pca = prcomp(t(log_df), center = TRUE)
+log_pca = prcomp(t(log1p(data_matrix)), center = TRUE)
 ```
 
 We can summarize the variances of each principal component.

@@ -1,5 +1,5 @@
 Package: visualizationQualityControl
-Version: 0.4.7
+Version: 0.4.8
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.
@@ -7,7 +7,7 @@ Authors@R: c(person(given = c("Robert", "M"), family = "Flight", email
         = "rflight79@gmail.com", role = c("aut", "cre")), person(given
         = c("Hunter", "NB"), family = "Moseley", email =
         "hunter.moseley@gmail.com", role = c("aut")))
-Date: 2021-12-03
+Date: 2021-12-28
 Depends: R (>= 3.1.1)
 biocViews:
 Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
@@ -17,6 +17,8 @@ VignetteBuilder: knitr
 Suggests: testthat, knitr, rmarkdown, circlize, viridis, ICIKendallTau
 RoxygenNote: 7.1.2
 LinkingTo: Rcpp
-URL: https://moseleybioinformaticslab.github.io/visualizationQualityControl https://github.com/moseleybioinformaticslab/visualizationQualityControl
+URL:
+        https://moseleybioinformaticslab.github.io/visualizationQualityControl
+        https://github.com/moseleybioinformaticslab/visualizationQualityControl
 Remotes: github::MoseleyBioinformaticsLab/ICIKendallTau
 Config/testthat/edition: 3
