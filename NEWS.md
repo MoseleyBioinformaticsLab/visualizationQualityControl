@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.4.9
+
+* Windows and Mac binaries are now available via r-universe, and installation instructions are updated to reflect that.
+
 # visualizationQualityControl 0.4.7
 
 * Updated determine_outliers to be able to use either the output from median_correlations or outlier_fraction singly or together. 
