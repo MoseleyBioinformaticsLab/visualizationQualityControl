@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Quality Control Example}
   %\VignetteEncoding{UTF-8}
   %\VignetteDepends{visualizationQualityControl, ggplot2, ComplexHeatmap,
-  viridis, ICIKendallTau}
+  viridis, circlize, ICIKendallTau}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
@@ -166,28 +166,16 @@ the samples very well. The PCA plots rarely look this good in practice!
 ## Correlation Heatmap
 
 Correlation heatmaps show much of the same information as the PCA plots, but in
-a different way. Note that what we are calculating are **all pairwise sample-sample**
-correlations. In each sample-sample correlation, we calculate the correlation
-using the non-zero feature values.
-
-```{r sample1_sample2_cor, fig.width = 5, fig.height=5}
-s1_s2_cor <- cor(log_data[,1], log_data[,2])
-s1_s2_val <- sprintf("%.4f", s1_s2_cor)
-ggplot(log_df, aes(x = s1, y = s2)) + geom_point() + labs(title = paste0("R = ", s1_s2_val))
-```
+a different way.
 
 ### Calculate Correlations
 
-All pairwise correlations should be calculated using either the `globally_it_weighted_pairwise_correlation` or `locally_it_weighted_pairwise_correlation` functions.
-These functions calculate a correlation where we remove missing or zero values in either sample, and in addition, weights the correlations by the information shared between the samples, as well as their consistency, that is how many shared present and missing values there are between them.
+We recommend to use our information-content-informed Kendall-tau {ICIKendallTau::ici_kendalltau} correlation, that is scale invariant, and includes some effects of missing values.
 Note that we take the transpose of the data, because this function assumes
 that data are organized with *features* as *columns* and *samples* as *rows*. 
-Also, because we used `log1p` to transform the data, we make sure to remove the
-zeros, corresponding to missing data. A `log` transform would make them `-Inf`
-or `NaN`, and they should be removed automatically.
 
 ```{r calc_correlations}
-data_cor <- globally_it_weighted_pairwise_correlation(t(log_data), exclude_0 = TRUE)
+data_cor <- ICIKendallTau::ici_kendalltau(t(exp_data))
 ```
 
 This returns a list with some useful information, the actual correlations in `cor`,
@@ -206,7 +194,7 @@ dim(data_cor)
 We also do the same for our **mixed-up** data.
 
 ```{r mix_cor}
-mix_cor <- globally_it_weighted_pairwise_correlation(t(log_mix))$cor
+mix_cor <- ICIKendallTau::ici_kendalltau(t(mix_data))$cor
 ```
 
 ### Reorder Correlations
@@ -246,7 +234,7 @@ information about `viridis` is available [here](http://bids.github.io/colormap/)
 ```{r correlation_to_color}
 library(viridis)
 library(circlize)
-colormap <- colorRamp2(seq(0.2, 1, length.out = 20), viridis::viridis(20))
+colormap <- colorRamp2(seq(0.5, 1, length.out = 20), viridis::viridis(20))
 ```
 
 

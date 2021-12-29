@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.4.10
+
+* Updated the quality_control vignette to use ICIKendallTau instead of other correlation measures.
+
 # visualizationQualityControl 0.4.9
 
 * Windows and Mac binaries are now available via r-universe, and installation instructions are updated to reflect that.
