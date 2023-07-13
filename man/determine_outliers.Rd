@@ -8,7 +8,8 @@ determine_outliers(
   median_correlations = NULL,
   outlier_fraction = NULL,
   cor_weight = 1,
-  frac_weight = 1
+  frac_weight = 1,
+  only_low = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ determine_outliers(
 \item{cor_weight}{how much weight for the correlation score?}
 
 \item{frac_weight}{how much weight for the outlier fraction?}
+
+\item{only_low}{should only things at the low end of score be removed?}
 }
 \value{
 data.frame
