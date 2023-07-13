@@ -812,7 +812,7 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
 #' @param outlier_fraction outlier fractions
 #' @param cor_weight how much weight for the correlation score?
 #' @param frac_weight how much weight for the outlier fraction?
-#' @param only_low should only things at the low end of score be removed?
+#' @param only_high should only things at the low end of score be removed?
 #' 
 #' @details For outlier sample detection, one should 
 #'   first generate median correlations using
@@ -827,7 +827,7 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
 #' @export
 #' @return data.frame
 determine_outliers = function(median_correlations = NULL, outlier_fraction = NULL,
-                              cor_weight = 1, frac_weight = 1, only_low = TRUE){
+                              cor_weight = 1, frac_weight = 1, only_high = TRUE){
   
   if (!is.null(median_correlations) && !is.null(outlier_fraction)) {
     full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
@@ -867,7 +867,7 @@ determine_outliers = function(median_correlations = NULL, outlier_fraction = NUL
   full_data$outlier = FALSE
   full_data$outlier[full_data$sample_id %in% all_out] = TRUE
   
-  if (only_low) {
+  if (only_high) {
     split_data = split(full_data, full_data$sample_class)
     full_data = purrr::map(split_data, \(in_data){
       mean_score = mean(in_data$score)

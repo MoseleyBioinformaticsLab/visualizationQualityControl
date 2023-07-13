@@ -1,6 +1,6 @@
 # vsualizationQualityControl 0.4.11
 
-* Added a new argument `only_low` to `determine_outliers` to only look at the low end of the score distribution for outliers, as sometimes `boxplot.stats` will pick up outliers at the high end as well.
+* Added a new argument `only_high` to `determine_outliers` to only look at the high end of the score distribution for outliers, as sometimes `boxplot.stats` will pick up outliers at the low end as well.
 
 # visualizationQualityControl 0.4.10
 
