@@ -94,8 +94,8 @@ We recommend a transform agnostic correlation like Kendall-tau that can also han
 Here we use the {ici_kendalltau} function from our [ICIKendallTau](https://moseleybioinformaticslab.github.io/ICIKendallTau/) package.
 
 ```{r correlation}
-rownames(sample_info) = sample_info$sample
-data_cor = ICIKendallTau::ici_kendalltau(t(exp_data))
+rownames(sample_info) = sample_info$id
+data_cor = ICIKendallTau::ici_kendalltau(exp_data)
 data_order = similarity_reorderbyclass(data_cor$cor, sample_info[, "class", drop = FALSE], transform = "sub_1")
 ```
 
@@ -108,7 +108,7 @@ row_data = sample_info[, "class", drop = FALSE]
 row_annotation = list(class = data_legend)
 
 library(viridis)
-library(circlize)
+suppressPackageStartupMessages(library(circlize))
 colormap = colorRamp2(seq(0.3, 1, length.out = 50), viridis::viridis(50))
 
 visqc_heatmap(data_cor$cor, colormap, "Correlation", row_color_data = row_data,
@@ -132,7 +132,7 @@ ggplot(data_medcor, aes(x = sample_class, y = med_cor)) +
 ### outlier_fraction
 
 ```{r outlier_fraction}
-data_outlier = outlier_fraction(t(exp_data), sample_info$class)
+data_outlier = outlier_fraction(exp_data, sample_info$class)
 ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
   facet_grid(. ~ sample_class, scales = "free_x") + ggtitle("Outlier Fraction")
 
@@ -191,12 +191,12 @@ exp_data2[s2_missing, 1] = NA
 ```
 
 ```{r cor_random_missingness}
-cor_random_missing = ICIKendallTau::ici_kendalltau(t(exp_data2))$cor
+cor_random_missing = ICIKendallTau::ici_kendalltau(exp_data2)$cor
 cor_random_missing[1:4, 1:4]
 ```
 
 ```{r cor_random_missingness_noweight}
-cor_random_missing_nw = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
+cor_random_missing_nw = ICIKendallTau::ici_kendalltau(exp_data)$cor
 cor_random_missing_nw[1:4, 1:4]
 ```
 
@@ -210,7 +210,7 @@ rownames(exp_data) = paste0("f", seq(1, nrow(exp_data)))
 colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
 exp_data[s1_missing, 1:2] = NA
 
-cor_same_missing = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
+cor_same_missing = ICIKendallTau::ici_kendalltau(exp_data)$cor
 cor_same_missing[1:4, 1:4]
 ```
 

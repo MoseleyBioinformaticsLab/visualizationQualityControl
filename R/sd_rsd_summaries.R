@@ -1,29 +1,29 @@
 #' summarize data
 #'
-#' summarizes a matrix or data.frame, where rows are samples
-#' and columns are features
+#' summarizes a matrix or data.frame, where columns are samples
+#' and rows are features
 #'
 #' @param in_data matrix or data.frame
 #' @param sample_classes which samples are in which class
 #' @param avg_function which function to use for summary
 #' @param log_transform apply a log-transform to the mean
-#' @param remove_zeros remove zeros before summarizing
+#' @param remove_missing remove missing values before summarizing
 #'
 #' @return data.frame
 #' @export
 summarize_data <- function(in_data, sample_classes=NULL, avg_function = mean,
-                           log_transform = FALSE, remove_zeros = FALSE){
+                           log_transform = FALSE, remove_missing = NA){
   if (is.null(sample_classes)){
     sample_classes <- rep("A", nrow(in_data))
   }
 
-  n_feature <- ncol(in_data)
-  split_indices <- split(seq(1, nrow(in_data)), sample_classes)
+  n_feature <- nrow(in_data)
+  split_indices <- split(seq(1, ncol(in_data)), sample_classes)
 
   split_values <- lapply(split_indices, function(use_index){
-    tmp_mean_sd <- apply(in_data[use_index, , drop = FALSE], 2, function(x){
-      if (remove_zeros) {
-        x <- x[x != 0]
+    tmp_mean_sd <- apply(in_data[use_index, , drop = FALSE], 1, function(x){
+      if (length(remove_missing) > 0) {
+        x <- x[!(x %in% remove_missing)]
       }
       c(avg_function(x), sd(x), max(x) - min(x))
     })
@@ -52,11 +52,11 @@ summarize_data <- function(in_data, sample_classes=NULL, avg_function = mean,
 
 #' calculate F-ratio
 #'
-#' given a data matrix of samples (rows) and features (columns), and a vector of classes (character or factor),
+#' given a data matrix of samples (columns) and features (rows), and a vector of classes (character or factor),
 #' calculate an F-ratio for each feature.
 #'
-#' @param data the data matrix, with samples (rows) and features (columns)
-#' @param data_classes what are the classes of the rows
+#' @param data the data matrix, with samples (columns) and features (rows)
+#' @param data_classes what are the classes of the samples (columns)
 #'
 #' @return vector
 #' @export
@@ -65,16 +65,16 @@ calculate_fratio <- function(data, data_classes){
     data_classes <- factor(data_classes)
   }
 
-  all_means <- colMeans(data)
+  all_means <- rowMeans(data)
 
-  split_indices <- split(seq(1, nrow(data)), data_classes)
-  n_sample <- nrow(data)
+  split_indices <- split(seq(1, ncol(data)), data_classes)
+  n_sample <- ncol(data)
   n_group <- length(split_indices)
-  split_data <- lapply(split_indices, function(in_index){data[in_index, , drop = FALSE]})
+  split_data <- lapply(split_indices, function(in_index){data[, in_index, drop = FALSE]})
 
-  group_means <- lapply(split_data, colMeans)
-  group_var <- lapply(split_data, function(in_data){apply(in_data, 2, var)})
-  group_count <- lapply(split_data, nrow)
+  group_means <- lapply(split_data, rowMeans)
+  group_var <- lapply(split_data, function(in_data){apply(in_data, 1, var)})
+  group_count <- lapply(split_data, ncol)
 
   weight_var <- function(count, var, sub1 = TRUE){
     if (sub1){

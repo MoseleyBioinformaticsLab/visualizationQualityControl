@@ -17,14 +17,14 @@ cor_out = cor(all_samples_out)
 med_no_out = median_correlations(cor_no_out, grp_class)
 med_out = median_correlations(cor_out, grp_class)
 set.seed(1234)
-no_outlier <- t(vapply(seq(1, 20), function(x){rnorm(200, 0, 1)}, numeric(200)))
-has_outlier = t(vapply(seq(1, 2), function(x){rnorm(200, 5, 0.5)}, numeric(200)))
+no_outlier <- (vapply(seq(1, 20), function(x){rnorm(200, 0, 1)}, numeric(200)))
+has_outlier = (vapply(seq(1, 2), function(x){rnorm(200, 5, 0.5)}, numeric(200)))
 
 noout_frac = outlier_fraction(no_outlier, grp_class)
 
 has_out2 = no_outlier
-has_out2[1, ] = has_outlier[1, ]
-has_out2[12, ] = has_outlier[2, ]
+has_out2[, 1] = has_outlier[, 1]
+has_out2[, 12] = has_outlier[, 2]
 hasout_frac = outlier_fraction(has_out2, grp_class)
 
 test_that("no outliers works", {

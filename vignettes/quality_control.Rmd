@@ -175,7 +175,7 @@ Note that we take the transpose of the data, because this function assumes
 that data are organized with *features* as *columns* and *samples* as *rows*. 
 
 ```{r calc_correlations}
-data_cor <- ICIKendallTau::ici_kendalltau(t(exp_data))
+data_cor <- ICIKendallTau::ici_kendalltau(exp_data)
 ```
 
 This returns a list with some useful information, the actual correlations in `cor`,
@@ -194,7 +194,7 @@ dim(data_cor)
 We also do the same for our **mixed-up** data.
 
 ```{r mix_cor}
-mix_cor <- ICIKendallTau::ici_kendalltau(t(mix_data))$cor
+mix_cor <- ICIKendallTau::ici_kendalltau(mix_data)$cor
 ```
 
 ### Reorder Correlations
@@ -303,7 +303,7 @@ want to ignore zeros.
 ### Good
 
 ```{r calc_outliers}
-data_outlier <- outlier_fraction(t(log_data), sample_info$class, remove_0 = TRUE)
+data_outlier <- outlier_fraction(log_data, sample_info$class, remove_missing = NA)
 ```
 
 Plot them!
@@ -316,7 +316,7 @@ ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() +
 ### Bad
 
 ```{r calc_mixoutliers}
-mix_outlier <- outlier_fraction(t(mix_data), sample_info$class, remove_0 = TRUE)
+mix_outlier <- outlier_fraction(mix_data, sample_info$class, remove_missing = 0)
 ```
 
 Plot them.

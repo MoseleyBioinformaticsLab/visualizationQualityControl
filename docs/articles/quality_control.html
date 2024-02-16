@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">visualizationQualityControl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,8 +76,8 @@
                         <h4 data-toc-skip class="author">Robert M
 Flight</h4>
             
-            <h4 data-toc-skip class="date">2023-07-12
-21:06:14.742406</h4>
+            <h4 data-toc-skip class="date">2024-02-15
+21:08:28.726275</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/moseleybioinformaticslab/visualizationQualityControl/blob/HEAD/vignettes/quality_control.Rmd" class="external-link"><code>vignettes/quality_control.Rmd</code></a></small>
       <div class="d-none name"><code>quality_control.Rmd</code></div>
@@ -239,198 +239,11 @@ using <code>visqc_score_contributions</code>.</p>
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/visqc_score_contributions.html">visqc_score_contributions</a></span><span class="op">(</span><span class="va">pca_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="6%">
-<col width="6%">
-<col width="13%">
+<col width="5%">
+<col width="5%">
 <col width="12%">
-<col width="13%">
-<col width="49%">
-</colgroup>
-<thead><tr class="header">
-<th align="left"></th>
-<th align="left">pc</th>
-<th align="right">variance</th>
-<th align="right">percent</th>
-<th align="right">cumulative</th>
-<th align="left">labels</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">PC1</td>
-<td align="left">PC1</td>
-<td align="right">630.300641</td>
-<td align="right">0.7474956</td>
-<td align="right">0.7474956</td>
-<td align="left">PC1 (75%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC2</td>
-<td align="left">PC2</td>
-<td align="right">15.260619</td>
-<td align="right">0.0180981</td>
-<td align="right">0.7655937</td>
-<td align="left">PC2 (1.8%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC3</td>
-<td align="left">PC3</td>
-<td align="right">14.393039</td>
-<td align="right">0.0170692</td>
-<td align="right">0.7826629</td>
-<td align="left">PC3 (1.7%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC4</td>
-<td align="left">PC4</td>
-<td align="right">13.998044</td>
-<td align="right">0.0166008</td>
-<td align="right">0.7992637</td>
-<td align="left">PC4 (1.7%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC5</td>
-<td align="left">PC5</td>
-<td align="right">13.624605</td>
-<td align="right">0.0161579</td>
-<td align="right">0.8154216</td>
-<td align="left">PC5 (1.6%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC6</td>
-<td align="left">PC6</td>
-<td align="right">13.191010</td>
-<td align="right">0.0156437</td>
-<td align="right">0.8310653</td>
-<td align="left">PC6 (1.6%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC7</td>
-<td align="left">PC7</td>
-<td align="right">12.649098</td>
-<td align="right">0.0150010</td>
-<td align="right">0.8460663</td>
-<td align="left">PC7 (1.5%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC8</td>
-<td align="left">PC8</td>
-<td align="right">12.395460</td>
-<td align="right">0.0147002</td>
-<td align="right">0.8607665</td>
-<td align="left">PC8 (1.5%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC9</td>
-<td align="left">PC9</td>
-<td align="right">11.904228</td>
-<td align="right">0.0141176</td>
-<td align="right">0.8748841</td>
-<td align="left">PC9 (1.4%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC10</td>
-<td align="left">PC10</td>
-<td align="right">11.803515</td>
-<td align="right">0.0139982</td>
-<td align="right">0.8888823</td>
-<td align="left">PC10 (1.4%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC11</td>
-<td align="left">PC11</td>
-<td align="right">11.425450</td>
-<td align="right">0.0135498</td>
-<td align="right">0.9024322</td>
-<td align="left">PC11 (1.4%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC12</td>
-<td align="left">PC12</td>
-<td align="right">11.294834</td>
-<td align="right">0.0133949</td>
-<td align="right">0.9158271</td>
-<td align="left">PC12 (1.3%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC13</td>
-<td align="left">PC13</td>
-<td align="right">10.735845</td>
-<td align="right">0.0127320</td>
-<td align="right">0.9285591</td>
-<td align="left">PC13 (1.3%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC14</td>
-<td align="left">PC14</td>
-<td align="right">10.627450</td>
-<td align="right">0.0126035</td>
-<td align="right">0.9411626</td>
-<td align="left">PC14 (1.3%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC15</td>
-<td align="left">PC15</td>
-<td align="right">10.585936</td>
-<td align="right">0.0125542</td>
-<td align="right">0.9537168</td>
-<td align="left">PC15 (1.3%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC16</td>
-<td align="left">PC16</td>
-<td align="right">10.338576</td>
-<td align="right">0.0122609</td>
-<td align="right">0.9659777</td>
-<td align="left">PC16 (1.2%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC17</td>
-<td align="left">PC17</td>
-<td align="right">10.188966</td>
-<td align="right">0.0120835</td>
-<td align="right">0.9780612</td>
-<td align="left">PC17 (1.2%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC18</td>
-<td align="left">PC18</td>
-<td align="right">9.646507</td>
-<td align="right">0.0114401</td>
-<td align="right">0.9895013</td>
-<td align="left">PC18 (1.1%)</td>
-</tr>
-<tr class="odd">
-<td align="left">PC19</td>
-<td align="left">PC19</td>
-<td align="right">8.852683</td>
-<td align="right">0.0104987</td>
-<td align="right">1.0000000</td>
-<td align="left">PC19 (1%)</td>
-</tr>
-<tr class="even">
-<td align="left">PC20</td>
-<td align="left">PC20</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">1.0000000</td>
-<td align="left">PC20 (0.000000000000000000000000000016%)</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bad_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">)</span></span>
-<span><span class="va">bad_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">bad_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Bad Data"</span><span class="op">)</span></span>
-<span><span class="va">bad_pca</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_bad-1.png" width="768"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/visqc_score_contributions.html">visqc_score_contributions</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="5%">
-<col width="5%">
-<col width="13%">
 <col width="11%">
-<col width="13%">
+<col width="12%">
 <col width="50%">
 </colgroup>
 <thead><tr class="header">
@@ -600,7 +413,194 @@ using <code>visqc_score_contributions</code>.</p>
 <td align="right">0.000000</td>
 <td align="right">0.0000000</td>
 <td align="right">1.0000000</td>
-<td align="left">PC20 (0.0000000000000000000000000000081%)</td>
+<td align="left">PC20 (0.00000000000000000000000000000011%)</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bad_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">)</span></span>
+<span><span class="va">bad_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">bad_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Bad Data"</span><span class="op">)</span></span>
+<span><span class="va">bad_pca</span></span></code></pre></div>
+<p><img src="quality_control_files/figure-html/plot_bad-1.png" width="768"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/visqc_score_contributions.html">visqc_score_contributions</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="5%">
+<col width="5%">
+<col width="12%">
+<col width="11%">
+<col width="12%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="left">pc</th>
+<th align="right">variance</th>
+<th align="right">percent</th>
+<th align="right">cumulative</th>
+<th align="left">labels</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PC1</td>
+<td align="left">PC1</td>
+<td align="right">630.300641</td>
+<td align="right">0.7474956</td>
+<td align="right">0.7474956</td>
+<td align="left">PC1 (75%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC2</td>
+<td align="left">PC2</td>
+<td align="right">15.260619</td>
+<td align="right">0.0180981</td>
+<td align="right">0.7655937</td>
+<td align="left">PC2 (1.8%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC3</td>
+<td align="left">PC3</td>
+<td align="right">14.393039</td>
+<td align="right">0.0170692</td>
+<td align="right">0.7826629</td>
+<td align="left">PC3 (1.7%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC4</td>
+<td align="left">PC4</td>
+<td align="right">13.998044</td>
+<td align="right">0.0166008</td>
+<td align="right">0.7992637</td>
+<td align="left">PC4 (1.7%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC5</td>
+<td align="left">PC5</td>
+<td align="right">13.624605</td>
+<td align="right">0.0161579</td>
+<td align="right">0.8154216</td>
+<td align="left">PC5 (1.6%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC6</td>
+<td align="left">PC6</td>
+<td align="right">13.191010</td>
+<td align="right">0.0156437</td>
+<td align="right">0.8310653</td>
+<td align="left">PC6 (1.6%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC7</td>
+<td align="left">PC7</td>
+<td align="right">12.649098</td>
+<td align="right">0.0150010</td>
+<td align="right">0.8460663</td>
+<td align="left">PC7 (1.5%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC8</td>
+<td align="left">PC8</td>
+<td align="right">12.395460</td>
+<td align="right">0.0147002</td>
+<td align="right">0.8607665</td>
+<td align="left">PC8 (1.5%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC9</td>
+<td align="left">PC9</td>
+<td align="right">11.904228</td>
+<td align="right">0.0141176</td>
+<td align="right">0.8748841</td>
+<td align="left">PC9 (1.4%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC10</td>
+<td align="left">PC10</td>
+<td align="right">11.803515</td>
+<td align="right">0.0139982</td>
+<td align="right">0.8888823</td>
+<td align="left">PC10 (1.4%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC11</td>
+<td align="left">PC11</td>
+<td align="right">11.425450</td>
+<td align="right">0.0135498</td>
+<td align="right">0.9024322</td>
+<td align="left">PC11 (1.4%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC12</td>
+<td align="left">PC12</td>
+<td align="right">11.294834</td>
+<td align="right">0.0133949</td>
+<td align="right">0.9158271</td>
+<td align="left">PC12 (1.3%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC13</td>
+<td align="left">PC13</td>
+<td align="right">10.735845</td>
+<td align="right">0.0127320</td>
+<td align="right">0.9285591</td>
+<td align="left">PC13 (1.3%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC14</td>
+<td align="left">PC14</td>
+<td align="right">10.627450</td>
+<td align="right">0.0126035</td>
+<td align="right">0.9411626</td>
+<td align="left">PC14 (1.3%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC15</td>
+<td align="left">PC15</td>
+<td align="right">10.585936</td>
+<td align="right">0.0125542</td>
+<td align="right">0.9537168</td>
+<td align="left">PC15 (1.3%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC16</td>
+<td align="left">PC16</td>
+<td align="right">10.338576</td>
+<td align="right">0.0122609</td>
+<td align="right">0.9659777</td>
+<td align="left">PC16 (1.2%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC17</td>
+<td align="left">PC17</td>
+<td align="right">10.188966</td>
+<td align="right">0.0120835</td>
+<td align="right">0.9780612</td>
+<td align="left">PC17 (1.2%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC18</td>
+<td align="left">PC18</td>
+<td align="right">9.646507</td>
+<td align="right">0.0114401</td>
+<td align="right">0.9895013</td>
+<td align="left">PC18 (1.1%)</td>
+</tr>
+<tr class="odd">
+<td align="left">PC19</td>
+<td align="left">PC19</td>
+<td align="right">8.852683</td>
+<td align="right">0.0104987</td>
+<td align="right">1.0000000</td>
+<td align="left">PC19 (1%)</td>
+</tr>
+<tr class="even">
+<td align="left">PC20</td>
+<td align="left">PC20</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">1.0000000</td>
+<td align="left">PC20 (0.00000000000000000000000000000014%)</td>
 </tr>
 </tbody>
 </table>
@@ -624,7 +624,7 @@ transpose of the data, because this function assumes that data are
 organized with <em>features</em> as <em>columns</em> and
 <em>samples</em> as <em>rows</em>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_cor</span> <span class="op">&lt;-</span> <span class="fu">ICIKendallTau</span><span class="fu">::</span><span class="fu"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/reference/ici_kendalltau.html" class="external-link">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data_cor</span> <span class="op">&lt;-</span> <span class="fu">ICIKendallTau</span><span class="fu">::</span><span class="fu"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/reference/ici_kendalltau.html" class="external-link">ici_kendalltau</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span></code></pre></div>
 <p>This returns a list with some useful information, the actual
 correlations in <code>cor</code>, the number of points in each
 correlation in <code>count</code>, and which points pass the various
@@ -639,7 +639,7 @@ matrix.</p>
 <pre><code><span><span class="co">## [1] 20 20</span></span></code></pre>
 <p>We also do the same for our <strong>mixed-up</strong> data.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mix_cor</span> <span class="op">&lt;-</span> <span class="fu">ICIKendallTau</span><span class="fu">::</span><span class="fu"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/reference/ici_kendalltau.html" class="external-link">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">mix_data</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cor</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mix_cor</span> <span class="op">&lt;-</span> <span class="fu">ICIKendallTau</span><span class="fu">::</span><span class="fu"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/reference/ici_kendalltau.html" class="external-link">ici_kendalltau</a></span><span class="op">(</span><span class="va">mix_data</span><span class="op">)</span><span class="op">$</span><span class="va">cor</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="reorder-correlations">Reorder Correlations<a class="anchor" aria-label="anchor" href="#reorder-correlations"></a>
@@ -743,7 +743,7 @@ number of zeros, you probably want to ignore zeros.</p>
 <h3 id="good-1">Good<a class="anchor" aria-label="anchor" href="#good-1"></a>
 </h3>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_outlier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outlier_fraction.html">outlier_fraction</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">log_data</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">$</span><span class="va">class</span>, remove_0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data_outlier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outlier_fraction.html">outlier_fraction</a></span><span class="op">(</span><span class="va">log_data</span>, <span class="va">sample_info</span><span class="op">$</span><span class="va">class</span>, remove_missing <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
 <p>Plot them!</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data_outlier</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">frac</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -754,7 +754,7 @@ number of zeros, you probably want to ignore zeros.</p>
 <h3 id="bad-1">Bad<a class="anchor" aria-label="anchor" href="#bad-1"></a>
 </h3>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mix_outlier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outlier_fraction.html">outlier_fraction</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">mix_data</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">$</span><span class="va">class</span>, remove_0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mix_outlier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outlier_fraction.html">outlier_fraction</a></span><span class="op">(</span><span class="va">mix_data</span>, <span class="va">sample_info</span><span class="op">$</span><span class="va">class</span>, remove_missing <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>Plot them.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mix_outlier</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">frac</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>

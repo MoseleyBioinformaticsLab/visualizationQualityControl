@@ -9,11 +9,11 @@ outlier_fraction(
   sample_classes = NULL,
   n_trim = 3,
   n_sd = 5,
-  remove_0 = FALSE
+  remove_missing = NA
 )
 }
 \arguments{
-\item{data}{the data matrix (samples are rows, columns are features)}
+\item{data}{the data matrix (samples are columns, rows are features)}
 
 \item{sample_classes}{the sample classes}
 
@@ -21,7 +21,7 @@ outlier_fraction(
 
 \item{n_sd}{how many SD before treated as outlier (default is 5)}
 
-\item{remove_0}{should zeros be removed before calculating? (default is FALSE)}
+\item{remove_missing}{what missing values be removed before calculating? (default is NA)}
 }
 \value{
 data.frame

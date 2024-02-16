@@ -7,14 +7,14 @@
 calculate_fratio(data, data_classes)
 }
 \arguments{
-\item{data}{the data matrix, with samples (rows) and features (columns)}
+\item{data}{the data matrix, with samples (columns) and features (rows)}
 
-\item{data_classes}{what are the classes of the rows}
+\item{data_classes}{what are the classes of the samples (columns)}
 }
 \value{
 vector
 }
 \description{
-given a data matrix of samples (rows) and features (columns), and a vector of classes (character or factor),
+given a data matrix of samples (columns) and features (rows), and a vector of classes (character or factor),
 calculate an F-ratio for each feature.
 }

@@ -76,14 +76,14 @@ To see how much explained variance each PC has, you can calculate them:
 
     knitr::kable(visqc_score_contributions(pca_data$x))
 
-<table>
+<table style="width:100%;">
 <colgroup>
-<col style="width: 6%" />
-<col style="width: 6%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
 <col style="width: 13%" />
-<col style="width: 50%" />
+<col style="width: 51%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -254,7 +254,8 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: right;">1.0000000</td>
-<td style="text-align: left;">PC20 (0.0000000000000000000000000000029%)</td>
+<td style="text-align: left;">PC20
+(0.00000000000000000000000000000057%)</td>
 </tr>
 </tbody>
 </table>
@@ -268,8 +269,8 @@ use the {ici\_kendalltau} function from our
 [ICIKendallTau](https://moseleybioinformaticslab.github.io/ICIKendallTau/)
 package.
 
-    rownames(sample_info) = sample_info$sample
-    data_cor = ICIKendallTau::ici_kendalltau(t(exp_data))
+    rownames(sample_info) = sample_info$id
+    data_cor = ICIKendallTau::ici_kendalltau(exp_data)
     data_order = similarity_reorderbyclass(data_cor$cor, sample_info[, "class", drop = FALSE], transform = "sub_1")
 
 And then generate a colormapping for the sample classes and plot the
@@ -281,7 +282,7 @@ correlation heatmap.
     row_annotation = list(class = data_legend)
 
     library(viridis)
-    library(circlize)
+    suppressPackageStartupMessages(library(circlize))
     colormap = colorRamp2(seq(0.3, 1, length.out = 50), viridis::viridis(50))
 
     visqc_heatmap(data_cor$cor, colormap, "Correlation", row_color_data = row_data,
@@ -307,7 +308,7 @@ correlation heatmap.
 
 ### outlier\_fraction
 
-    data_outlier = outlier_fraction(t(exp_data), sample_info$class)
+    data_outlier = outlier_fraction(exp_data, sample_info$class)
     ggplot(data_outlier, aes(x = sample_id, y = frac)) + geom_point() + 
       facet_grid(. ~ sample_class, scales = "free_x") + ggtitle("Outlier Fraction")
 
@@ -374,16 +375,16 @@ Lets add some missingness to our data.
     exp_data2[s1_missing, 1] = NA
     exp_data2[s2_missing, 1] = NA
 
-    cor_random_missing = ICIKendallTau::ici_kendalltau(t(exp_data2))$cor
+    cor_random_missing = ICIKendallTau::ici_kendalltau(exp_data2)$cor
     cor_random_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.6000000 0.2368327 0.2315502 0.2500390
-    ## s2 0.2368327 1.0000000 0.7058586 0.7200000
-    ## s3 0.2315502 0.7058586 1.0000000 0.6925253
-    ## s4 0.2500390 0.7200000 0.6925253 1.0000000
+    ## s1 0.6000000 0.2495988 0.1958932 0.2333110
+    ## s2 0.2495988 1.0000000 0.7058586 0.7200000
+    ## s3 0.1958932 0.7058586 1.0000000 0.6925253
+    ## s4 0.2333110 0.7200000 0.6925253 1.0000000
 
-    cor_random_missing_nw = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
+    cor_random_missing_nw = ICIKendallTau::ici_kendalltau(exp_data)$cor
     cor_random_missing_nw[1:4, 1:4]
 
     ##           s1        s2        s3        s4
@@ -401,14 +402,14 @@ worth something?
     colnames(exp_data) = paste0("s", seq(1, ncol(exp_data)))
     exp_data[s1_missing, 1:2] = NA
 
-    cor_same_missing = ICIKendallTau::ici_kendalltau(t(exp_data))$cor
+    cor_same_missing = ICIKendallTau::ici_kendalltau(exp_data)$cor
     cor_same_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.8000000 0.8050420 0.3704108 0.3778272
-    ## s2 0.8050420 0.8000000 0.3794753 0.3844196
-    ## s3 0.3704108 0.3794753 1.0000000 0.6925253
-    ## s4 0.3778272 0.3844196 0.6925253 1.0000000
+    ## s1 0.8000000 0.8067227 0.4079051 0.4190298
+    ## s2 0.8067227 0.8000000 0.4021367 0.4025488
+    ## s3 0.4079051 0.4021367 1.0000000 0.6925253
+    ## s4 0.4190298 0.4025488 0.6925253 1.0000000
 
 Here we can see that the correlation between sapmles S1 and S2 has
 actually increased over the random missing case.
