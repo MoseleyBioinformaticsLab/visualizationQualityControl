@@ -12,7 +12,7 @@ standard deviations from the trimmed mean. See Details."><!-- mathjax --><script
     
     <a class="navbar-brand me-2" href="../index.html">visualizationQualityControl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,14 +66,14 @@ standard deviations from the trimmed mean. See Details.</p>
 <span>  sample_classes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_trim <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  n_sd <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  remove_0 <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  remove_missing <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>the data matrix (samples are rows, columns are features)</p></dd>
+<dd><p>the data matrix (samples are columns, rows are features)</p></dd>
 
 
 <dt>sample_classes</dt>
@@ -88,8 +88,8 @@ standard deviations from the trimmed mean. See Details.</p>
 <dd><p>how many SD before treated as outlier (default is 5)</p></dd>
 
 
-<dt>remove_0</dt>
-<dd><p>should zeros be removed before calculating? (default is FALSE)</p></dd>
+<dt>remove_missing</dt>
+<dd><p>what missing values be removed before calculating? (default is NA)</p></dd>
 
 </dl></div>
     <div class="section level2">

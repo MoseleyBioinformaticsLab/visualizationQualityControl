@@ -1,5 +1,5 @@
 Package: visualizationQualityControl
-Version: 0.4.11
+Version: 0.5.1
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.
@@ -7,15 +7,15 @@ Authors@R: c(person(given = c("Robert", "M"), family = "Flight", email
         = "rflight79@gmail.com", role = c("aut", "cre")), person(given
         = c("Hunter", "NB"), family = "Moseley", email =
         "hunter.moseley@gmail.com", role = c("aut")))
-Date: 2021-12-28
+Date: 2024-02-15
 Depends: R (>= 3.1.1)
 biocViews:
 Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
         ggplot2, broom, knitrProgressBar, magrittr, purrr
 License: MIT + file LICENSE
 VignetteBuilder: knitr
-Suggests: testthat, knitr, rmarkdown, circlize, viridis, ICIKendallTau,
-        ggforce
+Suggests: testthat, knitr, rmarkdown, circlize, viridis, ICIKendallTau
+        (>= 1.0.0), ggforce
 RoxygenNote: 7.2.3
 Encoding: UTF-8
 LinkingTo: Rcpp

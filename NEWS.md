@@ -1,4 +1,15 @@
-# vsualizationQualityControl 0.4.11
+# visualizationQualityControl 0.5.0
+
+* Changed some functions to treat columns as samples and rows as features:
+  * `keep_non_zero_percentage`
+  * `summarize_data`
+  * `calculate_fratio`
+  
+* Added `keep_non_missing_percentage`, which allows using multiple values to represent missingnes.
+* Made `summarize_data` handle possible missing values.
+* Removed correlation calculation functions, those have been superseded by [ICIKendallTau](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
+
+# visualizationQualityControl 0.4.11
 
 * Added a new argument `only_high` to `determine_outliers` to only look at the high end of the score distribution for outliers, as sometimes `boxplot.stats` will pick up outliers at the low end as well.
 

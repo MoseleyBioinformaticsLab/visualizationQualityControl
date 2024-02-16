@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">visualizationQualityControl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,14 +130,14 @@
 <p><img src="reference/figures/do_pca-1.png"></p>
 <p>To see how much explained variance each PC has, you can calculate them:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">visqc_score_contributions</span>(pca_data<span class="sc">$</span>x))</span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 12%">
-<col style="width: 12%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 11%">
+<col style="width: 11%">
 <col style="width: 13%">
-<col style="width: 50%">
+<col style="width: 51%">
 </colgroup>
 <thead><tr class="header">
 <th style="text-align: left;">
@@ -556,7 +556,7 @@ PC20
 1.0000000
 </td>
 <td style="text-align: left;">
-PC20 (0.0000000000000000000000000000029%)
+PC20 (0.00000000000000000000000000000057%)
 </td>
 </tr>
 </tbody>
@@ -566,8 +566,8 @@ PC20 (0.0000000000000000000000000000029%)
 <h3 id="visqc_heatmap">visqc_heatmap<a class="anchor" aria-label="anchor" href="#visqc_heatmap"></a>
 </h3>
 <p>Calculate sample-sample correlations and reorder based on within class correlations. We recommend a transform agnostic correlation like Kendall-tau that can also handle missing data when necessary. Here we use the {ici_kendalltau} function from our <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a> package.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">rownames</span>(sample_info) <span class="ot">=</span> sample_info<span class="sc">$</span>sample</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>data_cor <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">rownames</span>(sample_info) <span class="ot">=</span> sample_info<span class="sc">$</span>id</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>data_cor <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(exp_data)</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>data_order <span class="ot">=</span> <span class="fu">similarity_reorderbyclass</span>(data_cor<span class="sc">$</span>cor, sample_info[, <span class="st">"class"</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>], <span class="at">transform =</span> <span class="st">"sub_1"</span>)</span></code></pre></div>
 <p>And then generate a colormapping for the sample classes and plot the correlation heatmap.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>data_legend <span class="ot">=</span> <span class="fu">generate_group_colors</span>(<span class="dv">2</span>)</span>
@@ -576,7 +576,7 @@ PC20 (0.0000000000000000000000000000029%)
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>row_annotation <span class="ot">=</span> <span class="fu">list</span>(<span class="at">class =</span> data_legend)</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(circlize))</span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>colormap <span class="ot">=</span> <span class="fu">colorRamp2</span>(<span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">50</span>), viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">50</span>))</span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">visqc_heatmap</span>(data_cor<span class="sc">$</span>cor, colormap, <span class="st">"Correlation"</span>, <span class="at">row_color_data =</span> row_data,</span>
@@ -600,7 +600,7 @@ PC20 (0.0000000000000000000000000000029%)
 <div class="section level3">
 <h3 id="outlier_fraction">outlier_fraction<a class="anchor" aria-label="anchor" href="#outlier_fraction"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>data_outlier <span class="ot">=</span> <span class="fu">outlier_fraction</span>(<span class="fu">t</span>(exp_data), sample_info<span class="sc">$</span>class)</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>data_outlier <span class="ot">=</span> <span class="fu">outlier_fraction</span>(exp_data, sample_info<span class="sc">$</span>class)</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">ggplot</span>(data_outlier, <span class="fu">aes</span>(<span class="at">x =</span> sample_id, <span class="at">y =</span> frac)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sample_class, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Outlier Fraction"</span>)</span></code></pre></div>
 <p><img src="reference/figures/outlier_fraction-1.png"></p>
@@ -645,16 +645,16 @@ PC20 (0.0000000000000000000000000000029%)
 <span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>exp_data2[s1_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
 <span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>exp_data2[s2_missing, <span class="dv">1</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
 <span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>cor_random_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data2))<span class="sc">$</span>cor</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>cor_random_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(exp_data2)<span class="sc">$</span>cor</span>
 <span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>cor_random_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a></span>
 <span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="do">## s1 0.6000000 0.2368327 0.2315502 0.2500390</span></span>
-<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="do">## s2 0.2368327 1.0000000 0.7058586 0.7200000</span></span>
-<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="do">## s3 0.2315502 0.7058586 1.0000000 0.6925253</span></span>
-<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="do">## s4 0.2500390 0.7200000 0.6925253 1.0000000</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="do">## s1 0.6000000 0.2495988 0.1958932 0.2333110</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="do">## s2 0.2495988 1.0000000 0.7058586 0.7200000</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="do">## s3 0.1958932 0.7058586 1.0000000 0.6925253</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="do">## s4 0.2333110 0.7200000 0.6925253 1.0000000</span></span>
 <span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(exp_data)<span class="sc">$</span>cor</span>
 <span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>cor_random_missing_nw[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a></span>
 <span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
@@ -668,14 +668,14 @@ PC20 (0.0000000000000000000000000000029%)
 <span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">colnames</span>(exp_data) <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"s"</span>, <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">ncol</span>(exp_data)))</span>
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>exp_data[s1_missing, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
 <span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>cor_same_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(<span class="fu">t</span>(exp_data))<span class="sc">$</span>cor</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>cor_same_missing <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(exp_data)<span class="sc">$</span>cor</span>
 <span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>cor_same_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a></span>
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8050420 0.3704108 0.3778272</span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="do">## s2 0.8050420 0.8000000 0.3794753 0.3844196</span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="do">## s3 0.3704108 0.3794753 1.0000000 0.6925253</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="do">## s4 0.3778272 0.3844196 0.6925253 1.0000000</span></span></code></pre></div>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8067227 0.4079051 0.4190298</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="do">## s2 0.8067227 0.8000000 0.4021367 0.4025488</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="do">## s3 0.4079051 0.4021367 1.0000000 0.6925253</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="do">## s4 0.4190298 0.4025488 0.6925253 1.0000000</span></span></code></pre></div>
 <p>Here we can see that the correlation between sapmles S1 and S2 has actually increased over the random missing case.</p>
 </div>
 </div>

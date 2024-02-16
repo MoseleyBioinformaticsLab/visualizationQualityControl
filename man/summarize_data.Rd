@@ -9,7 +9,7 @@ summarize_data(
   sample_classes = NULL,
   avg_function = mean,
   log_transform = FALSE,
-  remove_zeros = FALSE
+  remove_missing = NA
 )
 }
 \arguments{
@@ -21,12 +21,12 @@ summarize_data(
 
 \item{log_transform}{apply a log-transform to the mean}
 
-\item{remove_zeros}{remove zeros before summarizing}
+\item{remove_missing}{remove missing values before summarizing}
 }
 \value{
 data.frame
 }
 \description{
-summarizes a matrix or data.frame, where rows are samples
-and columns are features
+summarizes a matrix or data.frame, where columns are samples
+and rows are features
 }
