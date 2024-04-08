@@ -69,3 +69,21 @@ setup_missing_matrix = function(data_matrix, global_na)
   out_data[exclude_loc] = NA
   out_data
 }
+
+add_uniform_noise = function(n_rep, value, sd, use_zero = FALSE){
+  n_value = length(value)
+  
+  n_sd = n_rep * n_value
+  
+  out_sd = rnorm(n_sd, 0, sd)
+  out_sd = matrix(out_sd, nrow = n_value, ncol = n_rep)
+  
+  if (!use_zero){
+    tmp_value = matrix(value, nrow = n_value, ncol = n_rep, byrow = FALSE)
+    out_value = tmp_value + out_sd
+  } else {
+    out_value = out_sd
+  }
+  
+  return(out_value)
+}
