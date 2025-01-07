@@ -6,6 +6,12 @@
 #' @param pca_scores matrix of scores from a PCA decomposition
 #' @param sample_info data.frame of sample attributes to test
 #'
+#' @details
+#' For each variable being tested, the function first checks the number of unique values
+#' in that variable. If the number of unique values is 1, or equal to the number of rows,
+#' then the variable is not tested and is excluded from the results.
+#' 
+#' 
 #' @export
 #' @return data.frame
 visqc_test_pca_scores = function(pca_scores, sample_info){
@@ -13,13 +19,26 @@ visqc_test_pca_scores = function(pca_scores, sample_info){
   pc_2_variable = purrr::imap_dfr(sample_info, function(var_col, var_name){
     pc_test = purrr::map_df(pc_test, function(in_pc){
       #message(paste0(var_name, " : ", in_pc))
-      tmp_frame = data.frame(y = pca_scores[, in_pc],
-                             x = var_col)
-      aov_res = stats::aov(y ~ x, data = tmp_frame)
-      tidy_res = broom::tidy(aov_res)[1, ]
-      tidy_res$PC = in_pc
-      tidy_res$variable = var_name
-      tidy_res
+      n_var = length(unique(var_col))
+      is_1_all = FALSE
+      if (n_var == 1) {
+        is_1_all = TRUE
+      }
+      if ((n_var == nrow(sample_info)) && (is.character(var_col))) {
+        is_1_all = TRUE
+      }
+
+      if (!is_1_all) {
+        tmp_frame = data.frame(y = pca_scores[, in_pc],
+          x = var_col)
+          aov_res = stats::aov(y ~ x, data = tmp_frame)
+          tidy_res = broom::tidy(aov_res)[1, ]
+          tidy_res$PC = in_pc
+          tidy_res$variable = var_name
+          return(tidy_res)
+      } else {
+        return(NULL)
+      }
     })
     
   })

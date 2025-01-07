@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.5.2
+
+* Fixed behavior of `visqc_test_pca_scores` to skip testing attributes that either have a single value, or the number of numeric values matches the number of samples.
+
 # visualizationQualityControl 0.5.0
 
 * Changed some functions to treat columns as samples and rows as features:
