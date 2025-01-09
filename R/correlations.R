@@ -71,7 +71,7 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
   sample_median_cor <- do.call(rbind, sample_median_cor)
   
   sample_median_cor$plot_class <- paste0(sample_median_cor$sample_class, "::", sample_median_cor$compare_class)
-  sample_median_cor <- sample_median_cor[(sample_median_cor$sample_class == sample_median_cor$compare_class), ]
+  
   group = rep("within", nrow(sample_median_cor))
   group[sample_median_cor$sample_class != sample_median_cor$compare_class] = "between"
   

@@ -1,5 +1,5 @@
 Package: visualizationQualityControl
-Version: 0.5.3
+Version: 0.5.4
 Title: Development of visualization methods for quality control
 Description: Provides utilities useful quality control of
         high-throughput -omics datasets.

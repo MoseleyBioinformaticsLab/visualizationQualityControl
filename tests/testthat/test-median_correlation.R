@@ -22,6 +22,8 @@ test_that("median double works", {
   expect_snapshot_value(median_correlations(grp1_grp2, grp_class), style = "serialize")
   grp_class <- factor(grp_class)
   expect_snapshot_value(median_correlations(grp1_grp2, grp_class), style = "serialize")
+
+  expect_snapshot_value(median_correlations(grp1_grp2, grp_class, between_classes = TRUE), style = "serialize")
 })
 
 test_that("median swapped works", {
