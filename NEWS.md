@@ -1,3 +1,8 @@
+# visualizationQualityControl 0.5.3
+
+* `median_correlations` now has more columns, regardless of the setting for `between_classes`, to provide consistency.
+* `median_correlations` output gains an extra column, `group` to allow easier filtering of **within** and **between** class comparisons.
+
 # visualizationQualityControl 0.5.2
 
 * Fixed behavior of `visqc_test_pca_scores` to skip testing attributes that either have a single value, or the number of numeric values matches the number of samples.

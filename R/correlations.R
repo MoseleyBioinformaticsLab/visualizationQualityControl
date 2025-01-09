@@ -11,14 +11,14 @@
 #' @return data.frame
 #' @export
 #'
-#' @details The data.frame may have 5 columns, first three are always present,
-#'   the second two come up if \code{between_classes = TRUE}:
+#' @details The data.frame has 6 columns:
 #' \describe{
 #'   \item{med_cor}{the median correlation with other samples}
 #'   \item{sample_id}{the sample id, either the rowname or an index}
 #'   \item{sample_class}{the class of the sample. If not provided, set to "C1"}
 #'   \item{compare_class}{the class of the other sample}
 #'   \item{plot_class}{\code{sample_class::compare_class} for easy grouping}
+#'   \item{group}{whether the median is \emph{within} or \emph{between} groups of samples}
 #' }
 #'
 median_correlations <- function(cor_matrix, sample_classes = NULL, between_classes = FALSE){
@@ -70,13 +70,16 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
   })
   sample_median_cor <- do.call(rbind, sample_median_cor)
   
-  if (between_classes) {
-    sample_median_cor$plot_class <- paste0(sample_median_cor$sample_class, "::", sample_median_cor$compare_class)
-  } else {
-    sample_median_cor <- sample_median_cor[(sample_median_cor$sample_class == sample_median_cor$compare_class), ]
-    sample_median_cor$compare_class <- NULL
-  }
+  sample_median_cor$plot_class <- paste0(sample_median_cor$sample_class, "::", sample_median_cor$compare_class)
+  sample_median_cor <- sample_median_cor[(sample_median_cor$sample_class == sample_median_cor$compare_class), ]
+  group = rep("within", nrow(sample_median_cor))
+  group[sample_median_cor$sample_class != sample_median_cor$compare_class] = "between"
+  
+  sample_median_cor$group = group
 
+  if (!between_classes) {
+    sample_median_cor = sample_median_cor[sample_median_cor$group %in% "within", ]
+  }
   rownames(sample_median_cor) <- NULL
 
   sample_median_cor
