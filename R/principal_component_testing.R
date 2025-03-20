@@ -19,7 +19,9 @@ visqc_test_pca_scores = function(pca_scores, sample_info){
   pc_2_variable = purrr::imap_dfr(sample_info, function(var_col, var_name){
     pc_test = purrr::map_df(pc_test, function(in_pc){
       #message(paste0(var_name, " : ", in_pc))
-      n_var = length(unique(var_col))
+      tmp_col = var_col
+      tmp_col = tmp_col[!is.na(var_col) | !is.infinite(var_col) | !is.nan(var_col)]
+      n_var = length(unique(tmp_col))
       is_1_all = FALSE
       if (n_var == 1) {
         is_1_all = TRUE
@@ -31,11 +33,13 @@ visqc_test_pca_scores = function(pca_scores, sample_info){
       if (!is_1_all) {
         tmp_frame = data.frame(y = pca_scores[, in_pc],
           x = var_col)
-          aov_res = stats::aov(y ~ x, data = tmp_frame)
-          tidy_res = broom::tidy(aov_res)[1, ]
-          tidy_res$PC = in_pc
-          tidy_res$variable = var_name
-          return(tidy_res)
+        na_x = is.na(tmp_frame$x) | is.infinite(tmp_frame$x) | is.nan(tmp_frame$x)
+        tmp_frame = tmp_frame[!na_x, ]
+        aov_res = stats::aov(y ~ x, data = tmp_frame)
+        tidy_res = broom::tidy(aov_res)[1, ]
+        tidy_res$PC = in_pc
+        tidy_res$variable = var_name
+        return(tidy_res)
       } else {
         return(NULL)
       }
