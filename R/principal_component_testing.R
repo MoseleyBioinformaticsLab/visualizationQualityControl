@@ -20,7 +20,7 @@ visqc_test_pca_scores = function(pca_scores, sample_info){
     pc_test = purrr::map_df(pc_test, function(in_pc){
       #message(paste0(var_name, " : ", in_pc))
       tmp_col = var_col
-      tmp_col = tmp_col[!is.na(var_col) | !is.infinite(var_col) | !is.nan(var_col)]
+      tmp_col = tmp_col[!is.na(var_col) & !is.infinite(var_col) & !is.nan(var_col)]
       n_var = length(unique(tmp_col))
       is_1_all = FALSE
       if (n_var == 1) {
