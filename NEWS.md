@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.5.7
+
+* Fixed a bug in `visqc_test_pca_scores`, where if all values were not-testable (NaN, Inf, NA), the function would still try to do the ANOVA. It now returns NA values for all of the ANOVA statistics.
+
 # visualizationQualityControl 0.5.3
 
 * `median_correlations` now has more columns, regardless of the setting for `between_classes`, to provide consistency.

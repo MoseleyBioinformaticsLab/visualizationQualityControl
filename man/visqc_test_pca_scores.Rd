@@ -19,7 +19,7 @@ Given a matrix of PCA scores, set of sample attributes to test,
 goes through and performs an ANOVA of the scores versus the attribute.
 }
 \details{
-For each variable being tested, the function first checks the number of unique values
-in that variable. If the number of unique values is 1, or equal to the number of rows,
-then the variable is not tested and is excluded from the results.
+For each variable being tested, the function first checks the number of unique and missing values
+in that variable. If they are all missing, or the unique values is 1, or equal to the number of rows,
+then the variable is not tested and NA values will be returned for that variable.
 }
