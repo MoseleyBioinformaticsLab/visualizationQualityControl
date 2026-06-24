@@ -21,7 +21,11 @@
 #'   \item{group}{whether the median is \emph{within} or \emph{between} groups of samples}
 #' }
 #'
-median_correlations <- function(cor_matrix, sample_classes = NULL, between_classes = FALSE){
+median_correlations <- function(
+  cor_matrix,
+  sample_classes = NULL,
+  between_classes = FALSE
+) {
   stopifnot(nrow(cor_matrix) == ncol(cor_matrix))
   n_sample <- nrow(cor_matrix)
 
@@ -45,40 +49,50 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
   split_classes <- split(sample_id, use_classes)
   names(use_classes) <- sample_id
 
-  sample_median_cor <- lapply(sample_id, function(in_sample){
+  sample_median_cor <- lapply(sample_id, function(in_sample) {
     #message(in_sample)
     sample_loc <- which(colnames(cor_matrix) %in% in_sample)
-    
+
     sample_cor <- cor_matrix[sample_loc, -sample_loc]
-    
-    cor_by_class <- lapply(split_classes, function(class_ids){
+
+    cor_by_class <- lapply(split_classes, function(class_ids) {
       #message(class_ids[1])
       class_samples <- setdiff(class_ids, in_sample)
       if (length(class_samples) > 0) {
-        med_cor = median(sample_cor[class_samples])
+        med_cor <- median(sample_cor[class_samples])
       } else {
-        med_cor = NA
+        med_cor <- NA
       }
-        data.frame(sample_id = in_sample,
-                   med_cor = med_cor,
-                   sample_class = as.character(use_classes[in_sample]),
-                   compare_class = as.character(unique(use_classes[class_ids])),
-                   stringsAsFactors = FALSE)
-      })
-      
+      data.frame(
+        sample_id = in_sample,
+        med_cor = med_cor,
+        sample_class = as.character(use_classes[in_sample]),
+        compare_class = as.character(unique(use_classes[class_ids])),
+        stringsAsFactors = FALSE
+      )
+    })
+
     cor_by_class <- do.call(rbind, cor_by_class)
   })
   sample_median_cor <- do.call(rbind, sample_median_cor)
-  
-  sample_median_cor$plot_class <- paste0(sample_median_cor$sample_class, "::", sample_median_cor$compare_class)
-  
-  group = rep("within", nrow(sample_median_cor))
-  group[sample_median_cor$sample_class != sample_median_cor$compare_class] = "between"
-  
-  sample_median_cor$group = group
+
+  sample_median_cor$plot_class <- paste0(
+    sample_median_cor$sample_class,
+    "::",
+    sample_median_cor$compare_class
+  )
+
+  group <- rep("within", nrow(sample_median_cor))
+  group[
+    sample_median_cor$sample_class != sample_median_cor$compare_class
+  ] <- "between"
+
+  sample_median_cor$group <- group
 
   if (!between_classes) {
-    sample_median_cor = sample_median_cor[sample_median_cor$group %in% "within", ]
+    sample_median_cor <- sample_median_cor[
+      sample_median_cor$group %in% "within",
+    ]
   }
   rownames(sample_median_cor) <- NULL
 
@@ -98,14 +112,14 @@ median_correlations <- function(cor_matrix, sample_classes = NULL, between_class
 #' @export
 #'
 #'
-median_class_correlations <- function(cor_matrix, sample_classes = NULL){
+median_class_correlations <- function(cor_matrix, sample_classes = NULL) {
   stopifnot(nrow(cor_matrix) == ncol(cor_matrix))
   n_sample <- nrow(cor_matrix)
-  
+
   if (is.null(sample_classes)) {
     stop("You didn't provide sample classes to work with.")
   }
-  
+
   if (is.null(rownames(cor_matrix))) {
     stopifnot(rownames(cor_matrix) == colnames(cor_matrix))
     sample_id <- paste0("S", seq(1, n_sample))
@@ -113,45 +127,49 @@ median_class_correlations <- function(cor_matrix, sample_classes = NULL){
   } else {
     sample_id <- rownames(cor_matrix)
   }
-  
-  names(sample_classes) = rownames(cor_matrix)
-  sample_classes = sort(sample_classes)
-  
-  all_comp = combn(names(sample_classes), 2)
-  comp_df = data.frame(s1 = all_comp[1, ],
-                       s2 = all_comp[2, ],
-                       class1 = sample_classes[all_comp[1, ]],
-                       class2 = sample_classes[all_comp[2, ]],
-                       cor = NA)
-  
+
+  names(sample_classes) <- rownames(cor_matrix)
+  sample_classes <- sort(sample_classes)
+
+  all_comp <- combn(names(sample_classes), 2)
+  comp_df <- data.frame(
+    s1 = all_comp[1, ],
+    s2 = all_comp[2, ],
+    class1 = sample_classes[all_comp[1, ]],
+    class2 = sample_classes[all_comp[2, ]],
+    cor = NA
+  )
+
   for (irow in seq_len(nrow(comp_df))) {
-    comp_df[irow, "cor"] = cor_matrix[comp_df[irow, "s1"],
-                                      comp_df[irow, "s2"]]
+    comp_df[irow, "cor"] <- cor_matrix[comp_df[irow, "s1"], comp_df[irow, "s2"]]
   }
-  
-  med_df = comp_df %>%
+
+  med_df <- comp_df %>%
     dplyr::group_by(class1, class2) %>%
     dplyr::summarise(median = median(cor), .groups = "keep") %>%
     dplyr::ungroup() %>%
     data.frame()
-  
-  out_classes = unique(sample_classes)
-  out_median = matrix(NA, nrow = length(out_classes),
-                      ncol = length(out_classes))
-  rownames(out_median) = colnames(out_median) = out_classes
-  
+
+  out_classes <- unique(sample_classes)
+  out_median <- matrix(
+    NA,
+    nrow = length(out_classes),
+    ncol = length(out_classes)
+  )
+  rownames(out_median) <- colnames(out_median) <- out_classes
+
   for (irow in seq_len(nrow(med_df))) {
-    class1 = med_df[irow, "class1"]
-    class2 = med_df[irow, "class2"]
-    out_median[class1, class2] = med_df[irow, "median"]
+    class1 <- med_df[irow, "class1"]
+    class2 <- med_df[irow, "class2"]
+    out_median[class1, class2] <- med_df[irow, "median"]
   }
-  
+
   out_median
 }
 
 # calculates if something is an outlier
-.calc_outlier <- function(data, n_trim, n_sd, remove_missing){
-  outlier_data <- apply(data, 1, function(x){
+.calc_outlier <- function(data, n_trim, n_sd, remove_missing) {
+  outlier_data <- apply(data, 1, function(x) {
     is_bad <- is.infinite(x) | is.na(x) | is.nan(x)
     if (length(remove_missing) > 0) {
       all_bad <- is_bad | (x %in% remove_missing)
@@ -219,8 +237,13 @@ median_class_correlations <- function(cor_matrix, sample_classes = NULL){
 #'
 #' @export
 #' @return data.frame
-outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
-                             n_sd = 5, remove_missing = NA){
+outlier_fraction <- function(
+  data,
+  sample_classes = NULL,
+  n_trim = 3,
+  n_sd = 5,
+  remove_missing = NA
+) {
   n_sample <- ncol(data)
 
   if (is.null(sample_classes)) {
@@ -240,14 +263,23 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
     sample_names <- colnames(data)
   }
 
-  frac_outlier_class <- lapply(names(split_classes), function(class_name){
+  frac_outlier_class <- lapply(names(split_classes), function(class_name) {
     class_index <- split_classes[[class_name]]
-    is_outlier <- .calc_outlier(data[, class_index, drop = FALSE], n_trim, n_sd, remove_missing)
+    is_outlier <- .calc_outlier(
+      data[, class_index, drop = FALSE],
+      n_trim,
+      n_sd,
+      remove_missing
+    )
     if (nrow(is_outlier) != nrow(data)) {
-      is_outlier = t(is_outlier)
+      is_outlier <- t(is_outlier)
     }
     frac_outlier <- colSums(is_outlier) / nrow(data)
-    data.frame(sample_id = sample_names[class_index], sample_class = class_name, frac = frac_outlier)
+    data.frame(
+      sample_id = sample_names[class_index],
+      sample_class = class_name,
+      frac = frac_outlier
+    )
   })
 
   frac_outlier <- do.call(rbind, frac_outlier_class)
@@ -255,81 +287,98 @@ outlier_fraction <- function(data, sample_classes = NULL, n_trim = 3,
 }
 
 #' determine outliers
-#' 
+#'
 #' @param median_correlations median correlations
 #' @param outlier_fraction outlier fractions
 #' @param cor_weight how much weight for the correlation score?
 #' @param frac_weight how much weight for the outlier fraction?
 #' @param only_high should only things at the low end of score be removed?
-#' 
-#' @details For outlier sample detection, one should 
+#'
+#' @details For outlier sample detection, one should
 #'   first generate median correlations using
 #'   `median_correlations`, and outlier fractions using
 #'   `outlier_fraction`. If you only have one or the other,
 #'   than you should use named arguments to only pass the one
-#'   or the other. 
-#'   
+#'   or the other.
+#'
 #'   Alternatively, you can change the weighting used for median correlations
 #'   or outlier fraction, including setting them to 0.
-#' 
+#'
 #' @export
 #' @return data.frame
-determine_outliers = function(median_correlations = NULL, outlier_fraction = NULL,
-                              cor_weight = 1, frac_weight = 1, only_high = TRUE){
-  
+determine_outliers <- function(
+  median_correlations = NULL,
+  outlier_fraction = NULL,
+  cor_weight = 1,
+  frac_weight = 1,
+  only_high = TRUE
+) {
   if (!is.null(median_correlations) && !is.null(outlier_fraction)) {
-    full_data = dplyr::left_join(median_correlations, outlier_fraction, by = "sample_id", suffix = c(".cor", ".frac"))
-    
-    if ((nrow(full_data) != nrow(median_correlations)) || (nrow(full_data) != nrow(outlier_fraction))) {
-      stop("Samples in median_correlations and outlier_fraction don't match up!")
+    full_data <- dplyr::left_join(
+      median_correlations,
+      outlier_fraction,
+      by = "sample_id",
+      suffix = c(".cor", ".frac")
+    )
+
+    if (
+      (nrow(full_data) != nrow(median_correlations)) ||
+        (nrow(full_data) != nrow(outlier_fraction))
+    ) {
+      stop(
+        "Samples in median_correlations and outlier_fraction don't match up!"
+      )
     }
-    
+
     if (!all(full_data$sample_class.cor == full_data$sample_class.frac)) {
-      stop("The sample classes (sample_class) from median_correlations and outlier_fraction are NOT all the same!")
+      stop(
+        "The sample classes (sample_class) from median_correlations and outlier_fraction are NOT all the same!"
+      )
     }
-    full_data$sample_class = full_data$sample_class.cor
-    full_data$sample_class.cor = NULL
-    full_data$sample_class.frac = NULL
+    full_data$sample_class <- full_data$sample_class.cor
+    full_data$sample_class.cor <- NULL
+    full_data$sample_class.frac <- NULL
   }
-  
+
   if (is.null(outlier_fraction) && !is.null(median_correlations)) {
-    full_data = median_correlations
-    full_data$frac = 0
+    full_data <- median_correlations
+    full_data$frac <- 0
   }
-  
+
   if (!is.null(outlier_fraction) && is.null(median_correlations)) {
-    full_data = outlier_fraction
-    full_data$med_cor = 0
+    full_data <- outlier_fraction
+    full_data$med_cor <- 0
   }
-  
-  data_score = (cor_weight * log(1 - full_data$med_cor)) + (frac_weight * log1p(full_data$frac))
-  names(data_score) = full_data$sample_id
-  split_score = split(data_score, full_data$sample_class)
-  out_each = purrr::map(split_score, function(in_scores){
-    score_out = boxplot.stats(in_scores)$out
+
+  data_score <- (cor_weight * log1p(1 - full_data$med_cor)) +
+    (frac_weight * log1p(full_data$frac))
+
+  names(data_score) <- full_data$sample_id
+  split_score <- split(data_score, full_data$sample_class)
+  out_each <- purrr::map(split_score, function(in_scores) {
+    score_out <- boxplot.stats(in_scores)$out
     names(in_scores)[in_scores %in% score_out]
   })
-  all_out = unlist(out_each)
-  
-  full_data$score = data_score
-  full_data$outlier = FALSE
-  full_data$outlier[full_data$sample_id %in% all_out] = TRUE
-  
-  if (only_high) {
-    split_data = split(full_data, full_data$sample_class)
-    full_data = purrr::map(split_data, \(in_data){
-      mean_score = mean(in_data$score)
-      wrong_side = in_data |>
+  all_out <- unlist(out_each)
+
+  full_data$score <- data_score
+  full_data$outlier <- FALSE
+  full_data$outlier[full_data$sample_id %in% all_out] <- TRUE
+
+  if (only_high && any(full_data$outlier)) {
+    split_data <- split(full_data, full_data$sample_class)
+    full_data <- purrr::map(split_data, \(in_data) {
+      mean_score <- mean(in_data$score)
+      wrong_side <- in_data |>
         dplyr::filter(score < mean_score, outlier) |>
         dplyr::pull(sample_id)
-      in_data$outlier[in_data$sample_id %in% wrong_side] = FALSE
+      in_data$outlier[in_data$sample_id %in% wrong_side] <- FALSE
       in_data
     }) |>
       dplyr::bind_rows()
   }
-  
+
   full_data
-  
 }
 
 #' grp_cor_data

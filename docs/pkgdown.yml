@@ -1,8 +1,7 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: 3.8.3
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   pca_testing: pca_testing.html
   quality_control: quality_control.html
-last_built: 2024-02-16T02:08Z
-
+last_built: 2026-06-24T14:54Z

@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.5.8
+
+* Fixed a bug in `determine_outliers`, where if the median correlation value was 1, then a score of `-Inf` was returned (`log(0)`), which would result in the sample being considered an outlier due to the way boxplot.stats works. To avoid this, the log-transform now uses `log1p` instead.
+
 # visualizationQualityControl 0.5.7
 
 * Fixed a bug in `visqc_test_pca_scores`, where if all values were not-testable (NaN, Inf, NA), the function would still try to do the ANOVA. It now returns NA values for all of the ANOVA statistics.
