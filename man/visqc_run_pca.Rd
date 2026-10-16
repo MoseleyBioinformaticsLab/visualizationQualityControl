@@ -19,7 +19,7 @@ visqc_run_pca(data_matrix, center = TRUE, scale = FALSE, ...)
 \code{visqc_run_pca} returns a list containing
 \item{\code{scores}}{a data.frame of scores, each column is a principal component.}
 \item{\code{loadings}}{a data.frame of the loadings, each column is a principal component.}
-\item{\code{variance}}{a data.frame of variance information, each row is a principal component.}
+\item{\code{variances}}{a data.frame of variance information, each row is a principal component.}
 }
 \description{
 Given a matrix of values, runs principal component analysis (PCA)

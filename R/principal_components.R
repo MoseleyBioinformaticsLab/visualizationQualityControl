@@ -4,7 +4,7 @@
 #' contributions, and generates a percent label that can be used for labeling plots.
 #'
 #' @param pca_scores matrix of scores, columns are each PC
-#'
+#' @importFrom dplyr .data
 #' @export
 #' @return data.frame
 visqc_score_contributions = function(pca_scores) {
@@ -16,8 +16,8 @@ visqc_score_contributions = function(pca_scores) {
   )
   pca_vars = dplyr::mutate(
     pca_vars,
-    percent = variance / sum(variance),
-    cumulative = cumsum(percent)
+    percent = .data$variance / sum(.data$variance),
+    cumulative = cumsum(.data$percent)
   )
   pca_labels = purrr::map2_chr(
     pca_vars$pc,
@@ -56,6 +56,7 @@ visqc_score_contributions = function(pca_scores) {
 #' available, and returns the scores, the loadings, and the
 #' variance contributions.
 #'
+#' @importFrom stats prcomp
 #' @export
 #' @seealso [stats::prcomp]
 #' @return `visqc_run_pca` returns a list containing

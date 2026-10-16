@@ -52,7 +52,6 @@ corresponding to a column entry in the data.frame, and the names of the colors
 corresponding to annotations in that column.
 }
 \examples{
- 
 \dontrun{
 library(circlize)
 data(grp_cor)
@@ -69,7 +68,7 @@ col_annotation = list(set = annotation_color[3:4])
 
 visqc_heatmap(grp_cor, colormap, row_color_data = row_data, row_color_list = row_annotation,
                  col_color_data = col_data, col_color_list = col_annotation)
-                 
+
 reorder_sim <- similarity_reorderbyclass(grp_cor, transform = "sub_1")
 visqc_heatmap(grp_cor, colormap, "reorder1", row_data, row_annotation, col_data, col_annotation,
                  column_order = reorder_sim$indices, row_order = reorder_sim$indices)

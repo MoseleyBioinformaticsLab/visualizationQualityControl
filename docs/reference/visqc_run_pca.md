@@ -39,7 +39,7 @@ visqc_run_pca(data_matrix, center = TRUE, scale = FALSE, ...)
 
   a data.frame of the loadings, each column is a principal component.
 
-- `variance`:
+- `variances`:
 
   a data.frame of variance information, each row is a principal
   component.

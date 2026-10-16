@@ -24,9 +24,9 @@ similarity_reorder(
 \item{dendsort_type}{how should the reordering be done? (default is "min")}
 }
 \value{
-a \link{dendrogram} object. To get the order use \code{order.dendogram}.
+a \code{\link[stats:dendrogram]{stats::dendrogram()}} object. To get the order use \code{order.dendogram}.
 }
 \description{
 given a matrix (maybe a distance matrix), cluster and then re-order using
-dendsort.
+\code{\link[dendsort:dendsort]{dendsort::dendsort()}}.
 }

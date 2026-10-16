@@ -2,8 +2,9 @@
 
 to avoid spurious visualization problems, it is useful in a heatmap
 visualization to reorder the samples within each sample class. This
-function uses hierarchical clustering and dendsort to sort entries in a
-distance matrix.
+function uses hierarchical clustering and
+[`dendsort::dendsort()`](https://rdrr.io/pkg/dendsort/man/dendsort.html)
+to sort entries in a distance matrix.
 
 ## Usage
 

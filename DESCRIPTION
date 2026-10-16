@@ -11,13 +11,12 @@ Date: 2026-10-16
 Depends: R (>= 3.1.1)
 biocViews:
 Imports: ComplexHeatmap (>= 1.2.1), stats, dendsort, colorspace, dplyr,
-        ggplot2, broom, knitrProgressBar, magrittr, purrr
+        broom, knitrProgressBar, purrr
 License: MIT + file LICENSE
 VignetteBuilder: knitr
 Suggests: testthat, knitr, rmarkdown, circlize, viridis, ICIKendallTau
-        (>= 1.0.0), ggforce, labelled
+        (>= 1.0.0), ggforce, labelled, ggplot2
 Encoding: UTF-8
-LinkingTo: Rcpp
 URL:
         https://moseleybioinformaticslab.github.io/visualizationQualityControl
         https://github.com/moseleybioinformaticslab/visualizationQualityControl

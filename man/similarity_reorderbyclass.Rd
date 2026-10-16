@@ -34,7 +34,7 @@ a list containing the reordering of the matrix in a:
 \description{
 to avoid spurious visualization problems, it is useful in a heatmap visualization
 to reorder the samples within each sample class. This function uses
-hierarchical clustering and \link{dendsort} to sort entries in a distance matrix.
+hierarchical clustering and \code{\link[dendsort:dendsort]{dendsort::dendsort()}} to sort entries in a distance matrix.
 }
 \details{
 The \code{similarity_matrix} should be either a square matrix of similarity values

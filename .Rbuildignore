@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*\.o$
@@ -7,3 +9,11 @@
 ^docs$
 ^pkgdown$
 ^LICENSE\.md$
+^README*$
+^air\.toml$
+^README\.html$
+^other_tests$
+^NEWS\.md$
+^README\.Rmd$
+^figure$
+^README_files$

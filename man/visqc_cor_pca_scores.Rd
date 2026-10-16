@@ -7,7 +7,7 @@
 visqc_cor_pca_scores(pca_scores, sample_info)
 }
 \arguments{
-\item{pca_scores}{the scores matrix to test}
+\item{pca_scores}{the scores data.frame or matrix to test}
 
 \item{sample_info}{data.frame of sample attributes to test
 

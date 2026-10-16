@@ -30,13 +30,13 @@ data.frame
 determine outliers
 }
 \details{
-For outlier sample detection, one should 
-  first generate median correlations using
-  `median_correlations`, and outlier fractions using
-  `outlier_fraction`. If you only have one or the other,
-  than you should use named arguments to only pass the one
-  or the other. 
-  
-  Alternatively, you can change the weighting used for median correlations
-  or outlier fraction, including setting them to 0.
+For outlier sample detection, one should
+first generate median correlations using
+\code{median_correlations}, and outlier fractions using
+\code{outlier_fraction}. If you only have one or the other,
+than you should use named arguments to only pass the one
+or the other.
+
+Alternatively, you can change the weighting used for median correlations
+or outlier fraction, including setting them to 0.
 }

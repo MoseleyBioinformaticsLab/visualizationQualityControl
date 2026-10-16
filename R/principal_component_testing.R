@@ -15,7 +15,7 @@
 #' @export
 #' @return data.frame
 visqc_test_pca_scores = function(pca_scores, sample_info) {
-  null_res = tibble::tibble(
+  null_res = data.frame(
     term = "x",
     df = NA,
     sumsq = NA,

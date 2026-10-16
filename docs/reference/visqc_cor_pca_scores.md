@@ -13,7 +13,7 @@ visqc_cor_pca_scores(pca_scores, sample_info)
 
 - pca_scores:
 
-  the scores matrix to test
+  the scores data.frame or matrix to test
 
 - sample_info:
 

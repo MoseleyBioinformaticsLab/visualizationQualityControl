@@ -15,6 +15,7 @@
   disjoint colors
 - [`grp_cor`](grp_cor.md) : 10 sample to sample correlations
 - [`grp_cor_data`](grp_cor_data.md) : grp_cor_data
+- [`grp_data`](grp_data.md) : grp_data
 - [`grp_exp_data`](grp_exp_data.md) : grp_exp_data
 - [`grp_info`](grp_info.md) : 10 sample meta-data
 - [`keep_non_missing_percentage()`](keep_non_missing_percentage.md) :

@@ -1,7 +1,8 @@
 # cluster and reorder
 
 given a matrix (maybe a distance matrix), cluster and then re-order
-using dendsort.
+using
+[`dendsort::dendsort()`](https://rdrr.io/pkg/dendsort/man/dendsort.html).
 
 ## Usage
 
@@ -39,5 +40,5 @@ similarity_reorder(
 
 ## Value
 
-a [dendrogram](https://rdrr.io/r/stats/dendrogram.html) object. To get
-the order use `order.dendogram`.
+a [`stats::dendrogram()`](https://rdrr.io/r/stats/dendrogram.html)
+object. To get the order use `order.dendogram`.
