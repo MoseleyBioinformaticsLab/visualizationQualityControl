@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Quality Control Example • visualizationQualityControl</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Quality Control Example">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">visualizationQualityControl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,8 +61,8 @@
                         <h4 data-toc-skip class="author">Robert M
 Flight</h4>
             
-            <h4 data-toc-skip class="date">2026-06-24
-10:54:55.892119</h4>
+            <h4 data-toc-skip class="date">2026-10-16
+09:45:11.359573</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/moseleybioinformaticslab/visualizationQualityControl/blob/HEAD/vignettes/quality_control.Rmd" class="external-link"><code>vignettes/quality_control.Rmd</code></a></small>
       <div class="d-none name"><code>quality_control.Rmd</code></div>
@@ -163,7 +163,7 @@ way!</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">exp_df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">s1</span>, y <span class="op">=</span> <span class="va">s2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Raw Data"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/raw_plot-1.png" alt="" width="768"></p>
+<p><img src="quality_control_files/figure-html/raw_plot-1.png" class="r-plt" alt="" width="768"></p>
 <p>Notice the dispersion in the values as the actual values increase.
 Most statistical methods don’t like this.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -171,7 +171,7 @@ Most statistical methods don’t like this.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log_df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">log_data</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">log_df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">s1</span>, y <span class="op">=</span> <span class="va">s2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Log Transform"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/log_plot-1.png" alt="" width="768"></p>
+<p><img src="quality_control_files/figure-html/log_plot-1.png" class="r-plt" alt="" width="768"></p>
 <p>But, lots of other methods don’t deal well with <code>NA</code> or
 <code>Inf</code> values, which is what you get when you do a
 log-transform on negative or zero values. There are a couple of
@@ -207,8 +207,8 @@ so on and so on. It is extemely useful for confirming that the largest
 source of variance is the biological one, and for examining if any
 confounds can explain some sources of variance.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pca_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">log_data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">pca_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">log_mix</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pca_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visqc_run_pca.html">visqc_run_pca</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">log_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pca_mixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visqc_run_pca.html">visqc_run_pca</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">log_mix</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="visualize-them">Visualize Them<a class="anchor" aria-label="anchor" href="#visualize-them"></a>
 </h3>
@@ -216,12 +216,12 @@ confounds can explain some sources of variance.</p>
 much a PC contributes to the variances, we can get a summary of them
 using <code>visqc_score_contributions</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gd_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pca_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">)</span></span>
-<span><span class="va">gd_pca</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gd_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Good Data"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">gd_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pca_data</span><span class="op">$</span><span class="va">scores</span>, <span class="va">sample_info</span><span class="op">)</span></span>
+<span><span class="va">gd_pca</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gd_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Good Data"</span><span class="op">)</span></span>
 <span><span class="va">gd_pca</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_good-1.png" alt="" width="768"></p>
+<p><img src="quality_control_files/figure-html/plot_good-1.png" class="r-plt" alt="" width="768"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/visqc_score_contributions.html">visqc_score_contributions</a></span><span class="op">(</span><span class="va">pca_data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">pca_data</span><span class="op">$</span><span class="va">variances</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="5%">
@@ -403,12 +403,12 @@ using <code>visqc_score_contributions</code>.</p>
 </tbody>
 </table>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bad_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="va">sample_info</span><span class="op">)</span></span>
-<span><span class="va">bad_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">bad_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Bad Data"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">bad_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">scores</span>, <span class="va">sample_info</span><span class="op">)</span></span>
+<span><span class="va">bad_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">bad_scores</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">class</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Bad Data"</span><span class="op">)</span></span>
 <span><span class="va">bad_pca</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_bad-1.png" alt="" width="768"></p>
+<p><img src="quality_control_files/figure-html/plot_bad-1.png" class="r-plt" alt="" width="768"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/visqc_score_contributions.html">visqc_score_contributions</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">pca_mixed</span><span class="op">$</span><span class="va">variances</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="5%">
@@ -633,10 +633,8 @@ matrix.</p>
 the <strong>sample classes</strong> and reorder the correlations, this
 highlights sub-groups within classes as well as potential outliers.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_reorderbyclass.html">similarity_reorderbyclass</a></span><span class="op">(</span><span class="va">data_cor</span>, <span class="va">sample_info</span><span class="op">[</span>, <span class="st">"class"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>,</span>
-<span>                                        transform <span class="op">=</span> <span class="st">"sub_1"</span><span class="op">)</span></span>
-<span><span class="va">mix_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_reorderbyclass.html">similarity_reorderbyclass</a></span><span class="op">(</span><span class="va">mix_cor</span>, <span class="va">sample_info</span><span class="op">[</span>, <span class="st">"class"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>,</span>
-<span>                                       transform <span class="op">=</span> <span class="st">"sub_1"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_reorder.html">similarity_reorder</a></span><span class="op">(</span><span class="va">data_cor</span>, transform <span class="op">=</span> <span class="st">"sub_1"</span><span class="op">)</span></span>
+<span><span class="va">mix_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_reorder.html">similarity_reorder</a></span><span class="op">(</span><span class="va">mix_cor</span>, transform <span class="op">=</span> <span class="st">"sub_1"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="color-by-class">Color by Class<a class="anchor" aria-label="anchor" href="#color-by-class"></a>
@@ -674,13 +672,13 @@ information about <code>viridis</code> is available <a href="http://bids.github.
 <span>              row_color_list <span class="op">=</span> <span class="va">row_annotation</span>, col_color_data <span class="op">=</span> <span class="va">row_data</span>,</span>
 <span>              col_color_list <span class="op">=</span> <span class="va">row_annotation</span>, row_order <span class="op">=</span> <span class="va">data_order</span><span class="op">$</span><span class="va">indices</span>,</span>
 <span>              column_order <span class="op">=</span> <span class="va">data_order</span><span class="op">$</span><span class="va">indices</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/heatmap1-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/heatmap1-1.png" class="r-plt" alt="" width="480"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visqc_heatmap.html">visqc_heatmap</a></span><span class="op">(</span><span class="va">mix_cor</span>, <span class="va">colormap</span>, <span class="st">"Bad Data"</span>, row_color_data <span class="op">=</span> <span class="va">row_data</span>,</span>
 <span>              row_color_list <span class="op">=</span> <span class="va">row_annotation</span>, col_color_data <span class="op">=</span> <span class="va">row_data</span>,</span>
 <span>              col_color_list <span class="op">=</span> <span class="va">row_annotation</span>, row_order <span class="op">=</span> <span class="va">mix_order</span><span class="op">$</span><span class="va">indices</span>,</span>
 <span>              column_order <span class="op">=</span> <span class="va">mix_order</span><span class="op">$</span><span class="va">indices</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/heatmap2-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/heatmap2-1.png" class="r-plt" alt="" width="480"></p>
 <p>Note in the second example, <strong>s5</strong> and
 <strong>s19</strong> look odd.</p>
 </div>
@@ -698,7 +696,7 @@ information about <code>viridis</code> is available <a href="http://bids.github.
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data_medcor</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">med_cor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">sample_class</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Good Data"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_med_good-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/plot_med_good-1.png" class="r-plt" alt="" width="480"></p>
 </div>
 <div class="section level3">
 <h3 id="bad">Bad<a class="anchor" aria-label="anchor" href="#bad"></a>
@@ -709,7 +707,7 @@ information about <code>viridis</code> is available <a href="http://bids.github.
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mix_medcor</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">med_cor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">sample_class</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Bad Dat"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_med_mix-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/plot_med_mix-1.png" class="r-plt" alt="" width="480"></p>
 </div>
 </div>
 <div class="section level2">
@@ -733,7 +731,7 @@ number of zeros, you probably want to ignore zeros.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data_outlier</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">frac</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">sample_class</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Good Data"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_good_outliers-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/plot_good_outliers-1.png" class="r-plt" alt="" width="480"></p>
 </div>
 <div class="section level3">
 <h3 id="bad-1">Bad<a class="anchor" aria-label="anchor" href="#bad-1"></a>
@@ -744,7 +742,7 @@ number of zeros, you probably want to ignore zeros.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mix_outlier</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_id</span>, y <span class="op">=</span> <span class="va">frac</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">sample_class</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Mix Data"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="quality_control_files/figure-html/plot_mixoutliers-1.png" alt="" width="480"></p>
+<p><img src="quality_control_files/figure-html/plot_mixoutliers-1.png" class="r-plt" alt="" width="480"></p>
 </div>
 </div>
 <div class="section level2">
@@ -764,7 +762,7 @@ your high-througput -omics data for potential problems.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

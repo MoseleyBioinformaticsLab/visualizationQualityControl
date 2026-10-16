@@ -18,9 +18,9 @@ apply to different types of -omics or high-feature datasets proposed by
 
 ### Dependencies
 
--   `ComplexHeatmap`, for generating the heatmaps.
--   `dendsort`, for reordering samples in heatmaps.
--   `ICIKendallTau`, for calculating Kendall-tau with missing values.
+- `ComplexHeatmap`, for generating the heatmaps.
+- `dendsort`, for reordering samples in heatmaps.
+- `ICIKendallTau`, for calculating Kendall-tau with missing values.
 
 These should get installed automatically.
 
@@ -65,16 +65,16 @@ see the **quality\_control** vignette.
 
 ### Visualize PCA Component Scores
 
-    pca_data = prcomp(t(exp_data), center = TRUE)
-    pca_scores = as.data.frame(pca_data$x)
-    pca_scores = cbind(pca_scores, sample_info)
+    pca_data = visqc_run_pca(t(exp_data))
+    pca_scores = cbind(pca_data$scores, sample_info)
     ggplot(pca_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
 
 ![](man/figures/do_pca-1.png)
 
-To see how much explained variance each PC has, you can calculate them:
+To see how much explained variance each PC has, you can examine the
+output of `visqc_run_pca`:
 
-    knitr::kable(visqc_score_contributions(pca_data$x))
+    knitr::kable(pca_data$variance)
 
 <table style="width:100%;">
 <colgroup>
@@ -86,7 +86,7 @@ To see how much explained variance each PC has, you can calculate them:
 <col style="width: 51%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: left;"></th>
 <th style="text-align: left;">pc</th>
 <th style="text-align: right;">variance</th>
@@ -96,7 +96,7 @@ To see how much explained variance each PC has, you can calculate them:
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC1</td>
 <td style="text-align: left;">PC1</td>
 <td style="text-align: right;">2.0852320</td>
@@ -104,7 +104,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.6853218</td>
 <td style="text-align: left;">PC1 (69%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC2</td>
 <td style="text-align: left;">PC2</td>
 <td style="text-align: right;">0.0944324</td>
@@ -112,7 +112,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.7163574</td>
 <td style="text-align: left;">PC2 (3.1%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC3</td>
 <td style="text-align: left;">PC3</td>
 <td style="text-align: right;">0.0827594</td>
@@ -120,7 +120,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.7435567</td>
 <td style="text-align: left;">PC3 (2.7%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC4</td>
 <td style="text-align: left;">PC4</td>
 <td style="text-align: right;">0.0802501</td>
@@ -128,7 +128,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.7699313</td>
 <td style="text-align: left;">PC4 (2.6%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC5</td>
 <td style="text-align: left;">PC5</td>
 <td style="text-align: right;">0.0758842</td>
@@ -136,7 +136,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.7948710</td>
 <td style="text-align: left;">PC5 (2.5%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC6</td>
 <td style="text-align: left;">PC6</td>
 <td style="text-align: right;">0.0750434</td>
@@ -144,7 +144,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.8195344</td>
 <td style="text-align: left;">PC6 (2.5%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC7</td>
 <td style="text-align: left;">PC7</td>
 <td style="text-align: right;">0.0668954</td>
@@ -152,7 +152,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.8415199</td>
 <td style="text-align: left;">PC7 (2.2%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC8</td>
 <td style="text-align: left;">PC8</td>
 <td style="text-align: right;">0.0600538</td>
@@ -160,7 +160,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.8612569</td>
 <td style="text-align: left;">PC8 (2%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC9</td>
 <td style="text-align: left;">PC9</td>
 <td style="text-align: right;">0.0590223</td>
@@ -168,7 +168,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.8806548</td>
 <td style="text-align: left;">PC9 (1.9%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC10</td>
 <td style="text-align: left;">PC10</td>
 <td style="text-align: right;">0.0520022</td>
@@ -176,7 +176,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.8977456</td>
 <td style="text-align: left;">PC10 (1.7%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC11</td>
 <td style="text-align: left;">PC11</td>
 <td style="text-align: right;">0.0507126</td>
@@ -184,7 +184,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9144126</td>
 <td style="text-align: left;">PC11 (1.7%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC12</td>
 <td style="text-align: left;">PC12</td>
 <td style="text-align: right;">0.0450374</td>
@@ -192,7 +192,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9292143</td>
 <td style="text-align: left;">PC12 (1.5%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC13</td>
 <td style="text-align: left;">PC13</td>
 <td style="text-align: right;">0.0398570</td>
@@ -200,7 +200,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9423135</td>
 <td style="text-align: left;">PC13 (1.3%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC14</td>
 <td style="text-align: left;">PC14</td>
 <td style="text-align: right;">0.0380927</td>
@@ -208,7 +208,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9548329</td>
 <td style="text-align: left;">PC14 (1.3%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC15</td>
 <td style="text-align: left;">PC15</td>
 <td style="text-align: right;">0.0337662</td>
@@ -216,7 +216,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9659303</td>
 <td style="text-align: left;">PC15 (1.1%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC16</td>
 <td style="text-align: left;">PC16</td>
 <td style="text-align: right;">0.0304897</td>
@@ -224,7 +224,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9759509</td>
 <td style="text-align: left;">PC16 (1%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC17</td>
 <td style="text-align: left;">PC17</td>
 <td style="text-align: right;">0.0271052</td>
@@ -232,7 +232,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9848592</td>
 <td style="text-align: left;">PC17 (0.89%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC18</td>
 <td style="text-align: left;">PC18</td>
 <td style="text-align: right;">0.0252369</td>
@@ -240,7 +240,7 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">0.9931534</td>
 <td style="text-align: left;">PC18 (0.83%)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">PC19</td>
 <td style="text-align: left;">PC19</td>
 <td style="text-align: right;">0.0208322</td>
@@ -248,14 +248,14 @@ To see how much explained variance each PC has, you can calculate them:
 <td style="text-align: right;">1.0000000</td>
 <td style="text-align: left;">PC19 (0.68%)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">PC20</td>
 <td style="text-align: left;">PC20</td>
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: right;">1.0000000</td>
 <td style="text-align: left;">PC20
-(0.00000000000000000000000000000057%)</td>
+(0.00000000000000000000000000000095%)</td>
 </tr>
 </tbody>
 </table>
@@ -379,10 +379,10 @@ Lets add some missingness to our data.
     cor_random_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.6000000 0.2495988 0.1958932 0.2333110
-    ## s2 0.2495988 1.0000000 0.7058586 0.7200000
-    ## s3 0.1958932 0.7058586 1.0000000 0.6925253
-    ## s4 0.2333110 0.7200000 0.6925253 1.0000000
+    ## s1 0.6000000 0.2438760 0.2196645 0.1791652
+    ## s2 0.2438760 1.0000000 0.7058586 0.7200000
+    ## s3 0.2196645 0.7058586 1.0000000 0.6925253
+    ## s4 0.1791652 0.7200000 0.6925253 1.0000000
 
     cor_random_missing_nw = ICIKendallTau::ici_kendalltau(exp_data)$cor
     cor_random_missing_nw[1:4, 1:4]
@@ -406,10 +406,10 @@ worth something?
     cor_same_missing[1:4, 1:4]
 
     ##           s1        s2        s3        s4
-    ## s1 0.8000000 0.8067227 0.4079051 0.4190298
-    ## s2 0.8067227 0.8000000 0.4021367 0.4025488
-    ## s3 0.4079051 0.4021367 1.0000000 0.6925253
-    ## s4 0.4190298 0.4025488 0.6925253 1.0000000
+    ## s1 0.8000000 0.8121849 0.4297424 0.4280943
+    ## s2 0.8121849 0.8000000 0.4458114 0.4375709
+    ## s3 0.4297424 0.4458114 1.0000000 0.6925253
+    ## s4 0.4280943 0.4375709 0.6925253 1.0000000
 
 Here we can see that the correlation between sapmles S1 and S2 has
 actually increased over the random missing case.

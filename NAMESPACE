@@ -19,6 +19,7 @@ export(split_groups)
 export(summarize_data)
 export(visqc_cor_pca_scores)
 export(visqc_heatmap)
+export(visqc_run_pca)
 export(visqc_score_contributions)
 export(visqc_test_pca_loadings)
 export(visqc_test_pca_scores)
@@ -27,6 +28,8 @@ import(dendsort)
 import(dplyr)
 importFrom(colorspace,rainbow_hcl)
 importFrom(magrittr,"%>%")
-importFrom(stats,as.dendrogram)
-importFrom(stats,as.dist)
-importFrom(stats,hclust)
+importFrom(stats,
+  as.dendrogram,
+  as.dist,
+  hclust
+)

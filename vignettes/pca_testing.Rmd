@@ -69,20 +69,20 @@ ggplot(all_df, aes(x = s1, y = s2)) +
 We will use the log-transformed values, because PCA doesn't do well with proportional variance data.
 
 ```{r do_pca}
-log_pca = prcomp(t(log1p(data_matrix)), center = TRUE)
+log_pca = visqc_run_pca(t(log1p(data_matrix)))
 ```
 
-We can summarize the variances of each principal component.
+The `visqc_run_pca` function also summarized the variances for us (using `visqc_summarize_variances`).
 
 ```{r variances}
-log_variances = visqc_score_contributions(log_pca$x)
+log_variances = log_pca$variance
 knitr::kable(log_variances)
 ```
 
 And we can add the scores to the sample info so we can plot them by sample type.
 
 ```{r add_scores}
-log_scores = cbind(as.data.frame(log_pca$x), sample_info)
+log_scores = cbind(log_pca$scores, sample_info)
 ggplot(log_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
 ```
 
@@ -94,7 +94,7 @@ What if there was some variable we were interested in knowing if there was a PC 
 The only one here should be PC1, but lets go through and test them anyway.
 
 ```{r test_pcs}
-pc_stats = visqc_test_pca_scores(log_pca$x, sample_info[, c("class"), drop = FALSE])
+pc_stats = visqc_test_pca_scores(log_pca$scores, sample_info[, c("class"), drop = FALSE])
 
 knitr::kable(pc_stats)
 ```
@@ -116,7 +116,7 @@ We will test both PC1 and PC2 here, because we don't really expect that there sh
 Note that for a large number of variables, this will take some time, because a slightly different null is created for each variable by excluding that variables loadings in the other PCs.
 
 ```{r test_loadings}
-loading_sig = visqc_test_pca_loadings(log_pca$rotation, test_columns = c("PC1", "PC2"), progress = FALSE)
+loading_sig = visqc_test_pca_loadings(log_pca$loadings, test_columns = c("PC1", "PC2"), progress = FALSE)
 ```
 
 ```{r n_sig}

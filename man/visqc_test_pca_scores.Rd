@@ -7,7 +7,7 @@
 visqc_test_pca_scores(pca_scores, sample_info)
 }
 \arguments{
-\item{pca_scores}{matrix of scores from a PCA decomposition}
+\item{pca_scores}{matrix or data.frame of scores from a PCA decomposition}
 
 \item{sample_info}{data.frame of sample attributes to test}
 }

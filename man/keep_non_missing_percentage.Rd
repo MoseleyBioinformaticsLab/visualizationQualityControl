@@ -27,15 +27,15 @@ keep_non_missing_percentage(
 logical
 }
 \description{
-Given a value matrix (features are rows, samples are columns), and sample classes, 
-find those things that are \emph{not missing} in at least a certain 
+Given a value matrix (features are rows, samples are columns), and sample classes,
+find those things that are \emph{not missing} in at least a certain
 number of samples in one of the classes, and keep those features for further
 processing.
 }
 \details{
 The number of samples that must be non-missing can be expressed either as a whole
-  number (that is greater than one), or as a fraction that will be be multiplied 
-  by the number of samples in each class to get the lower limits for each of the classes.
-  If there are multiple values that represent missingness, use a vector. For example, to
-  to use both 0 and NA, you can do \code{missing_value = c(NA, 0)}.
+number (that is greater than one), or as a fraction that will be be multiplied
+by the number of samples in each class to get the lower limits for each of the classes.
+If there are multiple values that represent missingness, use a vector. For example, to
+to use both 0 and NA, you can do \code{missing_value = c(NA, 0)}.
 }

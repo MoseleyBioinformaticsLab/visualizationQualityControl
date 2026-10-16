@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Development of visualization methods for quality control • visualizationQualityControl</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Development of visualization methods for quality control">
 <meta name="description" content="Provides utilities useful quality control of high-throughput -omics datasets.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">visualizationQualityControl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,13 +107,12 @@
 <div class="section level3">
 <h3 id="visualize-pca-component-scores">Visualize PCA Component Scores<a class="anchor" aria-label="anchor" href="#visualize-pca-component-scores"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pca_data <span class="ot">=</span> <span class="fu">prcomp</span>(<span class="fu">t</span>(exp_data), <span class="at">center =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">as.data.frame</span>(pca_data<span class="sc">$</span>x)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">cbind</span>(pca_scores, sample_info)</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">ggplot</span>(pca_scores, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> class)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pca_data <span class="ot">=</span> <span class="fu">visqc_run_pca</span>(<span class="fu">t</span>(exp_data))</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>pca_scores <span class="ot">=</span> <span class="fu">cbind</span>(pca_data<span class="sc">$</span>scores, sample_info)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">ggplot</span>(pca_scores, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> class)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
 <p><img src="reference/figures/do_pca-1.png"></p>
-<p>To see how much explained variance each PC has, you can calculate them:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">visqc_score_contributions</span>(pca_data<span class="sc">$</span>x))</span></code></pre></div>
+<p>To see how much explained variance each PC has, you can examine the output of <code>visqc_run_pca</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(pca_data<span class="sc">$</span>variance)</span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
 <col style="width: 5%">
@@ -123,7 +122,7 @@
 <col style="width: 13%">
 <col style="width: 51%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th style="text-align: left;">
 </th>
 <th style="text-align: left;">
@@ -143,7 +142,7 @@ labels
 </th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC1
 </td>
@@ -163,7 +162,7 @@ PC1
 PC1 (69%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC2
 </td>
@@ -183,7 +182,7 @@ PC2
 PC2 (3.1%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC3
 </td>
@@ -203,7 +202,7 @@ PC3
 PC3 (2.7%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC4
 </td>
@@ -223,7 +222,7 @@ PC4
 PC4 (2.6%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC5
 </td>
@@ -243,7 +242,7 @@ PC5
 PC5 (2.5%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC6
 </td>
@@ -263,7 +262,7 @@ PC6
 PC6 (2.5%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC7
 </td>
@@ -283,7 +282,7 @@ PC7
 PC7 (2.2%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC8
 </td>
@@ -303,7 +302,7 @@ PC8
 PC8 (2%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC9
 </td>
@@ -323,7 +322,7 @@ PC9
 PC9 (1.9%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC10
 </td>
@@ -343,7 +342,7 @@ PC10
 PC10 (1.7%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC11
 </td>
@@ -363,7 +362,7 @@ PC11
 PC11 (1.7%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC12
 </td>
@@ -383,7 +382,7 @@ PC12
 PC12 (1.5%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC13
 </td>
@@ -403,7 +402,7 @@ PC13
 PC13 (1.3%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC14
 </td>
@@ -423,7 +422,7 @@ PC14
 PC14 (1.3%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC15
 </td>
@@ -443,7 +442,7 @@ PC15
 PC15 (1.1%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC16
 </td>
@@ -463,7 +462,7 @@ PC16
 PC16 (1%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC17
 </td>
@@ -483,7 +482,7 @@ PC17
 PC17 (0.89%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC18
 </td>
@@ -503,7 +502,7 @@ PC18
 PC18 (0.83%)
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 PC19
 </td>
@@ -523,7 +522,7 @@ PC19
 PC19 (0.68%)
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 PC20
 </td>
@@ -540,7 +539,7 @@ PC20
 1.0000000
 </td>
 <td style="text-align: left;">
-PC20 (0.00000000000000000000000000000057%)
+PC20 (0.00000000000000000000000000000095%)
 </td>
 </tr>
 </tbody>
@@ -633,10 +632,10 @@ PC20 (0.00000000000000000000000000000057%)
 <span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>cor_random_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a></span>
 <span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="do">## s1 0.6000000 0.2495988 0.1958932 0.2333110</span></span>
-<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="do">## s2 0.2495988 1.0000000 0.7058586 0.7200000</span></span>
-<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="do">## s3 0.1958932 0.7058586 1.0000000 0.6925253</span></span>
-<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="do">## s4 0.2333110 0.7200000 0.6925253 1.0000000</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="do">## s1 0.6000000 0.2438760 0.2196645 0.1791652</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="do">## s2 0.2438760 1.0000000 0.7058586 0.7200000</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="do">## s3 0.2196645 0.7058586 1.0000000 0.6925253</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="do">## s4 0.1791652 0.7200000 0.6925253 1.0000000</span></span>
 <span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a></span>
 <span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>cor_random_missing_nw <span class="ot">=</span> ICIKendallTau<span class="sc">::</span><span class="fu">ici_kendalltau</span>(exp_data)<span class="sc">$</span>cor</span>
 <span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>cor_random_missing_nw[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
@@ -656,10 +655,10 @@ PC20 (0.00000000000000000000000000000057%)
 <span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>cor_same_missing[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a></span>
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="do">##           s1        s2        s3        s4</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8067227 0.4079051 0.4190298</span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="do">## s2 0.8067227 0.8000000 0.4021367 0.4025488</span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="do">## s3 0.4079051 0.4021367 1.0000000 0.6925253</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="do">## s4 0.4190298 0.4025488 0.6925253 1.0000000</span></span></code></pre></div>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="do">## s1 0.8000000 0.8121849 0.4297424 0.4280943</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="do">## s2 0.8121849 0.8000000 0.4458114 0.4375709</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="do">## s3 0.4297424 0.4458114 1.0000000 0.6925253</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="do">## s4 0.4280943 0.4375709 0.6925253 1.0000000</span></span></code></pre></div>
 <p>Here we can see that the correlation between sapmles S1 and S2 has actually increased over the random missing case.</p>
 </div>
 </div>
@@ -764,8 +763,8 @@ PC20 (0.00000000000000000000000000000057%)
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Robert M Flight <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Hunter NB Moseley <br><small class="roles"> Author </small>  </li>
+<li>Robert M Flight <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Hunter NB Moseley <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -780,7 +779,7 @@ PC20 (0.00000000000000000000000000000057%)
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

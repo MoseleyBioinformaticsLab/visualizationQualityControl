@@ -18,10 +18,10 @@ for sample classes
 }
 \details{
 the default for \code{randomize} is \code{NULL}, so that reordering
-  the colors randomly is decided purely based on the number of colors requested.
-  Currently, that cutoff is \emph{5} colors, less than that the colors will
-  always be in the same order, for \emph{5} colors or more, they will
-  be in a scrambled order, different each time unless \code{set.seed} is
-  used. If \code{randomize} is \code{TRUE} or \code{FALSE}, then it overrides
-  the defaults.
+the colors randomly is decided purely based on the number of colors requested.
+Currently, that cutoff is \emph{5} colors, less than that the colors will
+always be in the same order, for \emph{5} colors or more, they will
+be in a scrambled order, different each time unless \code{set.seed} is
+used. If \code{randomize} is \code{TRUE} or \code{FALSE}, then it overrides
+the defaults.
 }

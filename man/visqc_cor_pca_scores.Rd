@@ -12,10 +12,10 @@ visqc_cor_pca_scores(pca_scores, sample_info)
 \item{sample_info}{data.frame of sample attributes to test
 
 Important: All of the attributes must be numeric, or character.
-  If character, they will be transformed to a factor, and the numeric
-  factor levels will be used instead.
-  If missing values are present, that is OK, as long as they are
-  missing-not-at-random (i.e. missing at the low end of the values).}
+If character, they will be transformed to a factor, and the numeric
+factor levels will be used instead.
+If missing values are present, that is OK, as long as they are
+missing-not-at-random (i.e. missing at the low end of the values).}
 }
 \value{
 data.frame

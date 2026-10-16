@@ -75,16 +75,15 @@ sample_classes = sample_info$class
 ### Visualize PCA Component Scores
 
 ```{r do_pca}
-pca_data = prcomp(t(exp_data), center = TRUE)
-pca_scores = as.data.frame(pca_data$x)
-pca_scores = cbind(pca_scores, sample_info)
+pca_data = visqc_run_pca(t(exp_data))
+pca_scores = cbind(pca_data$scores, sample_info)
 ggplot(pca_scores, aes(x = PC1, y = PC2, color = class)) + geom_point()
 ```
 
-To see how much explained variance each PC has, you can calculate them:
+To see how much explained variance each PC has, you can examine the output of `visqc_run_pca`:
 
 ```{r show_variance}
-knitr::kable(visqc_score_contributions(pca_data$x))
+knitr::kable(pca_data$variance)
 ```
 
 ### visqc_heatmap

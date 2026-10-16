@@ -24,11 +24,11 @@ the same class. May be useful for determining outliers.
 \details{
 The data.frame has 6 columns:
 \describe{
-  \item{med_cor}{the median correlation with other samples}
-  \item{sample_id}{the sample id, either the rowname or an index}
-  \item{sample_class}{the class of the sample. If not provided, set to "C1"}
-  \item{compare_class}{the class of the other sample}
-  \item{plot_class}{\code{sample_class::compare_class} for easy grouping}
-  \item{group}{whether the median is \emph{within} or \emph{between} groups of samples}
+\item{med_cor}{the median correlation with other samples}
+\item{sample_id}{the sample id, either the rowname or an index}
+\item{sample_class}{the class of the sample. If not provided, set to "C1"}
+\item{compare_class}{the class of the other sample}
+\item{plot_class}{\code{sample_class::compare_class} for easy grouping}
+\item{group}{whether the median is \emph{within} or \emph{between} groups of samples}
 }
 }

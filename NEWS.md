@@ -1,3 +1,7 @@
+# visualizationQualityControl 0.5.9
+
+* Added the function `visqc_run_pca` that does PCA the way I like it, and calculates the relative variance contributions of the PCs, and returns the scores and loadings as data.frames, with scores having their relative contributions if the {labelled} package is installed.
+
 # visualizationQualityControl 0.5.8
 
 * Fixed a bug in `determine_outliers`, where if the median correlation value was 1, then a score of `-Inf` was returned (`log(0)`), which would result in the sample being considered an outlier due to the way boxplot.stats works. To avoid this, the log-transform now uses `log1p` instead.

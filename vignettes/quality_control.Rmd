@@ -131,8 +131,8 @@ useful for confirming that the largest source of variance is the biological one,
 and for examining if any confounds can explain some sources of variance.
 
 ```{r do_pca}
-pca_data <- prcomp(t(log_data), center = TRUE)
-pca_mixed <- prcomp(t(log_mix), center = TRUE)
+pca_data <- visqc_run_pca(t(log_data))
+pca_mixed <- visqc_run_pca(t(log_mix), center = TRUE)
 ```
 
 ### Visualize Them
@@ -141,23 +141,23 @@ To visualize the data, we plot the scores.
 If we want to know how much a PC contributes to the variances, we can get a summary of them using `visqc_score_contributions`.
 
 ```{r plot_good}
-gd_scores = cbind(as.data.frame(pca_data$x), sample_info)
-gd_pca = ggplot(gd_scores, aes(x = PC1, y = PC2, color = class)) + geom_point() + ggtitle("Good Data")
+gd_scores = cbind(pca_data$scores, sample_info)
+gd_pca = ggplot(gd_scores, aes(x = PC1, y = PC2, color = class)) + geom_point(size = 2) + ggtitle("Good Data")
 gd_pca
 ```
 
 ```{r good_contributions}
-knitr::kable(visqc_score_contributions(pca_data$x))
+knitr::kable(pca_data$variances)
 ```
 
 ```{r plot_bad}
-bad_scores = cbind(as.data.frame(pca_mixed$x), sample_info)
-bad_pca <- ggplot(bad_scores, aes(x = PC1, y = PC2, color = class)) + geom_point() + ggtitle("Bad Data")
+bad_scores = cbind(pca_mixed$scores, sample_info)
+bad_pca <- ggplot(bad_scores, aes(x = PC1, y = PC2, color = class)) + geom_point(size = 2) + ggtitle("Bad Data")
 bad_pca
 ```
 
 ```{r bad_contributions}
-knitr::kable(visqc_score_contributions(pca_mixed$x))
+knitr::kable(pca_mixed$variances)
 ```
 
 Note in this case **PC1** contains a large proportion of variance, and separates
@@ -204,10 +204,8 @@ and reorder the correlations, this highlights sub-groups within classes as well
 as potential outliers.
 
 ```{r reorder_cor}
-data_order <- similarity_reorderbyclass(data_cor, sample_info[, "class", drop = FALSE],
-                                        transform = "sub_1")
-mix_order <- similarity_reorderbyclass(mix_cor, sample_info[, "class", drop = FALSE],
-                                       transform = "sub_1")
+data_order <- similarity_reorder(data_cor, transform = "sub_1")
+mix_order <- similarity_reorder(mix_cor, transform = "sub_1")
 ```
 
 ### Color by Class

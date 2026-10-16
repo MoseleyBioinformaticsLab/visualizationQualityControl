@@ -3,7 +3,7 @@
 #' Given a matrix of PCA scores, set of sample attributes to test,
 #' goes through and performs an ANOVA of the scores versus the attribute.
 #'
-#' @param pca_scores matrix of scores from a PCA decomposition
+#' @param pca_scores matrix or data.frame of scores from a PCA decomposition
 #' @param sample_info data.frame of sample attributes to test
 #'
 #' @details
@@ -78,7 +78,7 @@ visqc_test_pca_scores = function(pca_scores, sample_info) {
 #' goes through and performs an ICI-Kt of the scores versus the attribute.
 #'
 #'
-#' @param pca_scores the scores matrix to test
+#' @param pca_scores the scores data.frame or matrix to test
 #' @param sample_info data.frame of sample attributes to test
 #'
 #' Important: All of the attributes must be numeric, or character.
@@ -173,7 +173,7 @@ test_loadings = function(
   use_index = seq(1, length(use_loadings))
   purrr::map_dbl(use_index, function(in_row) {
     test_value = use_loadings[in_row]
-    all_other = (as.vector(other_loadings[-in_row, ]))
+    all_other = (as.vector(as.matrix(other_loadings[-in_row, ])))
 
     if (direction) {
       if (test_value < 0) {

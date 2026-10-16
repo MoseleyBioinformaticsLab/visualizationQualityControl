@@ -25,15 +25,15 @@ similarity_reorderbyclass(
 }
 \value{
 a list containing the reordering of the matrix in a:
-  \enumerate{
-    \item dendrogram
-    \item numeric vector
-    \item character vector (will be NULL if rownames are not set on the matrix)
-  }
+\enumerate{
+\item dendrogram
+\item numeric vector
+\item character vector (will be NULL if rownames are not set on the matrix)
+}
 }
 \description{
 to avoid spurious visualization problems, it is useful in a heatmap visualization
-to reorder the samples within each sample class. This function uses 
+to reorder the samples within each sample class. This function uses
 hierarchical clustering and \link{dendsort} to sort entries in a distance matrix.
 }
 \details{
@@ -43,7 +43,7 @@ distance, you can use a \code{transform} to turn it into a true \code{distance}
 (for example, if you have correlation, then a distance would be 1 - correlation,
 use "sub_1" as the transform argument).
 
-The \code{sample_classes} should be either a data.frame or factor argument. If 
+The \code{sample_classes} should be either a data.frame or factor argument. If
 a data.frame is passed, all columns of the data.frame will be pasted together
 to create a factor for splitting the data into groups. If the rownames of the
 data.frame do not correspond to the rownames or colnames of the matrix, then

@@ -11,7 +11,7 @@ List with 2 entries, data and class
 Robert M Flight
 }
 \usage{
-grp_cor_data
+data(grp_cor_data)
 }
 \description{
 Example data used for demonstrating \code{median correlation}. A list with
@@ -19,8 +19,8 @@ Example data used for demonstrating \code{median correlation}. A list with
 }
 \details{
 \describe{
-  \item{data}{a data matrix with 100 rows and 20 columns}
-  \item{class}{a character vector of 20 entries denoting classes}
+\item{data}{a data matrix with 100 rows and 20 columns}
+\item{class}{a character vector of 20 entries denoting classes}
 }
 
 The data comes from two groups of samples, where there is ~0.85 correlation

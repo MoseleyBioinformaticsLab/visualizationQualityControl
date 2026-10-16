@@ -45,7 +45,7 @@ using \code{\link{generate_group_colors}}
 This function uses the \code{ComplexHeatmap} package to produce
 heatmaps with complex row- and column-color annotations. Both \code{row_color_data}
 and \code{col_color_data} should be \code{data.frame}'s where each column describes
-meta-data about the rows or columns of the matrix. The \code{row_color_list} and 
+meta-data about the rows or columns of the matrix. The \code{row_color_list} and
 \code{col_color_list} provide the mapping of color to annotation, where each
 \code{list} entry should be a named vector of colors, with the list entry
 corresponding to a column entry in the data.frame, and the names of the colors

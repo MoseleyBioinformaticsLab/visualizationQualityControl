@@ -17,13 +17,13 @@ filter_non_zero_percentage(data_matrix, sample_classes = NULL, keep_num = 0.75)
 matrix
 }
 \description{
-Given a value matrix (features are columns, samples are rows), and sample classes, 
-find those things that are not zero in at least a certain 
+Given a value matrix (features are columns, samples are rows), and sample classes,
+find those things that are not zero in at least a certain
 number of one of the classes, and keep them
 }
 \details{
 This function is being deprecated and all code should use the
-  \code{keep_non_zero_percentage} function instead.
+\code{keep_non_zero_percentage} function instead.
 }
 \seealso{
 keep_non_zero_percentage
